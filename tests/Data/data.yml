@@ -1,0 +1,46 @@
+ClassOne:
+  caption: "Noticia"
+  relations:
+    - ClassTwo
+  attributes:
+    DefaultAttribute:
+      attributes:
+        SubAttribute:
+    GlobalAttribute:
+      caption: attribute
+      type: textarea
+      values:
+        rules:
+          required: true
+        configuration:
+          cols: 10
+          rows: 10
+    SpecificAttribute:
+      values:
+        rules:
+          required: true
+          configuration:
+            cols: 30
+            rows: 30
+        languages:
+          es:
+            rules:
+              required: true
+            configuration:
+              cols: 10
+              rows: 10
+          en:
+            rules:
+              required: false
+            configuration:
+              cols: 20
+              rows: 20
+    AllLanguagesAttribute:
+      type: lookup
+      values:
+        languages:
+          "*":
+            configuration:
+              options:
+                key1:
+                key2: "Custom caption"

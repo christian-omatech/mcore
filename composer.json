@@ -1,0 +1,33 @@
+{
+    "name": "omatech/ecore",
+    "require": {
+        "php": "^8.0",
+        "symfony/yaml": "^5.3",
+        "lambdish/phunctional": "^2.1",
+        "cocur/slugify": "^4.0"
+    },
+    "require-dev": {
+        "roave/security-advisories": "dev-latest",
+        "phpunit/phpunit": "^9.5",
+        "infection/infection": "^0.23.0",
+        "nunomaduro/phpinsights": "^2.0",
+        "symfony/var-dumper": "^5.3",
+        "mockery/mockery": "^1.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "Omatech\\Ecore\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "test-coverage": "vendor/bin/phpunit --coverage-html build/coverage",
+        "infection": "vendor/bin/infection",
+        "analyse": "vendor/bin/phpinsights analyse --verbose --config-path=rules.php --fix src"
+    }
+}
