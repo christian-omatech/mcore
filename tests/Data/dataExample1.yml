@@ -1,0 +1,357 @@
+Attributes:
+  # Groups
+  seo: &seo
+    metaRobots:
+      type: lookup
+        values:
+          languages:
+            "*":
+              configuration:
+                options:
+                  indexFollow: "index,follow"
+                  noindexNofollow: "noindex,nofollow"
+                  indexNofollow: "index,nofollow"
+                  noindexFollow: "noindex,nofollow"
+    ogImage:
+      type: image
+      attributes:
+        altOgImage:
+    metaTitle:
+    metaKeywords:
+      type: textarea
+    metaDescription:
+      type: textarea
+
+  # Niceurl
+  niceurl: &niceurl
+    type: niceurl
+
+  #  String
+  title: &title
+  textCalltoaction: &textCalltoaction
+  period: &period
+  duration: &duration
+  language: &language
+  price: &price
+  place: &place
+  textCancelled: &textCancelled
+  textFinalized: &textFinalized
+  titleThumbnail: &titleThumbnail
+    #String All
+  productCodeSecutix: &productCodeSecutix
+    values:
+      languages:
+        "*"
+    #String Order
+    tag: &tag
+
+  # Textarea
+  colloquium: &colloquium
+    type: textarea
+  textIntro: &textIntro
+    type: textarea
+  textAccessibility: &textAccessibility
+    type: textarea
+  timetable: &timetable
+    type: textarea
+  textThumbnail: &textThumbnail
+    type: textarea
+  freeOnline: &freeOnline
+    type: textarea
+    #Textarea ALL + Languages
+  text: &text
+    type: textarea
+    values:
+      "+": #* + languages
+
+  #Text
+    textSecondary: &textSecondary
+      type: text
+    #Text All
+    textSimple: &textSimple
+      type: text
+      values:
+        languages:
+          "*":
+
+  # Date
+  dateFinishShow: &dateFinishShow
+    type: date
+    values:
+      type: date
+    # Date Order
+  dateStartShow: &dateStartShow
+    type: date
+    values:
+      type: date
+
+  # Map
+  map: &map
+    type: map
+    values:
+      type: json
+      languages:
+        "*":
+
+  # Image
+  imgShow: &imgShow
+    type: image
+    values:
+      languages:
+        "*":
+    caption: "Imatge"
+    attributes:
+      altImgShow:
+    # Image All
+  imgThumbnail: &imgThumbnail
+    type: image
+    caption: "Imatge thumbnail"
+    values:
+      languages:
+        "*":
+      configuration:
+        height: 338
+    attributes:
+      altImgThumbnail:
+  imgBannerinfoBackground: &imgBannerinfoBackground
+    type: image
+    values:
+      languages:
+        "*":
+      configuration:
+        height: 211
+        weight: 202
+    caption: "Imatge background"
+    attributes:
+      altImgBannerinfoBackground:
+  imgBannerinfoIcon: &imgBannerinfoIcon
+    type: image
+    values:
+      languages:
+        "*":
+    caption: "Imatge icon"
+    attributes:
+      altImgBannerinfoIcon:
+  imgCarrousel: &imgCarrousel
+    type: image
+    values:
+      languages:
+        "*":
+    caption: "Imatge carrousel"
+    attributes:
+      altImgCarrousel:
+
+  # Video
+  videoCarrousel: &videoCarrousel
+    type: video
+
+  # Url
+  urlTickets: &urlTickets
+    type: url
+  # Url All
+  urlVideoCarrouselLive: &urlVideoCarrouselLive
+    type: url
+    values:
+      languages:
+        "*":
+
+  # File
+  file: &file
+    type: file
+    values:
+      languages:
+        "+":
+
+    # Json
+    json: &json
+      type: textarea
+      values:
+        languages:
+          "*":
+        values:
+          type: json
+          rules:
+            onlyRoot: true
+
+  # Lookup
+  typeWebShow: &typeWebShow
+    type: lookup
+    values:
+      languages:
+        "*":
+      configuration:
+        options:
+          newWeb: "newWeb"
+          oldWeb: "oldWeb"
+          oldWebRwd: "oldWebRwd"
+  colorText: &colorText
+    type: lookup
+    values:
+      languages:
+        "*":
+      configuration:
+        options:
+          dark: "dark"
+          white: "white"
+  positionText: &positionText
+    type: lookup
+    values:
+      languages:
+        "*":
+      configuration:
+        options:
+          center: "center"
+          left: "left"
+          right: "right"
+  sizeText: &sizeText
+    type: lookup
+    values:
+      languages:
+        "*":
+      configuration:
+        options:
+          2: "2"
+          1: "1"
+  stateShow: &stateShow
+    type: lookup
+    values:
+      languages:
+        "*":
+      configuration:
+        options:
+          active: "active"
+          finalized: "finalized"
+          cancelled: "cancelled"
+  colorCarrousel: &colorCarrousel
+    type: lookup
+    values:
+      languages:
+        "*":
+      configuration:
+        options:
+          white: "white"
+          black: "black"
+  typeShow: &typeShow
+    type: lookup
+    values:
+      languages:
+        "*":
+      configuration:
+        options:
+          show: "show"
+          activity: "activity"
+  showAllShowsHome: &showAllShowsHome
+    type: lookup
+    values:
+      languages:
+        "*":
+      configuration:
+        options:
+          1: "Yes"
+          0: "No"
+#/////////////////////////////////////////////////////
+Classes:
+  SectionActivities:
+    caption: "Secció Activitats"
+    relations:
+      SectionShows:
+        - SectionShows
+    attributes:
+      *title
+
+  SectionShows:
+    caption: "Secció Espectacles"
+      relations:
+        Shows:
+          - Shows
+        Blocks:
+          - BannerInfo
+          - BannerInfoMultiple
+      attributes:
+        *seo
+        *niceurl
+        *showAllShowsHome
+        *title
+        *textThumbnail
+        Subtitle:
+        *text
+        imgSectionshowThumbnail:
+          type: image
+          values:
+            languages:
+              "*":
+          caption: "Imatge thumbnail"
+            altImgSectonshowThumbnail:
+
+  Shows:
+    caption: "Espectacle"
+    relations:
+      OthersShows:
+        - Shows
+      Blocks:
+        - BannerInfoMultiple
+    order:
+      - dateFinishShow
+      - dateStartShow
+    attributes:
+      *niceurl
+      *productCodeSecutix
+      *typeShow
+      *dateStartShow
+      *dateFinishShow
+      *colorCarrousel
+      *stateShow
+      *titleThumbnail
+      *title
+      textFrom:
+        type: textarea
+      *textIntro
+      *text
+      *textThumbnail
+      *typeWebShow
+      room:
+        values:
+          languages:
+            "*"
+      *imgThumbnail
+      *imgShow
+      *imgCarrousel
+      *videoCarrousel
+      *urlVideoCarrouselLive
+      *period
+      *urlTickets
+      *timetable
+      *duration
+      *place
+      *language
+      *price
+      *textAccessibility
+      *colloquium
+      *freeOnline
+      *textCancelled
+      *textFinalized
+      *textCalltoaction
+
+  BannerInfo:
+    attributes:
+      *title
+      *text
+      *textCalltoaction
+      *colorText
+      *positionText
+      *sizeText
+      *imgBannerinfoIcon
+      *imgBannerinfoBackground
+
+  BannerInfoMultiple:
+    order:
+      *tag
+    attributes:
+    *tag
+    *colorText
+    *text
+    *textSecondary
+    *textSimple
+    *map
+    *file
+    *json
