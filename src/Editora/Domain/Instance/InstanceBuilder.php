@@ -3,6 +3,7 @@
 namespace Omatech\Ecore\Editora\Domain\Instance;
 
 use Omatech\Ecore\Editora\Domain\Attribute\AttributeBuilder;
+use Omatech\Ecore\Editora\Domain\Instance\Contracts\InstanceCacheInterface;
 use Omatech\Ecore\Editora\Domain\Instance\Exceptions\InvalidClassNameException;
 use Omatech\Ecore\Editora\Domain\Instance\Exceptions\InvalidLanguagesException;
 use Omatech\Ecore\Editora\Domain\Instance\Exceptions\InvalidStructureException;
@@ -14,13 +15,38 @@ final class InstanceBuilder
     private array $languages = [];
     private array $structure = [];
     private string $className = '';
+    private InstanceCacheInterface $instanceCache;
+
+    public function __construct(?InstanceCacheInterface $instanceCache = null)
+    {
+        $this->instanceCache = $instanceCache ?? InstanceCache::getInstance();
+    }
 
     public function build(): Instance
     {
+        $this->instanceCache->get($this->className);
         $this->ensureBuilderIsValid();
+        return $this->instanceCache->get($this->className) ?? $this->buildInstance();
+    }
+
+    private function ensureBuilderIsValid(): void
+    {
+        if (! count($this->languages)) {
+            throw new InvalidLanguagesException();
+        }
+        if ($this->className === '') {
+            throw new InvalidClassNameException();
+        }
+        if (! count($this->structure)) {
+            throw new InvalidStructureException();
+        }
+    }
+
+    private function buildInstance(): Instance
+    {
         $instance = [
             'metadata' => [
-                'className' => $this->className,
+                'name' => $this->className,
                 'caption' => $this->structure['caption'] ?? "class.{$this->className}",
                 'relations' => $this->normalizeRelations(),
             ],
@@ -29,21 +55,10 @@ final class InstanceBuilder
                 ->setAttributes($this->structure['attributes'])
                 ->build(),
         ];
-        return new class($instance) extends Instance {
+        $instance = new class($instance) extends Instance {
         };
-    }
-
-    private function ensureBuilderIsValid(): void
-    {
-        if (! count($this->languages)) {
-            throw new InvalidLanguagesException();
-        }
-        if (! count($this->structure)) {
-            throw new InvalidStructureException();
-        }
-        if ($this->className === '') {
-            throw new InvalidClassNameException();
-        }
+        $this->instanceCache->put($this->className, $instance);
+        return $instance;
     }
 
     private function normalizeRelations(): array

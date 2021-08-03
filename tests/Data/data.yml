@@ -19,9 +19,9 @@ ClassOne:
       values:
         rules:
           required: true
-          configuration:
-            cols: 30
-            rows: 30
+        configuration:
+          cols: 30
+          rows: 30
         languages:
           es:
             rules:

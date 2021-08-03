@@ -2,18 +2,16 @@
 
 return [
     'metadata' => [
-        'className' => 'class-one',
+        'name' => 'class-one',
         'caption' => 'Noticia',
+        'relations' => [],
         'id' => null,
         'key' => null,
-        'allowedRelations' => [
-            'class-two'
+        'publication' => [
+            'status' => 'pending',
+            'startPublishingDate' => null,
+            'endPublishingDate' => null
         ],
-    ],
-    'publication' => [
-        'status' => 'pending',
-        'startPublishingDate' => null,
-        'endPublishingDate' => null
     ],
     'attributes' => [
         [

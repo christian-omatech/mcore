@@ -4,14 +4,16 @@
     bootstrap="vendor/autoload.php"
     colors="true"
     verbose="true"
-    xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd">
+    executionOrder="random"
+    xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.5/phpunit.xsd">
     <coverage>
         <include>
             <directory suffix=".php">src/</directory>
         </include>
         <report>
-            <clover outputFile="build/logs/clover.xml"/>
-            <html outputDirectory="build/coverage"/>
+            <clover outputFile="build/clover.xml"/>
+            <html outputDirectory="build/coverage-html"/>
+            <xml outputDirectory="build/coverage-xml"/>
             <text outputFile="build/coverage.txt"/>
         </report>
     </coverage>

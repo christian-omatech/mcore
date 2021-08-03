@@ -4,33 +4,28 @@ namespace Omatech\Ecore\Editora\Domain\Instance;
 
 final class Metadata
 {
-    private string $className;
-    private string $caption;
     private ?int $id = null;
     private ?string $key = null;
-    private array $allowedRelations;
+    private Publication $publication;
 
-    public function __construct(array $metadata)
+    public function __construct()
     {
-        $this->className = $metadata['className'];
-        $this->caption = $metadata['caption'];
-        $this->allowedRelations = $metadata['relations'];
+        $this->publication = new Publication();
     }
 
     public function fill(array $metadata): void
     {
         $this->id = $metadata['id'] ?? null;
         $this->key = $metadata['key'] ?? null;
+        $this->publication->fill($metadata['publication'] ?? []);
     }
 
     public function toArray(): array
     {
         return [
-            'className' => $this->className,
-            'caption' => $this->caption,
             'id' => $this->id,
             'key' => $this->key,
-            'allowedRelations' => $this->allowedRelations,
+            'publication' => $this->publication->toArray(),
         ];
     }
 }
