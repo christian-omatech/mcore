@@ -4,28 +4,20 @@ on: [push, pull_request]
 
 jobs:
   build:
-    runs-on: ${{matrix.os}}
-    strategy:
-      matrix:
-        os: [ubuntu-latest]
-        php-version: [8.0]
-    name: Test on ${{matrix.os}} with PHP ${{matrix.php-version}}
+    runs-on: ubuntu-latest
+    name: MCore Build
     steps:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Setup PHP Action
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{matrix.php-version}}
-          tools: composer:v2
-          coverage: xdebug
+      - name: Build Container
+        run: make build
 
       - name: Install dependencies
-        run: composer install --no-interaction --prefer-dist --optimize-autoloader --ignore-platform-reqs
+        run: make install
 
-      - name: Run the tests
-        run: composer test-coverage
+      - name: Run code analysis
+        run: make analyse
 
-      - name: Run infection
-        run: composer infection
+      - name: Run tests
+        run: make test

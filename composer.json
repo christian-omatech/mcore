@@ -1,5 +1,5 @@
 {
-    "name": "omatech/ecore",
+    "name": "omatech/mcore",
     "require": {
         "php": "^8.0",
         "symfony/yaml": "^5.3",
@@ -27,6 +27,6 @@
     "scripts": {
         "test": "vendor/bin/phpunit",
         "infection": "vendor/bin/infection -j$(nproc) --coverage=build --skip-initial-tests",
-        "analyse": "vendor/bin/phpinsights analyse --verbose --config-path=rules.php --fix src"
+        "analyse": "vendor/bin/phpinsights analyse --verbose --config-path=rules.php --no-interaction --fix src"
     }
 }

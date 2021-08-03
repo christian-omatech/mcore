@@ -24,23 +24,24 @@ class InstanceBuilderTest extends TestCase
     private array $languages;
     private string $className = 'ClassOne';
     private array $expected;
-    private InstanceCacheInterface $instanceCache;
 
     public function setUp(): void
     {
         $this->languages = ['es', 'en'];
         $this->structure = Yaml::parseFile(dirname(__DIR__, 3).'/Data/data.yml');
         $this->expected = include dirname(__DIR__, 3).'/Data/ExpectedInstance.php';
-        $this->instanceCache = Mockery::mock(InstanceCacheInterface::class);
-        $this->instanceCache->shouldReceive('get')->andReturnNull();
-        $this->instanceCache->shouldReceive('put')->andReturnNull();
     }
 
     /** @test */
     public function missingLanguagesOnInstanceBuilder(): void
     {
         $this->expectException(InvalidLanguagesException::class);
-        (new InstanceBuilder($this->instanceCache))
+
+        $instanceCache = Mockery::mock(InstanceCacheInterface::class);
+        $instanceCache->shouldReceive('get')->andReturn(null)->never();
+        $instanceCache->shouldReceive('put')->andReturn(null)->never();
+
+        (new InstanceBuilder($instanceCache))
             ->setClassName($this->className)
             ->setStructure($this->structure[$this->className])
             ->build();
@@ -50,7 +51,12 @@ class InstanceBuilderTest extends TestCase
     public function missingStructureOnInstanceBuilder(): void
     {
         $this->expectException(InvalidStructureException::class);
-        (new InstanceBuilder($this->instanceCache))
+
+        $instanceCache = Mockery::mock(InstanceCacheInterface::class);
+        $instanceCache->shouldReceive('get')->andReturn(null)->never();
+        $instanceCache->shouldReceive('put')->andReturn(null)->never();
+
+        (new InstanceBuilder($instanceCache))
             ->setLanguages($this->languages)
             ->setClassName($this->className)
             ->build();
@@ -60,7 +66,12 @@ class InstanceBuilderTest extends TestCase
     public function missingClassNameOnInstanceBuilder(): void
     {
         $this->expectException(InvalidClassNameException::class);
-        (new InstanceBuilder($this->instanceCache))
+
+        $instanceCache = Mockery::mock(InstanceCacheInterface::class);
+        $instanceCache->shouldReceive('get')->andReturn(null)->never();
+        $instanceCache->shouldReceive('put')->andReturn(null)->never();
+
+        (new InstanceBuilder($instanceCache))
             ->setLanguages($this->languages)
             ->setStructure($this->structure[$this->className])
             ->build();
@@ -70,7 +81,12 @@ class InstanceBuilderTest extends TestCase
     public function invalidRuleWhenCreateInstance(): void
     {
         $this->expectException(InvalidRuleException::class);
-        (new InstanceBuilder($this->instanceCache))
+
+        $instanceCache = Mockery::mock(InstanceCacheInterface::class);
+        $instanceCache->shouldReceive('get')->andReturn(null)->once();
+        $instanceCache->shouldReceive('put')->andReturn(null)->never();
+
+        (new InstanceBuilder($instanceCache))
             ->setLanguages($this->languages)
             ->setStructure([
                 'attributes' => [
@@ -91,7 +107,12 @@ class InstanceBuilderTest extends TestCase
     public function invalidValueTypeWhenCreateInstance(): void
     {
         $this->expectException(InvalidValueTypeException::class);
-        (new InstanceBuilder($this->instanceCache))
+
+        $instanceCache = Mockery::mock(InstanceCacheInterface::class);
+        $instanceCache->shouldReceive('get')->andReturn(null)->once();
+        $instanceCache->shouldReceive('put')->andReturn(null)->never();
+
+        (new InstanceBuilder($instanceCache))
             ->setLanguages($this->languages)
             ->setStructure([
                 'attributes' => [
@@ -109,7 +130,9 @@ class InstanceBuilderTest extends TestCase
     /** @test */
     public function instanceBuildedCorrectly(): void
     {
-        $instanceCache = Mockery::spy(InstanceCache::class);
+        $instanceCache = Mockery::mock(InstanceCacheInterface::class);
+        $instanceCache->shouldReceive('get')->andReturn(null)->once();
+        $instanceCache->shouldReceive('put')->andReturn(null)->once();
 
         $instance = (new InstanceBuilder($instanceCache))
             ->setLanguages($this->languages)
@@ -117,13 +140,11 @@ class InstanceBuilderTest extends TestCase
             ->setClassName($this->className)
             ->build();
 
-        $instanceCache->shouldHaveReceived('has')->with($this->className);
-
         $this->assertEquals($instance->toArray(), $this->expected);
     }
 
     /** @test */
-    public function instanceBuildedWithCache(): void
+    public function instanceBuildedWithLocalCache(): void
     {
         $cache = InstanceCache::getInstance();
         $instance1 = (new InstanceBuilder($cache))

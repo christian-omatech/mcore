@@ -15,21 +15,22 @@ class InstanceTest extends TestCase
 {
     private array $languages;
     private string $className = 'ClassOne';
-    private InstanceCacheInterface $instanceCache;
 
     public function setUp(): void
     {
         $this->languages = ['es', 'en'];
-        $this->instanceCache = Mockery::mock(InstanceCacheInterface::class);
-        $this->instanceCache->shouldReceive('get')->andReturnNull();
-        $this->instanceCache->shouldReceive('put')->andReturnNull();
     }
 
     /** @test */
     public function instanceAttributeValidationFailed(): void
     {
         $this->expectException(RequiredValueException::class);
-        $instance = (new InstanceBuilder($this->instanceCache))
+
+        $instanceCache = Mockery::mock(InstanceCacheInterface::class);
+        $instanceCache->shouldReceive('get')->andReturn(null)->once();
+        $instanceCache->shouldReceive('put')->andReturn(null)->once();
+
+        $instance = (new InstanceBuilder($instanceCache))
             ->setLanguages($this->languages)
             ->setStructure([
                 'attributes' => [
@@ -58,7 +59,12 @@ class InstanceTest extends TestCase
     public function instanceSubAttributeValidationFailed(): void
     {
         $this->expectException(RequiredValueException::class);
-        $instance = (new InstanceBuilder($this->instanceCache))
+
+        $instanceCache = Mockery::mock(InstanceCacheInterface::class);
+        $instanceCache->shouldReceive('get')->andReturn(null)->once();
+        $instanceCache->shouldReceive('put')->andReturn(null)->once();
+
+        $instance = (new InstanceBuilder($instanceCache))
             ->setLanguages($this->languages)
             ->setStructure([
                 'attributes' => [
@@ -95,7 +101,11 @@ class InstanceTest extends TestCase
     /** @test */
     public function instanceFilledCorrectly(): void
     {
-        $instance = (new InstanceBuilder($this->instanceCache))
+        $instanceCache = Mockery::mock(InstanceCacheInterface::class);
+        $instanceCache->shouldReceive('get')->andReturn(null)->once();
+        $instanceCache->shouldReceive('put')->andReturn(null)->once();
+
+        $instance = (new InstanceBuilder($instanceCache))
             ->setLanguages($this->languages)
             ->setStructure([
                 'attributes' => [
@@ -236,116 +246,4 @@ class InstanceTest extends TestCase
             ]
         ], $instance->toArray());
     }
-
-    /** @test */
-    // public function speedTime()
-    // {
-    //     $languages = ['es', 'en'];
-    //     $structure = Yaml::parseFile(dirname(__DIR__, 3).'/Data/data.yml');
-    //     $className = 'Class1';
-    //     $then = microtime(true);
-
-
-    //         $instance = (new InstanceBuilder)
-    //             ->setLanguages($languages)
-    //             ->setStructure($structure[$className])
-    //             ->setClassName($className)
-    //             ->build();
-
-    //         $instance->fill([
-    //             'metadata' => [
-    //                 'id' => 1234,
-    //                 'key' => 'soy-la-key-de-la-instancia'
-    //             ],
-    //             'publication' => [
-    //                 'status' => PublicationStatus::REVISION,
-    //                 'startPublishingDate' => DateTime::createFromFormat(
-    //                     'Y-m-d H:i:s',
-    //                     '1989-03-08 09:00:00',
-    //                     new DateTimeZone('Europe/Madrid')
-    //                 ),
-    //                 'endPublishingDate' => DateTime::createFromFormat(
-    //                     'Y-m-d H:i:s',
-    //                     '2021-07-27 14:30:00',
-    //                     new DateTimeZone('Europe/Madrid')
-    //                 ),
-    //             ],
-    //             'attributes' => [
-    //                 'global-attribute' => [
-    //                     'values' => [
-    //                         'es' => 'hola',
-    //                         'en' => 'adios'
-    //                     ],
-    //                     'attributes' => [
-    //                         'another-attribute' => [
-    //                             'values' => [
-    //                                 'es' => 'hola',
-    //                                 'en' => 'adios',
-    //                                 'non-existent-language' => 'value'
-    //                             ]
-    //                         ]
-    //                     ]
-    //                 ],
-    //                 'specific-attribute' => [
-    //                     'values' => [
-    //                         'es' => 'hola',
-    //                     ]
-    //                 ]
-    //             ]
-    //         ]);
-    //         dump($instance);
-
-    //         $instance = (new InstanceBuilder)
-    //             ->setLanguages($languages)
-    //             ->setStructure($structure[$className])
-    //             ->setClassName($className)
-    //             ->build();
-
-    //         $instance->fill([
-    //             'metadata' => [
-    //                 'key' => 'soy-la-key-de-la-instancia'
-    //             ],
-    //             'publication' => [
-    //                 'status' => PublicationStatus::REVISION,
-    //                 'startPublishingDate' => DateTime::createFromFormat(
-    //                     'Y-m-d H:i:s',
-    //                     '1989-03-08 09:00:00',
-    //                     new DateTimeZone('Europe/Madrid')
-    //                 ),
-    //                 'endPublishingDate' => DateTime::createFromFormat(
-    //                     'Y-m-d H:i:s',
-    //                     '2021-07-27 14:30:00',
-    //                     new DateTimeZone('Europe/Madrid')
-    //                 ),
-    //             ],
-    //             'attributes' => [
-    //                 'global-attribute' => [
-    //                     'values' => [
-    //                         'es' => 'hola',
-    //                         'en' => 'adios'
-    //                     ],
-    //                     'attributes' => [
-    //                         'another-attribute' => [
-    //                             'values' => [
-    //                                 'es' => 'hola',
-    //                                 'en' => 'adios',
-    //                                 'non-existent-language' => 'value'
-    //                             ]
-    //                         ]
-    //                     ]
-    //                 ],
-    //                 'specific-attribute' => [
-    //                     'values' => [
-    //                         'es' => 'hola',
-    //                     ]
-    //                 ]
-    //             ]
-    //         ]);
-    //         dump($instance);
-
-
-    //     $now = microtime(true);
-    //     echo sprintf("Elapsed:  %f", $now-$then);
-    //     dump($now-$then);
-    // }
 }

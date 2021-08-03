@@ -24,7 +24,6 @@ final class InstanceBuilder
 
     public function build(): Instance
     {
-        $this->instanceCache->get($this->className);
         $this->ensureBuilderIsValid();
         return $this->instanceCache->get($this->className) ?? $this->buildInstance();
     }
