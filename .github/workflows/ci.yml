@@ -7,9 +7,6 @@ jobs:
     runs-on: ubuntu-latest
     name: MCore Build
     steps:
-      - name: faketty
-        uses: Yuri6037/Action-FakeTTY@v1.1
-
       - name: Checkout
         uses: actions/checkout@v2
 
