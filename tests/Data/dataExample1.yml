@@ -3,15 +3,15 @@ Attributes:
   seo: &seo
     metaRobots:
       type: lookup
-        values:
-          languages:
-            "*":
-              configuration:
-                options:
-                  indexFollow: "index,follow"
-                  noindexNofollow: "noindex,nofollow"
-                  indexNofollow: "index,nofollow"
-                  noindexFollow: "noindex,nofollow"
+      values:
+        languages:
+          "*":
+            configuration:
+              options:
+                indexFollow: "index,follow"
+                noIndexNofollow: "noindex,nofollow"
+                indexNoFollow: "index,nofollow"
+                noIndexFollow: "noindex,follow"
     ogImage:
       type: image
       attributes:
@@ -261,27 +261,27 @@ Classes:
 
   SectionShows:
     caption: "Secció Espectacles"
-      relations:
-        Shows:
-          - Shows
-        Blocks:
-          - BannerInfo
-          - BannerInfoMultiple
-      attributes:
-        *seo
-        *niceurl
-        *showAllShowsHome
-        *title
-        *textThumbnail
-        Subtitle:
-        *text
-        imgSectionshowThumbnail:
-          type: image
-          values:
-            languages:
-              "*":
-          caption: "Imatge thumbnail"
-            altImgSectonshowThumbnail:
+    relations:
+      Shows:
+        - Shows
+      Blocks:
+        - BannerInfo
+        - BannerInfoMultiple
+    attributes:
+      - *seo
+      - *niceurl
+      - *showAllShowsHome
+      - *title
+      - *textThumbnail
+      - Subtitle:
+      - *text
+      - imgSectionshowThumbnail:
+        caption: "Imatge thumbnail"
+        type: image
+        values:
+          languages:
+            "*":
+              altImgSectonshowThumbnail:
 
   Shows:
     caption: "Espectacle"
@@ -294,64 +294,64 @@ Classes:
       - dateFinishShow
       - dateStartShow
     attributes:
-      *niceurl
-      *productCodeSecutix
-      *typeShow
-      *dateStartShow
-      *dateFinishShow
-      *colorCarrousel
-      *stateShow
-      *titleThumbnail
-      *title
-      textFrom:
+      - *niceurl
+      - *productCodeSecutix
+      - *typeShow
+      - *dateStartShow
+      - *dateFinishShow
+      - *colorCarrousel
+      - *stateShow
+      - *titleThumbnail
+      - *title
+      - textFrom:
         type: textarea
-      *textIntro
-      *text
-      *textThumbnail
-      *typeWebShow
-      room:
+      - *textIntro
+      - *text
+      - *textThumbnail
+      - *typeWebShow
+      - room:
         values:
           languages:
             "*"
-      *imgThumbnail
-      *imgShow
-      *imgCarrousel
-      *videoCarrousel
-      *urlVideoCarrouselLive
-      *period
-      *urlTickets
-      *timetable
-      *duration
-      *place
-      *language
-      *price
-      *textAccessibility
-      *colloquium
-      *freeOnline
-      *textCancelled
-      *textFinalized
-      *textCalltoaction
+      - *imgThumbnail
+      - *imgShow
+      - *imgCarrousel
+      - *videoCarrousel
+      - *urlVideoCarrouselLive
+      - *period
+      - *urlTickets
+      - *timetable
+      - *duration
+      - *place
+      - *language
+      - *price
+      - *textAccessibility
+      - *colloquium
+      - *freeOnline
+      - *textCancelled
+      - *textFinalized
+      - *textCalltoaction
 
   BannerInfo:
     attributes:
-      *title
-      *text
-      *textCalltoaction
-      *colorText
-      *positionText
-      *sizeText
-      *imgBannerinfoIcon
-      *imgBannerinfoBackground
+      - *title
+      - *text
+      - *textCalltoaction
+      - *colorText
+      - *positionText
+      - *sizeText
+      - *imgBannerinfoIcon
+      - *imgBannerinfoBackground
 
   BannerInfoMultiple:
     order:
       *tag
     attributes:
-    *tag
-    *colorText
-    *text
-    *textSecondary
-    *textSimple
-    *map
-    *file
-    *json
+    - *tag
+    - *colorText
+    - *text
+    - *textSecondary
+    - *textSimple
+    - *map
+    - *file
+    - *json
