@@ -20,12 +20,12 @@ return [
         ]
     ],
     'metadata' => [
-        'key' => null,
-        'id' => null,
+        'key' => 'soy-la-key-de-la-instancia',
+        'id' => 1,
         'publication' => [
-            'status' => 'pending',
-            'startPublishingDate' => null,
-            'endPublishingDate' => null
+            'status' => 'in-revision',
+            'startPublishingDate' => '08/03/1989 09:00:00',
+            'endPublishingDate' => '27/07/2021 14:30:00'
         ],
     ],
     'attributes' => [
@@ -42,12 +42,12 @@ return [
                     'language' => 'es',
                     'rules' => [],
                     'configuration' => [],
-                    'value' => null
+                    'value' => 'hola'
                 ], [
                     'language' => 'en',
                     'rules' => [],
                     'configuration' => [],
-                    'value' => null
+                    'value' => 'adios'
                 ]
             ],
             'attributes' => [
@@ -64,12 +64,12 @@ return [
                             'language' => 'es',
                             'rules' => [],
                             'configuration' => [],
-                            'value' => null
+                            'value' => 'hola'
                         ], [
                             'language' => 'en',
                             'rules' => [],
                             'configuration' => [],
-                            'value' => null
+                            'value' => 'adios'
                         ]
                     ],
                     'attributes' => []
@@ -93,7 +93,7 @@ return [
                         'cols' => 10,
                         'rows' => 10
                     ],
-                    'value' => null
+                    'value' => 'hola'
                 ], [
                     'language' => 'en',
                     'rules' => [
@@ -103,7 +103,7 @@ return [
                         'cols' => 10,
                         'rows' => 10
                     ],
-                    'value' => null
+                    'value' => 'adios'
                 ],
             ],
             'attributes' => []
@@ -125,7 +125,7 @@ return [
                         'cols' => 10,
                         'rows' => 10
                     ],
-                    'value' => null
+                    'value' => 'hola'
                 ], [
                     'language' => 'en',
                     'rules' => [
@@ -135,7 +135,7 @@ return [
                         'cols' => 20,
                         'rows' => 20
                     ],
-                    'value' => null
+                    'value' => 'adios'
                 ],
             ],
             'attributes' => []
@@ -157,7 +157,7 @@ return [
                             'key2' => 'Custom caption'
                         ]
                     ],
-                    'value' => null
+                    'value' => 'hola'
                 ]
             ],
             'attributes' => []

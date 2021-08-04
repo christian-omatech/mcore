@@ -3,24 +3,24 @@
 namespace Omatech\Ecore\Editora\Domain\Instance;
 
 use Omatech\Ecore\Editora\Domain\Attribute\AttributeCollection;
+use Omatech\Ecore\Editora\Domain\Clazz\Clazz;
 
 abstract class Instance
 {
+    private Clazz $clazz;
     private Metadata $metadata;
-    private Publication $publication;
     private AttributeCollection $attributesCollection;
 
     public function __construct(array $instance)
     {
-        $this->metadata = new Metadata($instance['metadata']);
-        $this->publication = new Publication();
+        $this->clazz = new Clazz($instance['metadata']);
+        $this->metadata = new Metadata();
         $this->attributesCollection = new AttributeCollection($instance['attributes']);
     }
 
     public function fill(array $instance): void
     {
         $this->metadata->fill($instance['metadata']);
-        $this->publication->fill($instance['publication']);
         $this->attributesCollection->fill($instance['attributes']);
         $this->validate();
     }
@@ -33,8 +33,8 @@ abstract class Instance
     public function toArray(): array
     {
         return [
+            'class' => $this->clazz->toArray(),
             'metadata' => $this->metadata->toArray(),
-            'publication' => $this->publication->toArray(),
             'attributes' => $this->attributesCollection->get(),
         ];
     }

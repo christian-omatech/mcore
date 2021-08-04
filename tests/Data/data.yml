@@ -1,13 +1,16 @@
 ClassOne:
-  caption: "Noticia"
   relations:
-    - ClassTwo
+    RelationKey1:
+      - ClassTwo
+      - ClassThree
+    RelationKey2:
+      - ClassFour
+      - ClassFive
   attributes:
     DefaultAttribute:
       attributes:
         SubAttribute:
     GlobalAttribute:
-      caption: attribute
       type: textarea
       values:
         rules:
@@ -19,9 +22,9 @@ ClassOne:
       values:
         rules:
           required: true
-          configuration:
-            cols: 30
-            rows: 30
+        configuration:
+          cols: 30
+          rows: 30
         languages:
           es:
             rules:

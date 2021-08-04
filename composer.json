@@ -1,5 +1,5 @@
 {
-    "name": "omatech/ecore",
+    "name": "omatech/mcore",
     "require": {
         "php": "^8.0",
         "symfony/yaml": "^5.3",
@@ -8,7 +8,7 @@
     },
     "require-dev": {
         "roave/security-advisories": "dev-latest",
-        "phpunit/phpunit": "^9.5",
+        "phpunit/phpunit": "^9",
         "infection/infection": "^0.23.0",
         "nunomaduro/phpinsights": "^2.0",
         "symfony/var-dumper": "^5.3",
@@ -26,8 +26,7 @@
     },
     "scripts": {
         "test": "vendor/bin/phpunit",
-        "test-coverage": "vendor/bin/phpunit --coverage-html build/coverage",
-        "infection": "vendor/bin/infection",
-        "analyse": "vendor/bin/phpinsights analyse --verbose --config-path=rules.php --fix src"
+        "infection": "vendor/bin/infection -j$(nproc) --coverage=build --skip-initial-tests",
+        "analyse": "vendor/bin/phpinsights analyse --verbose --config-path=rules.php --no-interaction --fix src"
     }
 }
