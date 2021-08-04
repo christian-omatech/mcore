@@ -153,8 +153,8 @@ return [
                     'rules' => [],
                     'configuration' => [
                         'options' => [
-                            'key1' => 'options.key1',
-                            'key2' => 'Custom caption'
+                            'key1',
+                            'key2'
                         ]
                     ],
                     'value' => 'hola'

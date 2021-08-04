@@ -5,7 +5,6 @@ namespace Omatech\Ecore\Editora\Domain\Clazz;
 class Relation
 {
     private string $classKey;
-    private ?int $id = null;
 
     public function __construct(string $classKey)
     {

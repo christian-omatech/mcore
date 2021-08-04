@@ -10,7 +10,7 @@ use function Lambdish\Phunctional\map;
 
 class RuleCollection
 {
-    private array $rulesList = [];
+    private array $rulesList;
 
     /** @var array<Rule> $rules */
     private array $rules;
@@ -29,7 +29,7 @@ class RuleCollection
 
     private function find(string $rule, mixed $condition): Rule
     {
-        if (! array_key_exists($rule, $this->rulesList)) {
+        if (! isset($this->rulesList[$rule])) {
             InvalidRuleException::withRule($rule);
         }
         $ruleClass = $this->rulesList[$rule];

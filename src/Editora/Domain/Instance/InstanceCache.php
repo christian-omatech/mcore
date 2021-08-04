@@ -12,7 +12,7 @@ class InstanceCache implements InstanceCacheInterface
     public static function getInstance(): InstanceCache
     {
         if (! self::$instance) {
-            self::$instance = new InstanceCache();
+            self::$instance = new self();
         }
         return self::$instance;
     }

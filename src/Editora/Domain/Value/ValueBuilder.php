@@ -20,7 +20,7 @@ final class ValueBuilder
 
     private function normalizeLanguages(): void
     {
-        if (! array_key_exists('*', $this->values['languages'] ?? [])) {
+        if (! isset($this->values['languages']['*'])) {
             $this->values['languages'] = map(function ($values, $language) {
                 return $this->values['languages'][$language] ?? $values;
             }, $this->languages);
@@ -37,23 +37,12 @@ final class ValueBuilder
     private function defaultsToValue(array $properties): array
     {
         return map(function ($value, $key) use ($properties) {
-            $property = $properties[$key] ?? $this->values[$key] ?? $value;
-            return $this->defaultsToOptions($property);
+            return $properties[$key] ?? $this->values[$key] ?? $value;
         }, [
             'configuration' => [],
             'rules' => [],
             'type' => 'Value',
         ]);
-    }
-
-    private function defaultsToOptions(string | array $property): string | array
-    {
-        if (is_array($property) && array_key_exists('options', $property)) {
-            $property['options'] = map(static function ($value, $key) {
-                return $value ?? "options.{$key}";
-            }, $property['options']);
-        }
-        return $property;
     }
 
     private function instanceValues(): array
