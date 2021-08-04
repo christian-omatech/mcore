@@ -1,13 +1,16 @@
 ClassOne:
-  caption: "Noticia"
   relations:
-    - ClassTwo
+    RelationKey1:
+      - ClassTwo
+      - ClassThree
+    RelationKey2:
+      - ClassFour
+      - ClassFive
   attributes:
     DefaultAttribute:
       attributes:
         SubAttribute:
     GlobalAttribute:
-      caption: attribute
       type: textarea
       values:
         rules:

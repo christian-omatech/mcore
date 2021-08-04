@@ -4,19 +4,20 @@ namespace Omatech\Ecore\Editora\Domain\Clazz;
 
 class Clazz
 {
-    private Metadata $metadata;
-    private RelationCollection $relations;
+    private string $key;
+    private RelationCollection $relationCollection;
 
-    public function __construct(array $metadata)
+    public function __construct(array $class)
     {
-        $this->metadata = new Metadata($metadata['name'], $metadata['caption']);
-        $this->relations = new RelationCollection($metadata['relations']);
+        $this->key = $class['key'];
+        $this->relationCollection = new RelationCollection($class['relations']);
     }
 
     public function toArray(): array
     {
-        return $this->metadata->toArray() + [
-            'relations' => [],
+        return [
+            'key' => $this->key,
+            'relationGroups' => $this->relationCollection->toArray(),
         ];
     }
 }

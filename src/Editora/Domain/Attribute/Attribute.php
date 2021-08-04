@@ -14,7 +14,7 @@ final class Attribute
     public function __construct(array $properties)
     {
         $this->metadata = new Metadata($properties['key']);
-        $this->component = new Component($properties['type'], $properties['caption']);
+        $this->component = new Component($properties['type']);
         $this->valueCollection = new ValueCollection($properties['values']);
         $this->attributeCollection = new AttributeCollection($properties['attributes']);
     }

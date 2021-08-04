@@ -45,8 +45,7 @@ final class InstanceBuilder
     {
         $instance = [
             'metadata' => [
-                'name' => $this->className,
-                'caption' => $this->structure['caption'] ?? "class.{$this->className}",
+                'key' => $this->className,
                 'relations' => $this->normalizeRelations(),
             ],
             'attributes' => (new AttributeBuilder())
@@ -62,9 +61,14 @@ final class InstanceBuilder
 
     private function normalizeRelations(): array
     {
-        return map(static function ($relation) {
-            return Stringify::getInstance()->slug($relation);
-        }, $this->structure['relations'] ?? []);
+        return array_values(map(static function (array $relations, string $key) {
+            return [
+                'key' => Stringify::getInstance()->slug($key),
+                'classes' => map(static function ($class) {
+                    return Stringify::getInstance()->slug($class);
+                }, $relations),
+            ];
+        }, $this->structure['relations'] ?? []));
     }
 
     public function setLanguages(array $languages): InstanceBuilder

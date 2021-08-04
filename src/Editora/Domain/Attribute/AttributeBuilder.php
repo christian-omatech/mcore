@@ -29,12 +29,9 @@ final class AttributeBuilder
 
     private function defaultsToAttribute(string $key, ?array $properties): array
     {
-        $key = Stringify::getInstance()->slug($key);
-        $type = $properties['type'] ?? 'string';
         return [
-            'key' => $key,
-            'type' => $type,
-            'caption' => $properties['caption'] ?? "attribute.{$key}.{$type}",
+            'key' => Stringify::getInstance()->slug($key),
+            'type' => $properties['type'] ?? 'string',
             'values' => $properties['values'] ?? [],
             'attributes' => $properties['attributes'] ?? [],
         ];

@@ -10,7 +10,6 @@ abstract class Instance
     private Clazz $clazz;
     private Metadata $metadata;
     private AttributeCollection $attributesCollection;
-    private InstanceCollection $instanceCollection;
 
     public function __construct(array $instance)
     {
@@ -34,7 +33,8 @@ abstract class Instance
     public function toArray(): array
     {
         return [
-            'metadata' => $this->clazz->toArray() + $this->metadata->toArray(),
+            'class' => $this->clazz->toArray(),
+            'metadata' => $this->metadata->toArray(),
             'attributes' => $this->attributesCollection->get(),
         ];
     }
