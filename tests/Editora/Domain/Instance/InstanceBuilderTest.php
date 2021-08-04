@@ -162,4 +162,17 @@ class InstanceBuilderTest extends TestCase
         $this->assertNotSame($instance1, $instance2);
         (new ReflectionClass($cache))->setStaticPropertyValue('instance', null);
     }
+
+    /** @test */
+    public function instanceBuildedCorrectlyFromReal(): void
+    {
+        $structure = Yaml::parseFile(dirname(__DIR__, 3).'/Data/dataExample1.yml')['Classes'];
+        $className = "SectionShows";
+
+        $instance = (new InstanceBuilder)
+            ->setLanguages($this->languages)
+            ->setStructure($structure[$className])
+            ->setClassName($className)
+            ->build();
+    }
 }
