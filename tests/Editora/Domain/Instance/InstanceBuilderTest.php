@@ -22,7 +22,8 @@ class InstanceBuilderTest extends TestCase
     public function setUp(): void
     {
         $this->languages = ['es', 'en'];
-        $this->structure = Yaml::parseFile(dirname(__DIR__, 3).'/Data/data.yml');
+        $this->structure = Yaml::parseFile(dirname(__DIR__, 3).'/Data/dataExample1.yml');
+
         $this->expected = include dirname(__DIR__, 3).'/Data/ExpectedInstance.php';
     }
 
@@ -111,7 +112,7 @@ class InstanceBuilderTest extends TestCase
     public function instanceBuildedCorrectlyFromReal(): void
     {
         $structure = Yaml::parseFile(dirname(__DIR__, 3).'/Data/dataExample1.yml')['Classes'];
-        $className = "SectionActivities";
+        $className = "SectionShows";
 
         $instance = (new InstanceBuilder)
             ->setLanguages($this->languages)

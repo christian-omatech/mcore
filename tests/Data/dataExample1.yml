@@ -41,7 +41,7 @@ Attributes:
   productCodeSecutix: &productCodeSecutix
     values:
       languages:
-        "*"
+        "*":
     #String Order
     tag: &tag
 
@@ -62,7 +62,7 @@ Attributes:
   text: &text
     type: textarea
     values:
-      "+": #* + languages
+#      "+": #* + languages
 
   #Text
     textSecondary: &textSecondary
@@ -76,20 +76,20 @@ Attributes:
 
   # Date
   dateFinishShow: &dateFinishShow
-    type: date
+    type: Date
     values:
-      type: date
+      type: Date
     # Date Order
   dateStartShow: &dateStartShow
-    type: date
+    type: Date
     values:
-      type: date
+      type: Date
 
   # Map
   map: &map
     type: map
     values:
-      type: json
+      type: Json
       languages:
         "*":
 
@@ -99,13 +99,11 @@ Attributes:
     values:
       languages:
         "*":
-    caption: "Imatge"
     attributes:
       altImgShow:
     # Image All
   imgThumbnail: &imgThumbnail
     type: image
-    caption: "Imatge thumbnail"
     values:
       languages:
         "*":
@@ -121,7 +119,6 @@ Attributes:
       configuration:
         height: 211
         weight: 202
-    caption: "Imatge background"
     attributes:
       altImgBannerinfoBackground:
   imgBannerinfoIcon: &imgBannerinfoIcon
@@ -129,7 +126,6 @@ Attributes:
     values:
       languages:
         "*":
-    caption: "Imatge icon"
     attributes:
       altImgBannerinfoIcon:
   imgCarrousel: &imgCarrousel
@@ -137,7 +133,6 @@ Attributes:
     values:
       languages:
         "*":
-    caption: "Imatge carrousel"
     attributes:
       altImgCarrousel:
 
@@ -158,9 +153,9 @@ Attributes:
   # File
   file: &file
     type: file
-    values:
-      languages:
-        "+":
+#    values:
+#      languages:
+#        "+":
 
     # Json
     json: &json
@@ -169,7 +164,7 @@ Attributes:
         languages:
           "*":
         values:
-          type: json
+          type: Json
           rules:
             onlyRoot: true
 
@@ -252,15 +247,13 @@ Attributes:
 #/////////////////////////////////////////////////////
 Classes:
   SectionActivities:
-    caption: "Secció Activitats"
-    relations:
-      SectionShows:
-        - SectionShows
+#    relations:
+#      SectionShows:
+#        - SectionShows
     attributes:
-      *title
+      title: *title
 
   SectionShows:
-    caption: "Secció Espectacles"
     relations:
       Shows:
         - Shows
@@ -268,90 +261,88 @@ Classes:
         - BannerInfo
         - BannerInfoMultiple
     attributes:
-      - *seo
-      - *niceurl
-      - *showAllShowsHome
-      - *title
-      - *textThumbnail
-      - Subtitle:
-      - *text
-      - imgSectionshowThumbnail:
-        caption: "Imatge thumbnail"
+      seo: *seo
+      niceurl: *niceurl
+      showAllShowsHome: *showAllShowsHome
+      title: *title
+      textThumbnail: *textThumbnail
+      Subtitle:
+      text: *text
+      imgSectionshowThumbnail:
         type: image
         values:
           languages:
             "*":
               altImgSectonshowThumbnail:
 
-  Shows:
-    caption: "Espectacle"
-    relations:
-      OthersShows:
-        - Shows
-      Blocks:
-        - BannerInfoMultiple
+  Show:
+#    relations:
+#      OthersShows:
+#        - Shows
+#      Blocks:
+#        - BannerInfoMultiple
     order:
       - dateFinishShow
       - dateStartShow
     attributes:
-      - *niceurl
-      - *productCodeSecutix
-      - *typeShow
-      - *dateStartShow
-      - *dateFinishShow
-      - *colorCarrousel
-      - *stateShow
-      - *titleThumbnail
-      - *title
-      - textFrom:
+      niceurl: *niceurl
+      productCodeSecutix: *productCodeSecutix
+      typeShow: *typeShow
+      dateStartShow: *dateStartShow
+      dateFinishShow: *dateFinishShow
+      colorCarrousel: *colorCarrousel
+      stateShow: *stateShow
+      titleThumbnail: *titleThumbnail
+      title: *title
+      textFrom:
         type: textarea
-      - *textIntro
-      - *text
-      - *textThumbnail
-      - *typeWebShow
-      - room:
+      textIntro: *textIntro
+      text: *text
+      textThumbnail: *textThumbnail
+      typeWebShow: *typeWebShow
+      room:
         values:
           languages:
-            "*"
-      - *imgThumbnail
-      - *imgShow
-      - *imgCarrousel
-      - *videoCarrousel
-      - *urlVideoCarrouselLive
-      - *period
-      - *urlTickets
-      - *timetable
-      - *duration
-      - *place
-      - *language
-      - *price
-      - *textAccessibility
-      - *colloquium
-      - *freeOnline
-      - *textCancelled
-      - *textFinalized
-      - *textCalltoaction
+            "*":
+      imgThumbnail: *imgThumbnail
+      imgShow: *imgShow
+      imgCarrousel: *imgCarrousel
+      videoCarrousel: *videoCarrousel
+      urlVideoCarrouselLive: *urlVideoCarrouselLive
+      period: *period
+      urlTickets: *urlTickets
+      timetable: *timetable
+      duration: *duration
+      place: *place
+      language: *language
+      price: *price
+      textAccessibility: *textAccessibility
+      colloquium: *colloquium
+      freeOnline: *freeOnline
+      textCancelled: *textCancelled
+      textFinalized: *textFinalized
+      textCalltoaction: *textCalltoaction
 
   BannerInfo:
     attributes:
-      - *title
-      - *text
-      - *textCalltoaction
-      - *colorText
-      - *positionText
-      - *sizeText
-      - *imgBannerinfoIcon
-      - *imgBannerinfoBackground
+      title: *title
+      text: *text
+      textCalltoaction: *textCalltoaction
+      colorText: *colorText
+      positionText: *positionText
+      sizeText: *sizeText
+      imgBannerinfoIcon: *imgBannerinfoIcon
+      imgBannerinfoBackground: *imgBannerinfoBackground
 
   BannerInfoMultiple:
     order:
       *tag
     attributes:
-    - *tag
-    - *colorText
-    - *text
-    - *textSecondary
-    - *textSimple
-    - *map
-    - *file
-    - *json
+      tag: *tag
+      colorText: *colorText
+      text: *text
+      textSecondary: *textSecondary
+      textSimple: *textSimple
+      map: *map
+      file: *file
+      json: *json
