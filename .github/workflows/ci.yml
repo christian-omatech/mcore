@@ -13,19 +13,19 @@ jobs:
       - name: Build Container
         run: make build
 
-      - name: Install dependencies
+      - name: Install Dependencies
         run: make install
 
-      - name: Run code analysis
+      - name: Code Analysis
         run: make analyse
 
-      - name: Run tests
+      - name: Testing
         run: make test
 
       - name: Slack Notification
         uses: rtCamp/action-slack-notify@v2
         env:
-          SLACK_CHANNEL: ${{ secrets.SLACK_CHANNEL }} 
+          SLACK_CHANNEL: ${{ secrets.SLACK_CHANNEL }}
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
           SLACK_COLOR: ${{ job.status }}
           SLACK_ICON: https://github.githubassets.com/images/icons/copilot/cp-head-square.png?size=48
