@@ -25,7 +25,7 @@ jobs:
       - name: Slack Notification
         uses: rtCamp/action-slack-notify@v2
         env:
-          SLACK_CHANNEL: github
+          SLACK_CHANNEL: ${{ secrets.SLACK_CHANNEL }} 
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
           SLACK_COLOR: ${{ job.status }}
           SLACK_ICON: https://github.githubassets.com/images/icons/copilot/cp-head-square.png?size=48
