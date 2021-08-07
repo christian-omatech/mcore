@@ -21,7 +21,7 @@ class AttributeCollection
     public function fill(array $attributes): void
     {
         each(function (array $values, string $key): void {
-            search(static function (Attribute $attribute) use ($key) {
+            search(static function (Attribute $attribute) use ($key): bool {
                 return $attribute->key() === $key;
             }, $this->attributes)?->fill($values);
         }, $attributes);
@@ -35,8 +35,6 @@ class AttributeCollection
     /** @return array<Attribute> */
     public function get(): array
     {
-        return map(static function (Attribute $attribute) {
-            return $attribute->toArray();
-        }, $this->attributes);
+        return map(static fn (Attribute $attribute) => $attribute->toArray(), $this->attributes);
     }
 }

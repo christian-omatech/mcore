@@ -13,8 +13,8 @@ final class AttributeBuilder
 
     public function build(): array
     {
-        return array_values(map(function ($properties, $key) {
-            $properties = $this->defaultsToAttribute($key, $properties);
+        return array_values(map(function (?array $properties, string $key): Attribute {
+            $properties = $this->defaultsToAttribute($properties, $key);
             $properties['values'] = (new ValueBuilder())
                 ->setLanguages($this->languages)
                 ->setValues($properties['values'])
@@ -27,7 +27,7 @@ final class AttributeBuilder
         }, $this->attributes));
     }
 
-    private function defaultsToAttribute(string $key, ?array $properties): array
+    private function defaultsToAttribute(?array $properties, string $key): array
     {
         return [
             'key' => Stringify::getInstance()->slug($key),

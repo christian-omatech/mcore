@@ -6,20 +6,18 @@ use function Lambdish\Phunctional\map;
 
 class RelationCollection
 {
-    /** @var array<RelationGroup> $relations */
-    private array $relationGroups;
+    /** @var array<Relation> $relations */
+    private array $relations;
 
     public function __construct(array $relations)
     {
-        $this->relationGroups = map(static function (array $relationGroup) {
-            return new RelationGroup($relationGroup['key'], $relationGroup['classes']);
+        $this->relations = map(static function (array $relation): Relation {
+            return new Relation($relation['key'], $relation['classes']);
         }, $relations);
     }
 
     public function toArray(): array
     {
-        return map(static function (RelationGroup $relationGroup) {
-            return $relationGroup->toArray();
-        }, $this->relationGroups);
+        return map(static fn (Relation $relation) => $relation->toArray(), $this->relations);
     }
 }

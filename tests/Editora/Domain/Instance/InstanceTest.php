@@ -5,6 +5,7 @@ namespace Tests\Editora\Domain\Instance;
 use DateTime;
 use DateTimeZone;
 use Mockery;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Omatech\Ecore\Editora\Domain\Instance\Contracts\InstanceCacheInterface;
 use Omatech\Ecore\Editora\Domain\Instance\InstanceBuilder;
 use Omatech\Ecore\Editora\Domain\Instance\PublicationStatus;
@@ -14,6 +15,8 @@ use Symfony\Component\Yaml\Yaml;
 
 class InstanceTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
+
     private array $languages;
     private string $className = 'ClassOne';
 
@@ -157,6 +160,7 @@ class InstanceTest extends TestCase
                 ],
                 'specific-attribute' => [
                     'values' => [
+                        '+' => 'default',
                         'es' => 'hola',
                         'en' => 'adios'
                     ],

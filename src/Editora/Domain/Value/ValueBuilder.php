@@ -20,8 +20,12 @@ final class ValueBuilder
 
     private function normalizeLanguages(): void
     {
-        if (! isset($this->values['languages']['*'])) {
-            $this->values['languages'] = map(function ($values, $language) {
+        $this->values['languages'] = $this->values['languages'] ?? [];
+        if (! array_key_exists('*', $this->values['languages'])) {
+            if (array_key_exists('+', $this->values['languages'])) {
+                $this->languages['+'] = [];
+            }
+            $this->values['languages'] = map(function ($values, $language): array {
                 return $this->values['languages'][$language] ?? $values;
             }, $this->languages);
         }
@@ -29,14 +33,14 @@ final class ValueBuilder
 
     private function normalizeValues(): void
     {
-        $this->values = map(function ($properties) {
+        $this->values = map(function ($properties): array {
             return $this->defaultsToValue($properties ?? []);
         }, $this->values['languages']);
     }
 
     private function defaultsToValue(array $properties): array
     {
-        return map(function ($value, $key) use ($properties) {
+        return map(function ($value, $key) use ($properties): string | array {
             return $properties[$key] ?? $this->values[$key] ?? $value;
         }, [
             'configuration' => [],
@@ -47,21 +51,15 @@ final class ValueBuilder
 
     private function instanceValues(): array
     {
-        return array_values(map(function ($properties, $language) {
-            $type = $this->ensureValueTypeExists($properties['type']);
-            return new $type($language, $properties);
-        }, $this->values));
-    }
-
-    private function ensureValueTypeExists(string $type): string
-    {
-        if (! class_exists($type)) {
-            $type = self::NAMESPACE . $type;
-            if (! class_exists($type)) {
-                InvalidValueTypeException::withType($type);
+        return array_values(map(static function ($properties, $language): BaseValue {
+            if (! class_exists($properties['type'])) {
+                $properties['type'] = self::NAMESPACE . $properties['type'];
+                if (! class_exists($properties['type'])) {
+                    InvalidValueTypeException::withType($properties['type']);
+                }
             }
-        }
-        return $type;
+            return new $properties['type']($language, $properties);
+        }, $this->values));
     }
 
     public function setLanguages(array $languages): ValueBuilder

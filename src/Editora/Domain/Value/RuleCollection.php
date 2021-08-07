@@ -22,17 +22,14 @@ class RuleCollection
 
     public function addRules(array $rules): void
     {
-        $this->rules = map(function (mixed $condition, string $rule) {
+        $this->rules = map(function (mixed $condition, string $rule): Rule {
             return $this->find($rule, $condition);
         }, $rules);
     }
 
     private function find(string $rule, mixed $condition): Rule
     {
-        if (! isset($this->rulesList[$rule])) {
-            InvalidRuleException::withRule($rule);
-        }
-        $ruleClass = $this->rulesList[$rule];
+        $ruleClass = $this->rulesList[$rule] ?? InvalidRuleException::withRule($rule);
         return new $ruleClass($condition);
     }
 

@@ -3,16 +3,16 @@
 return [
     'class' => [
         'key' => 'class-one',
-        'relationGroups' => [
+        'relations' => [
             [
                 'key' => 'relation-key1',
-                'relations' => [
+                'classes' => [
                     'class-two',
                     'class-three',
                 ]
             ], [
                 'key' => 'relation-key2',
-                'relations' => [
+                'classes' => [
                     'class-four',
                     'class-five',
                 ]
@@ -136,6 +136,16 @@ return [
                         'rows' => 20
                     ],
                     'value' => 'adios'
+                ], [
+                    'language' => '+',
+                    'rules' => [
+                        'required' => true
+                    ],
+                    'configuration' => [
+                        'cols' => 30,
+                        'rows' => 30
+                    ],
+                    'value' => 'default'
                 ],
             ],
             'attributes' => []

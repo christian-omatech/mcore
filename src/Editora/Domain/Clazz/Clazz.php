@@ -17,7 +17,7 @@ class Clazz
     {
         return [
             'key' => $this->key,
-            'relationGroups' => $this->relationCollection->toArray(),
+            'relations' => $this->relationCollection->toArray(),
         ];
     }
 }

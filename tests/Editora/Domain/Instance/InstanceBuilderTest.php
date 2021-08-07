@@ -167,12 +167,13 @@ class InstanceBuilderTest extends TestCase
     public function instanceBuildedCorrectlyFromReal(): void
     {
         $structure = Yaml::parseFile(dirname(__DIR__, 3).'/Data/dataExample1.yml')['Classes'];
-        $className = "SectionShows";
 
-        $instance = (new InstanceBuilder)
-            ->setLanguages($this->languages)
-            ->setStructure($structure[$className])
-            ->setClassName($className)
-            ->build();
+        foreach($structure as $className => $classStructure) {
+            $instance = (new InstanceBuilder)
+                ->setLanguages($this->languages)
+                ->setStructure($classStructure)
+                ->setClassName($className)
+                ->build();
+        }
     }
 }

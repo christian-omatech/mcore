@@ -76,20 +76,20 @@ Attributes:
 
   # Date
   dateFinishShow: &dateFinishShow
-    type: Date
+    type: DateValue
     values:
-      type: Date
+      type: DateValue
     # Date Order
   dateStartShow: &dateStartShow
-    type: Date
+    type: DateValue
     values:
-      type: Date
+      type: DateValue
 
   # Map
   map: &map
     type: map
     values:
-      type: Json
+      type: JsonValue
       languages:
         "*":
 
@@ -164,7 +164,7 @@ Attributes:
         languages:
           "*":
         values:
-          type: Json
+          type: JsonValue
           rules:
             onlyRoot: true
 

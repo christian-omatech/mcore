@@ -61,10 +61,10 @@ final class InstanceBuilder
 
     private function normalizeRelations(): array
     {
-        return array_values(map(static function (array $relations, string $key) {
+        return array_values(map(static function (array $relations, string $key): array {
             return [
                 'key' => Stringify::getInstance()->slug($key),
-                'classes' => map(static function ($class) {
+                'classes' => map(static function ($class): string {
                     return Stringify::getInstance()->slug($class);
                 }, $relations),
             ];

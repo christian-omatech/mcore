@@ -21,7 +21,7 @@ final class ValueCollection
     public function fill(array $values): void
     {
         each(function (mixed $value, string $language): void {
-            search(static function (BaseValue $value) use ($language) {
+            search(static function (BaseValue $value) use ($language): bool {
                 return $value->language() === $language;
             }, $this->values)?->fill($value);
         }, $values);
@@ -35,8 +35,6 @@ final class ValueCollection
     /** @return array<BaseValue> */
     public function get(): array
     {
-        return map(static function (BaseValue $value) {
-            return $value->toArray();
-        }, $this->values);
+        return map(static fn (BaseValue $value) => $value->toArray(), $this->values);
     }
 }

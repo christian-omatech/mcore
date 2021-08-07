@@ -10,9 +10,12 @@ ClassOne:
     DefaultAttribute:
       attributes:
         SubAttribute:
+          values:
+            type: StringValue
     GlobalAttribute:
       type: textarea
       values:
+        type: JsonValue
         rules:
           required: true
         configuration:
@@ -20,12 +23,14 @@ ClassOne:
           rows: 10
     SpecificAttribute:
       values:
+        type: DateValue
         rules:
           required: true
         configuration:
           cols: 30
           rows: 30
         languages:
+          +:
           es:
             rules:
               required: true

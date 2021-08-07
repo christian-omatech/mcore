@@ -4,15 +4,20 @@ namespace Omatech\Ecore\Editora\Domain\Clazz;
 
 class Relation
 {
-    private string $classKey;
+    private string $key;
+    private array $classes;
 
-    public function __construct(string $classKey)
+    public function __construct(string $key, array $classes)
     {
-        $this->classKey = $classKey;
+        $this->key = $key;
+        $this->classes = $classes;
     }
 
-    public function classKey(): string
+    public function toArray(): array
     {
-        return $this->classKey;
+        return [
+            'key' => $this->key,
+            'classes' => $this->classes,
+        ];
     }
 }

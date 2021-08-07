@@ -19,7 +19,7 @@ class InstanceCache implements InstanceCacheInterface
 
     public function has(string $className): bool
     {
-        return isset($this->cache[$className]);
+        return array_key_exists($className, $this->cache);
     }
 
     public function get(string $className): ?Instance
