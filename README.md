@@ -6,7 +6,7 @@
 `make update`
 
 #### Code Analysis:
-`make analyze`
+`make analyse`
 
 #### Tests:
 `make test`
