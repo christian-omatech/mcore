@@ -2,18 +2,36 @@
 
 namespace Omatech\Ecore\Editora\Domain\Clazz;
 
+use Omatech\Ecore\Editora\Domain\Clazz\Exceptions\InvalidRelationException;
+use Omatech\Ecore\Editora\Domain\Instance\InstanceRelation;
+use function Lambdish\Phunctional\each;
+use function Lambdish\Phunctional\flat_map;
 use function Lambdish\Phunctional\map;
+use function Lambdish\Phunctional\search;
 
-class RelationCollection
+final class RelationCollection
 {
     /** @var array<Relation> $relations */
     private array $relations;
 
     public function __construct(array $relations)
     {
-        $this->relations = map(static function (array $relation): Relation {
-            return new Relation($relation['key'], $relation['classes']);
+        $this->relations = flat_map(static function (array $classes, $key): Relation {
+            return new Relation($key, $classes);
         }, $relations);
+    }
+
+    public function validate(array $instanceRelations): void
+    {
+        each(function (InstanceRelation $instanceRelation): void {
+            $relation = search(static function (Relation $relation) use ($instanceRelation): bool {
+                return $relation->key() === $instanceRelation->key();
+            }, $this->relations);
+            if (is_null($relation)) {
+                InvalidRelationException::withRelation($instanceRelation->key());
+            }
+            $relation->validate($instanceRelation->clazz());
+        }, $instanceRelations);
     }
 
     public function toArray(): array

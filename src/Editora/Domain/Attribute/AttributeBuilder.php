@@ -4,7 +4,7 @@ namespace Omatech\Ecore\Editora\Domain\Attribute;
 
 use Omatech\Ecore\Editora\Domain\Value\ValueBuilder;
 use Omatech\Ecore\Shared\Utils\Stringify;
-use function Lambdish\Phunctional\map;
+use function Lambdish\Phunctional\flat_map;
 
 final class AttributeBuilder
 {
@@ -13,7 +13,7 @@ final class AttributeBuilder
 
     public function build(): array
     {
-        return array_values(map(function (?array $properties, string $key): Attribute {
+        return flat_map(function (?array $properties, string $key): Attribute {
             $properties = $this->defaultsToAttribute($properties, $key);
             $properties['values'] = (new ValueBuilder())
                 ->setLanguages($this->languages)
@@ -24,7 +24,7 @@ final class AttributeBuilder
                 ->setAttributes($properties['attributes'])
                 ->build();
             return new Attribute($properties);
-        }, $this->attributes));
+        }, $this->attributes);
     }
 
     private function defaultsToAttribute(?array $properties, string $key): array

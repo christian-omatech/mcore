@@ -8,7 +8,7 @@ use Omatech\Ecore\Editora\Domain\Value\Rules\Rule;
 use function Lambdish\Phunctional\each;
 use function Lambdish\Phunctional\map;
 
-class RuleCollection
+final class RuleCollection
 {
     private array $rulesList;
 

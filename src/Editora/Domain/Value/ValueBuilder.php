@@ -3,6 +3,7 @@
 namespace Omatech\Ecore\Editora\Domain\Value;
 
 use Omatech\Ecore\Editora\Domain\Instance\Exceptions\InvalidValueTypeException;
+use function Lambdish\Phunctional\flat_map;
 use function Lambdish\Phunctional\map;
 
 final class ValueBuilder
@@ -51,7 +52,7 @@ final class ValueBuilder
 
     private function instanceValues(): array
     {
-        return array_values(map(static function ($properties, $language): BaseValue {
+        return flat_map(static function ($properties, $language): BaseValue {
             if (! class_exists($properties['type'])) {
                 $properties['type'] = self::NAMESPACE . $properties['type'];
                 if (! class_exists($properties['type'])) {
@@ -59,7 +60,7 @@ final class ValueBuilder
                 }
             }
             return new $properties['type']($language, $properties);
-        }, $this->values));
+        }, $this->values);
     }
 
     public function setLanguages(array $languages): ValueBuilder

@@ -61,14 +61,12 @@ final class InstanceBuilder
 
     private function normalizeRelations(): array
     {
-        return array_values(map(static function (array $relations, string $key): array {
-            return [
-                'key' => Stringify::getInstance()->slug($key),
-                'classes' => map(static function ($class): string {
-                    return Stringify::getInstance()->slug($class);
-                }, $relations),
-            ];
-        }, $this->structure['relations'] ?? []));
+        return map(static function (array $relations, string &$key): array {
+            $key = Stringify::getInstance()->slug($key);
+            return map(static function ($class): string {
+                return Stringify::getInstance()->slug($class);
+            }, $relations);
+        }, $this->structure['relations'] ?? []);
     }
 
     public function setLanguages(array $languages): InstanceBuilder

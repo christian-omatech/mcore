@@ -172,5 +172,24 @@ return [
             ],
             'attributes' => []
         ]
+    ],
+    'relations' => [
+        [
+            'key' => 'relation-key1',
+            'class' => 'class-two',
+            'instanceIds' => [1,2,3]
+        ], [
+            'key' => 'relation-key1',
+            'class' => 'class-three',
+            'instanceIds' => [4,5,6]
+        ], [
+            'key' => 'relation-key2',
+            'class' => 'class-four',
+            'instanceIds' => [7,8,9]
+        ], [
+            'key' => 'relation-key2',
+            'class' => 'class-five',
+            'instanceIds' => [10,11,12]
+        ],
     ]
 ];

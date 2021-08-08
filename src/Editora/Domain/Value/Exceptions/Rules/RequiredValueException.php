@@ -6,10 +6,8 @@ use Exception;
 
 final class RequiredValueException extends Exception
 {
-    public static function withAttributeLanguage(
-        string $key,
-        string $language
-    ): RequiredValueException {
+    public static function withAttributeLanguage(string $key, string $language): self
+    {
         throw new self("The value is required for the attribute ${key} in language ${language}.");
     }
 }

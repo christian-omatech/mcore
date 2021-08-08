@@ -6,7 +6,7 @@ use Exception;
 
 final class InvalidRuleException extends Exception
 {
-    public static function withRule(string $rule): InvalidRuleException
+    public static function withRule(string $rule): self
     {
         throw new self("The property ${rule} do not exists.");
     }

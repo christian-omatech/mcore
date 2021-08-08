@@ -6,7 +6,7 @@ use function Lambdish\Phunctional\each;
 use function Lambdish\Phunctional\map;
 use function Lambdish\Phunctional\search;
 
-class AttributeCollection
+final class AttributeCollection
 {
     /** @var array<Attribute> $attributes */
     private array $attributes;

@@ -2,7 +2,9 @@
 
 namespace Omatech\Ecore\Editora\Domain\Clazz;
 
-class Relation
+use Omatech\Ecore\Editora\Domain\Clazz\Exceptions\InvalidRelationClassException;
+
+final class Relation
 {
     private string $key;
     private array $classes;
@@ -11,6 +13,18 @@ class Relation
     {
         $this->key = $key;
         $this->classes = $classes;
+    }
+
+    public function validate(string $class): void
+    {
+        if (! in_array($class, $this->classes, true)) {
+            InvalidRelationClassException::withRelationClasses($this->key, $class);
+        }
+    }
+
+    public function key(): string
+    {
+        return $this->key;
     }
 
     public function toArray(): array

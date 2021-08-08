@@ -2,7 +2,7 @@
 
 namespace Omatech\Ecore\Editora\Domain\Instance;
 
-class PublicationStatus
+final class PublicationStatus
 {
     public const PENDING = 'pending';
     public const REVISION = 'in-revision';

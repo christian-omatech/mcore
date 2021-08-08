@@ -4,9 +4,9 @@ namespace Omatech\Ecore\Editora\Domain\Instance\Exceptions;
 
 use Exception;
 
-class InvalidValueTypeException extends Exception
+final class InvalidValueTypeException extends Exception
 {
-    public static function withType(string $type): InvalidValueTypeException
+    public static function withType(string $type): self
     {
         throw new self("${type} do not exists.");
     }

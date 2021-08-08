@@ -2,7 +2,7 @@
 
 namespace Omatech\Ecore\Editora\Domain\Clazz;
 
-class Clazz
+final class Clazz
 {
     private string $key;
     private RelationCollection $relationCollection;
@@ -11,6 +11,11 @@ class Clazz
     {
         $this->key = $class['key'];
         $this->relationCollection = new RelationCollection($class['relations']);
+    }
+
+    public function validateRelations(array $instanceRelations): void
+    {
+        $this->relationCollection->validate($instanceRelations);
     }
 
     public function toArray(): array

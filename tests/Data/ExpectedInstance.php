@@ -172,5 +172,6 @@ return [
             ],
             'attributes' => []
         ]
-    ]
+    ],
+    'relations' => []
 ];

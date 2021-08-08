@@ -6,6 +6,8 @@ use DateTime;
 use DateTimeZone;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Omatech\Ecore\Editora\Domain\Clazz\Exceptions\InvalidRelationClassException;
+use Omatech\Ecore\Editora\Domain\Clazz\Exceptions\InvalidRelationException;
 use Omatech\Ecore\Editora\Domain\Instance\Contracts\InstanceCacheInterface;
 use Omatech\Ecore\Editora\Domain\Instance\InstanceBuilder;
 use Omatech\Ecore\Editora\Domain\Instance\PublicationStatus;
@@ -102,6 +104,72 @@ class InstanceTest extends TestCase
         ]);
     }
 
+    /** @test  */
+    public function instanceInvalidRelation(): void
+    {
+        $this->expectException(InvalidRelationException::class);
+
+        $instanceCache = Mockery::mock(InstanceCacheInterface::class);
+        $instanceCache->shouldReceive('get')->andReturn(null)->once();
+        $instanceCache->shouldReceive('put')->andReturn(null)->once();
+
+        $instance = (new InstanceBuilder($instanceCache))
+            ->setLanguages($this->languages)
+            ->setStructure([
+                'relations' => [
+                    'relation-key1' => [
+                        'class-one'
+                    ]
+                ],
+                'attributes' => []
+            ])
+            ->setClassName($this->className)
+            ->build();
+
+        $instance->fill([
+            'metadata' => [],
+            'publication' => [],
+            'attributes' => [],
+            'relations' => [
+                'relation-key2' => [
+                    'class-two' => [1,2,3]
+                ]
+            ]
+        ]);
+    }    /** @test  */
+    public function instanceInvalidRelationClass(): void
+    {
+        $this->expectException(InvalidRelationClassException::class);
+
+        $instanceCache = Mockery::mock(InstanceCacheInterface::class);
+        $instanceCache->shouldReceive('get')->andReturn(null)->once();
+        $instanceCache->shouldReceive('put')->andReturn(null)->once();
+
+        $instance = (new InstanceBuilder($instanceCache))
+            ->setLanguages($this->languages)
+            ->setStructure([
+                'relations' => [
+                    'relation-key1' => [
+                        'class-one'
+                    ]
+                ],
+                'attributes' => []
+            ])
+            ->setClassName($this->className)
+            ->build();
+
+        $instance->fill([
+            'metadata' => [],
+            'publication' => [],
+            'attributes' => [],
+            'relations' => [
+                'relation-key1' => [
+                    'class-two' => [1]
+                ]
+            ]
+        ]);
+    }
+
     /** @test */
     public function instanceFilledCorrectly(): void
     {
@@ -135,7 +203,7 @@ class InstanceTest extends TestCase
                         new DateTimeZone('Europe/Madrid')
                     ),
                 ]
-                ],
+            ],
             'attributes' => [
                 'default-attribute' => [
                     'values' => [
@@ -171,6 +239,16 @@ class InstanceTest extends TestCase
                     ],
                 ],
                 'non-existent-attribute' => []
+            ],
+            'relations' => [
+                'relation-key1' => [
+                    'class-two' => [1,2,3],
+                    'class-three' => [4,5,6]
+                ],
+                'relation-key2' => [
+                    'class-four' => [7,8,9],
+                    'class-five' => [10,11,12],
+                ]
             ]
         ]);
 

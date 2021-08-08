@@ -4,7 +4,7 @@ namespace Omatech\Ecore\Editora\Domain\Instance;
 
 use Omatech\Ecore\Editora\Domain\Instance\Contracts\InstanceCacheInterface;
 
-class InstanceCache implements InstanceCacheInterface
+final class InstanceCache implements InstanceCacheInterface
 {
     private static ?InstanceCache $instance = null;
     private ?array $cache = [];

@@ -2,7 +2,7 @@
 
 namespace Omatech\Ecore\Editora\Domain\Attribute;
 
-class Component
+final class Component
 {
     private string $type;
 
