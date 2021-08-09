@@ -1,25 +1,25 @@
 <?php declare(strict_types=1);
 
-namespace Omatech\Ecore\Editora\Application\CreateInstance;
+namespace Omatech\Ecore\Editora\Application\UpdateInstance;
 
-final class CreateInstanceCommand
+final class UpdateInstanceCommand
 {
-    private string $classKey;
+    private int $id;
     private array $metadata;
     private array $attributes;
     private array $relations;
 
     public function __construct(array $data)
     {
-        $this->classKey = $data['classKey'];
+        $this->id = $data['metadata']['id'];
         $this->metadata = $data['metadata'];
         $this->attributes = $data['attributes'];
         $this->relations = $data['relations'];
     }
 
-    public function classKey(): string
+    public function id(): int
     {
-        return $this->classKey;
+        return $this->id;
     }
 
     public function metadata(): array

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Tests\Editora\Domain\Instance;
 
@@ -93,11 +93,11 @@ class InstanceBuilderTest extends TestCase
                     'Invalid' => [
                         'values' => [
                             'rules' => [
-                                'noRule' => true
-                            ]
-                        ]
-                    ]
-                ]
+                                'noRule' => true,
+                            ],
+                        ],
+                    ],
+                ],
             ])
             ->setClassName($this->className)
             ->build();
@@ -118,10 +118,10 @@ class InstanceBuilderTest extends TestCase
                 'attributes' => [
                     'Invalid' => [
                         'values' => [
-                            'type' => 'Invalid'
-                        ]
-                    ]
-                ]
+                            'type' => 'Invalid',
+                        ],
+                    ],
+                ],
             ])
             ->setClassName($this->className)
             ->build();
@@ -168,8 +168,8 @@ class InstanceBuilderTest extends TestCase
     {
         $structure = Yaml::parseFile(dirname(__DIR__, 3).'/Data/dataExample1.yml')['Classes'];
 
-        foreach($structure as $className => $classStructure) {
-            $instance = (new InstanceBuilder)
+        foreach ($structure as $className => $classStructure) {
+            (new InstanceBuilder())
                 ->setLanguages($this->languages)
                 ->setStructure($classStructure)
                 ->setClassName($className)

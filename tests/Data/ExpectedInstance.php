@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 return [
     'class' => [
@@ -9,15 +9,15 @@ return [
                 'classes' => [
                     'class-two',
                     'class-three',
-                ]
+                ],
             ], [
                 'key' => 'relation-key2',
                 'classes' => [
                     'class-four',
                     'class-five',
-                ]
-            ]
-        ]
+                ],
+            ],
+        ],
     ],
     'metadata' => [
         'key' => null,
@@ -25,14 +25,14 @@ return [
         'publication' => [
             'status' => 'pending',
             'startPublishingDate' => null,
-            'endPublishingDate' => null
+            'endPublishingDate' => null,
         ],
     ],
     'attributes' => [
         [
             'metadata' => [
                 'id' => null,
-                'key' => 'default-attribute'
+                'key' => 'default-attribute',
             ],
             'component' => [
                 'type' => 'string',
@@ -42,19 +42,19 @@ return [
                     'language' => 'es',
                     'rules' => [],
                     'configuration' => [],
-                    'value' => null
+                    'value' => null,
                 ], [
                     'language' => 'en',
                     'rules' => [],
                     'configuration' => [],
-                    'value' => null
-                ]
+                    'value' => null,
+                ],
             ],
             'attributes' => [
                 [
                     'metadata' => [
                         'id' => null,
-                        'key' => 'sub-attribute'
+                        'key' => 'sub-attribute',
                     ],
                     'component' => [
                         'type' => 'string',
@@ -64,21 +64,21 @@ return [
                             'language' => 'es',
                             'rules' => [],
                             'configuration' => [],
-                            'value' => null
+                            'value' => null,
                         ], [
                             'language' => 'en',
                             'rules' => [],
                             'configuration' => [],
-                            'value' => null
-                        ]
+                            'value' => null,
+                        ],
                     ],
-                    'attributes' => []
-                ]
+                    'attributes' => [],
+                ],
             ],
         ], [
             'metadata' => [
                 'id' => null,
-                'key' => 'global-attribute'
+                'key' => 'global-attribute',
             ],
             'component' => [
                 'type' => 'textarea',
@@ -87,30 +87,30 @@ return [
                 [
                     'language' => 'es',
                     'rules' => [
-                        'required' => true
+                        'required' => true,
                     ],
                     'configuration' => [
                         'cols' => 10,
-                        'rows' => 10
+                        'rows' => 10,
                     ],
-                    'value' => null
+                    'value' => null,
                 ], [
                     'language' => 'en',
                     'rules' => [
-                        'required' => true
+                        'required' => true,
                     ],
                     'configuration' => [
                         'cols' => 10,
-                        'rows' => 10
+                        'rows' => 10,
                     ],
-                    'value' => null
+                    'value' => null,
                 ],
             ],
-            'attributes' => []
+            'attributes' => [],
         ], [
             'metadata' => [
                 'id' => null,
-                'key' => 'specific-attribute'
+                'key' => 'specific-attribute',
             ],
             'component' => [
                 'type' => 'string',
@@ -119,40 +119,40 @@ return [
                 [
                     'language' => 'es',
                     'rules' => [
-                        'required' => true
+                        'required' => true,
                     ],
                     'configuration' => [
                         'cols' => 10,
-                        'rows' => 10
+                        'rows' => 10,
                     ],
-                    'value' => null
+                    'value' => null,
                 ], [
                     'language' => 'en',
                     'rules' => [
-                        'required' => false
+                        'required' => false,
                     ],
                     'configuration' => [
                         'cols' => 20,
-                        'rows' => 20
+                        'rows' => 20,
                     ],
-                    'value' => null
+                    'value' => null,
                 ], [
                     'language' => '+',
                     'rules' => [
-                        'required' => true
+                        'required' => true,
                     ],
                     'configuration' => [
                         'cols' => 30,
-                        'rows' => 30
+                        'rows' => 30,
                     ],
-                    'value' => null
-                ]
+                    'value' => null,
+                ],
             ],
-            'attributes' => []
+            'attributes' => [],
         ], [
             'metadata' => [
                 'id' => null,
-                'key' => 'all-languages-attribute'
+                'key' => 'all-languages-attribute',
             ],
             'component' => [
                 'type' => 'lookup',
@@ -164,14 +164,14 @@ return [
                     'configuration' => [
                         'options' => [
                             'key1',
-                            'key2'
-                        ]
+                            'key2',
+                        ],
                     ],
-                    'value' => null
-                ]
+                    'value' => null,
+                ],
             ],
-            'attributes' => []
-        ]
+            'attributes' => [],
+        ],
     ],
-    'relations' => []
+    'relations' => [],
 ];

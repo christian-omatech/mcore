@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Tests\Editora\Domain\Instance;
 
@@ -44,20 +44,20 @@ class InstanceTest extends TestCase
                         'values' => [
                             'type' => 'StringValue',
                             'rules' => [
-                                'required' => true
-                            ]
+                                'required' => true,
+                            ],
                         ],
-                        'attributes' => []
-                    ]
-                ]
+                        'attributes' => [],
+                    ],
+                ],
             ])
             ->setClassName($this->className)
             ->build();
 
         $instance->fill([
             'metadata' => [],
-            'publication' => [],
-            'attributes' => []
+            'attributes' => [],
+            'relations' => [],
         ]);
     }
 
@@ -78,29 +78,29 @@ class InstanceTest extends TestCase
                         'values' => [
                             'type' => 'StringValue',
                             'rules' => [
-                                'required' => false
-                            ]
+                                'required' => false,
+                            ],
                         ],
                         'attributes' => [
                             'AnotherAttribute' => [
                                 'values' => [
                                     'type' => 'StringValue',
                                     'rules' => [
-                                        'required' => true
-                                    ]
-                                ]
-                            ]
-                        ]
-                    ]
-                ]
+                                        'required' => true,
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
             ])
             ->setClassName($this->className)
             ->build();
 
         $instance->fill([
             'metadata' => [],
-            'publication' => [],
-            'attributes' => []
+            'attributes' => [],
+            'relations' => [],
         ]);
     }
 
@@ -118,23 +118,22 @@ class InstanceTest extends TestCase
             ->setStructure([
                 'relations' => [
                     'relation-key1' => [
-                        'class-one'
-                    ]
+                        'class-one',
+                    ],
                 ],
-                'attributes' => []
+                'attributes' => [],
             ])
             ->setClassName($this->className)
             ->build();
 
         $instance->fill([
             'metadata' => [],
-            'publication' => [],
             'attributes' => [],
             'relations' => [
                 'relation-key2' => [
-                    'class-two' => [1,2,3]
-                ]
-            ]
+                    'class-two' => [1,2,3],
+                ],
+            ],
         ]);
     }    /** @test  */
     public function instanceInvalidRelationClass(): void
@@ -150,23 +149,22 @@ class InstanceTest extends TestCase
             ->setStructure([
                 'relations' => [
                     'relation-key1' => [
-                        'class-one'
-                    ]
+                        'class-one',
+                    ],
                 ],
-                'attributes' => []
+                'attributes' => [],
             ])
             ->setClassName($this->className)
             ->build();
 
         $instance->fill([
             'metadata' => [],
-            'publication' => [],
             'attributes' => [],
             'relations' => [
                 'relation-key1' => [
-                    'class-two' => [1]
-                ]
-            ]
+                    'class-two' => [1],
+                ],
+            ],
         ]);
     }
 
@@ -202,54 +200,54 @@ class InstanceTest extends TestCase
                         '2021-07-27 14:30:00',
                         new DateTimeZone('Europe/Madrid')
                     ),
-                ]
+                ],
             ],
             'attributes' => [
                 'default-attribute' => [
                     'values' => [
                         'es' => 'hola',
-                        'en' => 'adios'
+                        'en' => 'adios',
                     ],
                     'attributes' => [
                         'sub-attribute' => [
                             'values' => [
                                 'es' => 'hola',
                                 'en' => 'adios',
-                                'non-existent-language' => 'value'
-                            ]
-                        ]
-                    ]
+                                'non-existent-language' => 'value',
+                            ],
+                        ],
+                    ],
                 ],
                 'global-attribute' => [
                     'values' => [
                         'es' => 'hola',
-                        'en' => 'adios'
+                        'en' => 'adios',
                     ],
                 ],
                 'specific-attribute' => [
                     'values' => [
                         '+' => 'default',
                         'es' => 'hola',
-                        'en' => 'adios'
+                        'en' => 'adios',
                     ],
                 ],
                 'all-languages-attribute' => [
                     'values' => [
-                        '*' => 'hola'
+                        '*' => 'hola',
                     ],
                 ],
-                'non-existent-attribute' => []
+                'non-existent-attribute' => [],
             ],
             'relations' => [
                 'relation-key1' => [
                     'class-two' => [1,2,3],
-                    'class-three' => [4,5,6]
+                    'class-three' => [4,5,6],
                 ],
                 'relation-key2' => [
                     'class-four' => [7,8,9],
                     'class-five' => [10,11,12],
-                ]
-            ]
+                ],
+            ],
         ]);
 
         $this->assertEquals($expected, $instance->toArray());
