@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace Omatech\Ecore\Editora\Domain\Value;
+namespace Omatech\Mcore\Editora\Domain\Value;
 
-use Omatech\Ecore\Editora\Domain\Value\Contracts\RulesListInterface;
-use Omatech\Ecore\Editora\Domain\Value\Rules\RequiredRule;
+use Omatech\Mcore\Editora\Domain\Value\Contracts\RulesListInterface;
+use Omatech\Mcore\Editora\Domain\Value\Rules\RequiredRule;
 
 class Rules implements RulesListInterface
 {

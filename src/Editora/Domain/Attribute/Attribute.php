@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace Omatech\Ecore\Editora\Domain\Attribute;
+namespace Omatech\Mcore\Editora\Domain\Attribute;
 
-use Omatech\Ecore\Editora\Domain\Value\ValueCollection;
+use Omatech\Mcore\Editora\Domain\Value\ValueCollection;
 
 final class Attribute
 {

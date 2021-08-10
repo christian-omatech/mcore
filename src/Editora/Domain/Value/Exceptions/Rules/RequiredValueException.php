@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Omatech\Ecore\Editora\Domain\Value\Exceptions\Rules;
+namespace Omatech\Mcore\Editora\Domain\Value\Exceptions\Rules;
 
 use Exception;
 

@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace Omatech\Ecore\Editora\Domain\Value\Types;
+namespace Omatech\Mcore\Editora\Domain\Value\Types;
 
-use Omatech\Ecore\Editora\Domain\Value\Exceptions\Rules\LookupValueOptionException;
-use Omatech\Ecore\Shared\Utils\Utils;
+use Omatech\Mcore\Editora\Domain\Value\Exceptions\Rules\LookupValueOptionException;
+use Omatech\Mcore\Shared\Utils\Utils;
 
 final class LookupValue extends StringValue
 {

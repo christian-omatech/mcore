@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace Omatech\Ecore\Editora\Application\ReadInstance;
+namespace Omatech\Mcore\Editora\Application\ReadInstance;
 
-use Omatech\Ecore\Editora\Domain\Instance\Contracts\InstanceRepositoryInterface;
-use Omatech\Ecore\Editora\Domain\Instance\Services\InstanceFinder;
+use Omatech\Mcore\Editora\Domain\Instance\Contracts\InstanceRepositoryInterface;
+use Omatech\Mcore\Editora\Domain\Instance\Services\InstanceFinder;
 
 final class ReadInstanceCommandHandler
 {

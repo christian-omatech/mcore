@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace Omatech\Ecore\Editora\Application\UpdateInstance;
+namespace Omatech\Mcore\Editora\Application\UpdateInstance;
 
-use Omatech\Ecore\Editora\Domain\Instance\Contracts\InstanceRepositoryInterface;
-use Omatech\Ecore\Editora\Domain\Instance\Services\InstanceFinder;
+use Omatech\Mcore\Editora\Domain\Instance\Contracts\InstanceRepositoryInterface;
+use Omatech\Mcore\Editora\Domain\Instance\Services\InstanceFinder;
 
 final class UpdateInstanceCommandHandler
 {

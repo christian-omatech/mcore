@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace Omatech\Ecore\Editora\Application\CreateInstance;
+namespace Omatech\Mcore\Editora\Application\CreateInstance;
 
-use Omatech\Ecore\Editora\Domain\Instance\Contracts\InstanceRepositoryInterface;
+use Omatech\Mcore\Editora\Domain\Instance\Contracts\InstanceRepositoryInterface;
 
 final class CreateInstanceCommandHandler
 {

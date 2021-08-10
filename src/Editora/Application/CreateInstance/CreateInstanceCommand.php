@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Omatech\Ecore\Editora\Application\CreateInstance;
+namespace Omatech\Mcore\Editora\Application\CreateInstance;
 
 final class CreateInstanceCommand
 {

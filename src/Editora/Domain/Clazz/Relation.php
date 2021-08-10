@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace Omatech\Ecore\Editora\Domain\Clazz;
+namespace Omatech\Mcore\Editora\Domain\Clazz;
 
-use Omatech\Ecore\Editora\Domain\Clazz\Exceptions\InvalidRelationClassException;
+use Omatech\Mcore\Editora\Domain\Clazz\Exceptions\InvalidRelationClassException;
 
 final class Relation
 {

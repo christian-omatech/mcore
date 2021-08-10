@@ -4,10 +4,10 @@ namespace Tests\Editora\Application;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Omatech\Ecore\Editora\Application\CreateInstance\CreateInstanceCommand;
-use Omatech\Ecore\Editora\Application\CreateInstance\CreateInstanceCommandHandler;
-use Omatech\Ecore\Editora\Domain\Instance\Contracts\InstanceRepositoryInterface;
-use Omatech\Ecore\Editora\Domain\Instance\Instance;
+use Omatech\Mcore\Editora\Application\CreateInstance\CreateInstanceCommand;
+use Omatech\Mcore\Editora\Application\CreateInstance\CreateInstanceCommandHandler;
+use Omatech\Mcore\Editora\Domain\Instance\Contracts\InstanceRepositoryInterface;
+use Omatech\Mcore\Editora\Domain\Instance\Instance;
 use PHPUnit\Framework\TestCase;
 
 class CreateInstanceTest extends TestCase

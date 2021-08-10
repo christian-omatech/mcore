@@ -2,7 +2,7 @@
 
 namespace Tests\Shared\Utils;
 
-use Omatech\Ecore\Shared\Utils\Utils;
+use Omatech\Mcore\Shared\Utils\Utils;
 use PHPUnit\Framework\TestCase;
 
 final class UtilsTest extends TestCase

@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace Omatech\Ecore\Editora\Domain\Clazz;
+namespace Omatech\Mcore\Editora\Domain\Clazz;
 
-use Omatech\Ecore\Editora\Domain\Clazz\Exceptions\InvalidRelationException;
-use Omatech\Ecore\Editora\Domain\Instance\InstanceRelation;
+use Omatech\Mcore\Editora\Domain\Clazz\Exceptions\InvalidRelationException;
+use Omatech\Mcore\Editora\Domain\Instance\InstanceRelation;
 use function Lambdish\Phunctional\each;
 use function Lambdish\Phunctional\flat_map;
 use function Lambdish\Phunctional\map;

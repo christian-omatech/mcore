@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace Omatech\Ecore\Editora\Domain\Instance;
+namespace Omatech\Mcore\Editora\Domain\Instance;
 
-use Omatech\Ecore\Editora\Domain\Instance\Contracts\InstanceCacheInterface;
+use Omatech\Mcore\Editora\Domain\Instance\Contracts\InstanceCacheInterface;
 
 final class InstanceCache implements InstanceCacheInterface
 {

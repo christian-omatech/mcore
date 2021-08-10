@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Omatech\Ecore\Editora\Application\UpdateInstance;
+namespace Omatech\Mcore\Editora\Application\UpdateInstance;
 
 final class UpdateInstanceCommand
 {

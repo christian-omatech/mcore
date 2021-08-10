@@ -4,11 +4,11 @@ namespace Tests\Editora\Application;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Omatech\Ecore\Editora\Application\DeleteInstance\DeleteInstanceCommand;
-use Omatech\Ecore\Editora\Application\DeleteInstance\DeleteInstanceCommandHandler;
-use Omatech\Ecore\Editora\Domain\Instance\Contracts\InstanceRepositoryInterface;
-use Omatech\Ecore\Editora\Domain\Instance\Exceptions\InstanceDoesNotExistsException;
-use Omatech\Ecore\Editora\Domain\Instance\Instance;
+use Omatech\Mcore\Editora\Application\DeleteInstance\DeleteInstanceCommand;
+use Omatech\Mcore\Editora\Application\DeleteInstance\DeleteInstanceCommandHandler;
+use Omatech\Mcore\Editora\Domain\Instance\Contracts\InstanceRepositoryInterface;
+use Omatech\Mcore\Editora\Domain\Instance\Exceptions\InstanceDoesNotExistsException;
+use Omatech\Mcore\Editora\Domain\Instance\Instance;
 use PHPUnit\Framework\TestCase;
 
 class DeleteInstanceTest extends TestCase

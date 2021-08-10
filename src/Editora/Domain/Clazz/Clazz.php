@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Omatech\Ecore\Editora\Domain\Clazz;
+namespace Omatech\Mcore\Editora\Domain\Clazz;
 
 final class Clazz
 {

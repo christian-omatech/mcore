@@ -2,7 +2,7 @@
 
 namespace Tests\Data;
 
-use Omatech\Ecore\Editora\Domain\Value\BaseValue;
+use Omatech\Mcore\Editora\Domain\Value\BaseValue;
 
 class Value extends BaseValue
 {

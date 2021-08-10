@@ -4,11 +4,11 @@ namespace Tests\Editora\Application;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Omatech\Ecore\Editora\Application\UpdateInstance\UpdateInstanceCommand;
-use Omatech\Ecore\Editora\Application\UpdateInstance\UpdateInstanceCommandHandler;
-use Omatech\Ecore\Editora\Domain\Instance\Contracts\InstanceRepositoryInterface;
-use Omatech\Ecore\Editora\Domain\Instance\Exceptions\InstanceDoesNotExistsException;
-use Omatech\Ecore\Editora\Domain\Instance\Instance;
+use Omatech\Mcore\Editora\Application\UpdateInstance\UpdateInstanceCommand;
+use Omatech\Mcore\Editora\Application\UpdateInstance\UpdateInstanceCommandHandler;
+use Omatech\Mcore\Editora\Domain\Instance\Contracts\InstanceRepositoryInterface;
+use Omatech\Mcore\Editora\Domain\Instance\Exceptions\InstanceDoesNotExistsException;
+use Omatech\Mcore\Editora\Domain\Instance\Instance;
 use PHPUnit\Framework\TestCase;
 
 class UpdateInstanceTest extends TestCase

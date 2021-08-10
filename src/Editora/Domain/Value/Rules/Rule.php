@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Omatech\Ecore\Editora\Domain\Value\Rules;
+namespace Omatech\Mcore\Editora\Domain\Value\Rules;
 
 abstract class Rule
 {

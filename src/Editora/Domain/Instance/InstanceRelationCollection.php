@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Omatech\Ecore\Editora\Domain\Instance;
+namespace Omatech\Mcore\Editora\Domain\Instance;
 
 use function Lambdish\Phunctional\flat_map;
 use function Lambdish\Phunctional\map;

@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Omatech\Ecore\Shared\Utils;
+namespace Omatech\Mcore\Shared\Utils;
 
 use Cocur\Slugify\Slugify;
 

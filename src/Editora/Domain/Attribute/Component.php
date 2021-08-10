@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Omatech\Ecore\Editora\Domain\Attribute;
+namespace Omatech\Mcore\Editora\Domain\Attribute;
 
 final class Component
 {

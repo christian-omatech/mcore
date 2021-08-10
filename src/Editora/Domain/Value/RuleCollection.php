@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace Omatech\Ecore\Editora\Domain\Value;
+namespace Omatech\Mcore\Editora\Domain\Value;
 
-use Omatech\Ecore\Editora\Domain\Value\Contracts\RulesListInterface;
-use Omatech\Ecore\Editora\Domain\Value\Exceptions\InvalidRuleException;
-use Omatech\Ecore\Editora\Domain\Value\Rules\Rule;
+use Omatech\Mcore\Editora\Domain\Value\Contracts\RulesListInterface;
+use Omatech\Mcore\Editora\Domain\Value\Exceptions\InvalidRuleException;
+use Omatech\Mcore\Editora\Domain\Value\Rules\Rule;
 use function Lambdish\Phunctional\each;
 use function Lambdish\Phunctional\map;
 

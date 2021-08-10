@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace Omatech\Ecore\Editora\Domain\Instance\Services;
+namespace Omatech\Mcore\Editora\Domain\Instance\Services;
 
-use Omatech\Ecore\Editora\Domain\Instance\Contracts\InstanceRepositoryInterface;
-use Omatech\Ecore\Editora\Domain\Instance\Exceptions\InstanceDoesNotExistsException;
-use Omatech\Ecore\Editora\Domain\Instance\Instance;
+use Omatech\Mcore\Editora\Domain\Instance\Contracts\InstanceRepositoryInterface;
+use Omatech\Mcore\Editora\Domain\Instance\Exceptions\InstanceDoesNotExistsException;
+use Omatech\Mcore\Editora\Domain\Instance\Instance;
 
 final class InstanceFinder
 {

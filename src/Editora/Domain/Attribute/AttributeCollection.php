@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Omatech\Ecore\Editora\Domain\Attribute;
+namespace Omatech\Mcore\Editora\Domain\Attribute;
 
 use function Lambdish\Phunctional\each;
 use function Lambdish\Phunctional\map;

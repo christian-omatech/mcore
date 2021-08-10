@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace Omatech\Ecore\Editora\Domain\Attribute;
+namespace Omatech\Mcore\Editora\Domain\Attribute;
 
-use Omatech\Ecore\Editora\Domain\Value\ValueBuilder;
-use Omatech\Ecore\Shared\Utils\Utils;
+use Omatech\Mcore\Editora\Domain\Value\ValueBuilder;
+use Omatech\Mcore\Shared\Utils\Utils;
 use function Lambdish\Phunctional\flat_map;
 
 final class AttributeBuilder

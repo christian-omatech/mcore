@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Omatech\Ecore\Editora\Application\DeleteInstance;
+namespace Omatech\Mcore\Editora\Application\DeleteInstance;
 
 final class DeleteInstanceCommand
 {

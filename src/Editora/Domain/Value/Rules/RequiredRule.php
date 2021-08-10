@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace Omatech\Ecore\Editora\Domain\Value\Rules;
+namespace Omatech\Mcore\Editora\Domain\Value\Rules;
 
-use Omatech\Ecore\Editora\Domain\Value\Exceptions\Rules\RequiredValueException;
-use Omatech\Ecore\Shared\Utils\Utils;
+use Omatech\Mcore\Editora\Domain\Value\Exceptions\Rules\RequiredValueException;
+use Omatech\Mcore\Shared\Utils\Utils;
 
 final class RequiredRule extends Rule
 {

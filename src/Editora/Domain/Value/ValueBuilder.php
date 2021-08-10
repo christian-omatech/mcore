@@ -1,14 +1,14 @@
 <?php declare(strict_types=1);
 
-namespace Omatech\Ecore\Editora\Domain\Value;
+namespace Omatech\Mcore\Editora\Domain\Value;
 
-use Omatech\Ecore\Editora\Domain\Instance\Exceptions\InvalidValueTypeException;
+use Omatech\Mcore\Editora\Domain\Instance\Exceptions\InvalidValueTypeException;
 use function Lambdish\Phunctional\flat_map;
 use function Lambdish\Phunctional\map;
 
 final class ValueBuilder
 {
-    private const NAMESPACE = 'Omatech\\Ecore\\Editora\\Domain\\Value\\Types\\';
+    private const NAMESPACE = 'Omatech\\Mcore\\Editora\\Domain\\Value\\Types\\';
     private array $languages;
     private string $key;
 

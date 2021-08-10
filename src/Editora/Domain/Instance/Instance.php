@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace Omatech\Ecore\Editora\Domain\Instance;
+namespace Omatech\Mcore\Editora\Domain\Instance;
 
-use Omatech\Ecore\Editora\Domain\Attribute\AttributeCollection;
-use Omatech\Ecore\Editora\Domain\Clazz\Clazz;
+use Omatech\Mcore\Editora\Domain\Attribute\AttributeCollection;
+use Omatech\Mcore\Editora\Domain\Clazz\Clazz;
 
 abstract class Instance
 {

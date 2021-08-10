@@ -1,13 +1,13 @@
 <?php declare(strict_types=1);
 
-namespace Omatech\Ecore\Editora\Domain\Instance;
+namespace Omatech\Mcore\Editora\Domain\Instance;
 
-use Omatech\Ecore\Editora\Domain\Attribute\AttributeBuilder;
-use Omatech\Ecore\Editora\Domain\Instance\Contracts\InstanceCacheInterface;
-use Omatech\Ecore\Editora\Domain\Instance\Exceptions\InvalidClassNameException;
-use Omatech\Ecore\Editora\Domain\Instance\Exceptions\InvalidLanguagesException;
-use Omatech\Ecore\Editora\Domain\Instance\Exceptions\InvalidStructureException;
-use Omatech\Ecore\Shared\Utils\Utils;
+use Omatech\Mcore\Editora\Domain\Attribute\AttributeBuilder;
+use Omatech\Mcore\Editora\Domain\Instance\Contracts\InstanceCacheInterface;
+use Omatech\Mcore\Editora\Domain\Instance\Exceptions\InvalidClassNameException;
+use Omatech\Mcore\Editora\Domain\Instance\Exceptions\InvalidLanguagesException;
+use Omatech\Mcore\Editora\Domain\Instance\Exceptions\InvalidStructureException;
+use Omatech\Mcore\Shared\Utils\Utils;
 use function Lambdish\Phunctional\map;
 
 final class InstanceBuilder
