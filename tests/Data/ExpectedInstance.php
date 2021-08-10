@@ -160,7 +160,12 @@ return [
             'values' => [
                 [
                     'language' => '*',
-                    'rules' => [],
+                    'rules' => [
+                        'lookup' => [
+                            'key1',
+                            'key2',
+                        ],
+                    ],
                     'configuration' => [
                         'options' => [
                             'key1',

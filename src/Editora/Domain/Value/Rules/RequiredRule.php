@@ -8,7 +8,7 @@ final class RequiredRule extends Rule
 {
     public function validate(string $key, string $language, mixed $value): void
     {
-        if ($this->condition === true && $value === null) {
+        if ($this->condition === true && $this->isEmpty($value)) {
             RequiredValueException::withAttributeLanguage($key, $language);
         }
     }

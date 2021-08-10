@@ -48,7 +48,9 @@ ClassOne:
       values:
         languages:
           "*":
-            configuration:
-              options:
+            configuration: 
+              options: &options
                 - key1
                 - key2
+            rules:
+              lookup: *options

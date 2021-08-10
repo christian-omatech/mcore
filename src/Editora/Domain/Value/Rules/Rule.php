@@ -17,4 +17,9 @@ abstract class Rule
     {
         return $this->condition;
     }
+
+    protected function isEmpty($value): bool
+    {
+        return $value === null || $value === '';
+    }
 }
