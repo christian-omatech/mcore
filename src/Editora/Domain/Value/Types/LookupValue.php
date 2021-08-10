@@ -13,16 +13,11 @@ final class LookupValue extends StringValue
         $this->ensureLookupIsValid();
     }
 
-    public function value(): ?string
-    {
-        return $this->value;
-    }
-
     private function ensureLookupIsValid(): void
     {
         if (! Utils::getInstance()->isEmpty($this->value) &&
-            ! in_array($this->value, $this->configuration()['options'])) {
-            LookupValueOptionException::withAttributeLanguage($this->key(), $this->language());
+            ! $this->configuration->exists($this->value, ['options'])) {
+            LookupValueOptionException::withAttributeLanguage($this->attributeKey, $this->language);
         }
     }
 }

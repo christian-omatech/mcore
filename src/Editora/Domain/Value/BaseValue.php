@@ -4,26 +4,25 @@ namespace Omatech\Ecore\Editora\Domain\Value;
 
 abstract class BaseValue
 {
+    protected string $attributeKey;
+    protected string $language;
     protected mixed $value = null;
-    private string $key;
-    private string $language;
+    protected Configuration $configuration;
     private RuleCollection $ruleCollection;
-    private array $configuration;
 
-    public function __construct(string $key, string $language, array $properties)
+    public function __construct(string $attributeKey, string $language, array $properties)
     {
-        $this->ruleCollection = new RuleCollection(new Rules());
-        $this->ruleCollection->addRules($properties['rules']);
+        $this->configuration = new Configuration($properties['configuration']);
+        $this->ruleCollection = new RuleCollection(new Rules(), $properties['rules']);
         $this->language = $language;
-        $this->configuration = $properties['configuration'];
-        $this->key = $key;
+        $this->attributeKey = $attributeKey;
     }
 
     abstract public function value(): mixed;
 
     public function validate(): void
     {
-        $this->ruleCollection->validate($this->key, $this->language, $this->value);
+        $this->ruleCollection->validate($this->attributeKey, $this->language, $this->value);
     }
 
     public function fill(mixed $value): void
@@ -36,22 +35,12 @@ abstract class BaseValue
         return $this->language;
     }
 
-    protected function configuration(): array
-    {
-        return $this->configuration;
-    }
-
-    protected function key(): string
-    {
-        return $this->key;
-    }
-
     public function toArray(): array
     {
         return [
             'language' => $this->language,
             'rules' => $this->ruleCollection->get(),
-            'configuration' => $this->configuration,
+            'configuration' => $this->configuration->get(),
             'value' => $this->value(),
         ];
     }

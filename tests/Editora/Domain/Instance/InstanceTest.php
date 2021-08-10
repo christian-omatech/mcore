@@ -63,7 +63,53 @@ class InstanceTest extends TestCase
     }
 
     /** @test */
-    public function instanceAttributeRequiredNullValue(): void
+    public function instanceLookupInvalidOption(): void
+    {
+        $this->expectException(LookupValueOptionException::class);
+
+        $instanceCache = Mockery::mock(InstanceCacheInterface::class);
+        $instanceCache->shouldReceive('get')->andReturn(null)->once();
+        $instanceCache->shouldReceive('put')->andReturn(null)->once();
+
+        $instance = (new InstanceBuilder($instanceCache))
+            ->setLanguages($this->languages)
+            ->setStructure([
+                'attributes' => [
+                    'AllLanguagesAttribute' => [
+                        'values' => [
+                            'type' => 'LookupValue',
+                            'languages' => [
+                                '*' => [
+                                    'configuration' => [
+                                        'options' => [
+                                            'key1',
+                                            'key2',
+                                        ],
+                                    ],
+                                ],
+
+                            ],
+                        ],
+                    ],
+                ],
+            ])
+            ->setClassName($this->className)
+            ->build();
+
+        $instance->fill([
+            'metadata' => [],
+            'attributes' => [
+                'all-languages-attribute' => [
+                    'values' => [
+                        '*' => 'hola',
+                    ],
+                ],
+            ],
+        ]);
+    }
+
+    /** @test */
+    public function instanceRequiredLookup(): void
     {
         $this->expectException(RequiredValueException::class);
 
@@ -75,18 +121,24 @@ class InstanceTest extends TestCase
             ->setLanguages($this->languages)
             ->setStructure([
                 'attributes' => [
-                    'DefaultAttribute' => [
+                    'AllLanguagesAttribute' => [
                         'values' => [
-                            'type' => 'StringValue',
+                            'type' => 'LookupValue',
                             'languages' => [
                                 '*' => [
+                                    'configuration' => [
+                                        'options' => [
+                                            'key1',
+                                            'key2',
+                                        ],
+                                    ],
                                     'rules' => [
-                                        'required' => true
+                                        'required' => true,
                                     ],
                                 ],
+
                             ],
                         ],
-                        'attributes' => [],
                     ],
                 ],
             ])
@@ -95,100 +147,7 @@ class InstanceTest extends TestCase
 
         $instance->fill([
             'metadata' => [],
-            'attributes' => [
-                'default-attribute' => [
-                    'values' => [
-                        '*' => null
-                    ],
-                ]
-            ],
-            'relations' => [],
-        ]);
-    }
-
-    /** @test */
-    public function instanceAttributeRequiredZeroValue(): void
-    {
-        $instanceCache = Mockery::mock(InstanceCacheInterface::class);
-        $instanceCache->shouldReceive('get')->andReturn(null)->once();
-        $instanceCache->shouldReceive('put')->andReturn(null)->once();
-
-        $instance = (new InstanceBuilder($instanceCache))
-            ->setLanguages($this->languages)
-            ->setStructure([
-                'attributes' => [
-                    'DefaultAttribute' => [
-                        'values' => [
-                            'type' => 'StringValue',
-                            'languages' => [
-                                '*' => [
-                                    'rules' => [
-                                        'required' => true
-                                    ],
-                                ],
-                            ],
-                        ],
-                        'attributes' => [],
-                    ],
-                ],
-            ])
-            ->setClassName($this->className)
-            ->build();
-
-        $instance->fill([
-            'metadata' => [],
-            'attributes' => [
-                'default-attribute' => [
-                    'values' => [
-                        '*' => 0
-                    ],
-                ]
-            ],
-            'relations' => [],
-        ]);
-    }
-
-    /** @test */
-    public function instanceAttributeRequiredEmptyStringValue(): void
-    {
-        $this->expectException(RequiredValueException::class);
-
-        $instanceCache = Mockery::mock(InstanceCacheInterface::class);
-        $instanceCache->shouldReceive('get')->andReturn(null)->once();
-        $instanceCache->shouldReceive('put')->andReturn(null)->once();
-
-        $instance = (new InstanceBuilder($instanceCache))
-            ->setLanguages($this->languages)
-            ->setStructure([
-                'attributes' => [
-                    'DefaultAttribute' => [
-                        'values' => [
-                            'type' => 'StringValue',
-                            'languages' => [
-                                '*' => [
-                                    'rules' => [
-                                        'required' => true
-                                    ],
-                                ],
-                            ],
-                        ],
-                        'attributes' => [],
-                    ],
-                ],
-            ])
-            ->setClassName($this->className)
-            ->build();
-
-        $instance->fill([
-            'metadata' => [],
-            'attributes' => [
-                'default-attribute' => [
-                    'values' => [
-                        '*' => ''
-                    ],
-                ]
-            ],
-            'relations' => [],
+            'attributes' => [],
         ]);
     }
 
@@ -266,8 +225,8 @@ class InstanceTest extends TestCase
                 ],
             ],
         ]);
-    }    
-    
+    }
+
     /** @test  */
     public function instanceInvalidRelationClass(): void
     {
@@ -384,98 +343,5 @@ class InstanceTest extends TestCase
         ]);
 
         $this->assertEquals($expected, $instance->toArray());
-    }
-
-    /** @test */
-    public function instanceLookupInvalidOption(): void
-    {
-        $this->expectException(LookupValueOptionException::class);
-
-        $instanceCache = Mockery::mock(InstanceCacheInterface::class);
-        $instanceCache->shouldReceive('get')->andReturn(null)->once();
-        $instanceCache->shouldReceive('put')->andReturn(null)->once();
-
-        $instance = (new InstanceBuilder($instanceCache))
-            ->setLanguages($this->languages)
-            ->setStructure([
-                'attributes' => [
-                    'AllLanguagesAttribute' => [
-                        'values' => [
-                            'type' => "LookupValue",
-                            'languages' => [
-                                '*' => [
-                                    'configuration' => [
-                                        'options' => [
-                                            'key1',
-                                            'key2'
-                                        ],
-                                    ],
-                                ],
-
-                            ]
-                        ],
-                    ],
-                ],
-            ])
-            ->setClassName($this->className)
-            ->build();
-
-        $instance->fill([
-            'metadata' => [],
-            'attributes' => [
-                'all-languages-attribute' => [
-                    'values' => [
-                        '*' => 'hola',
-                    ],
-                ],
-            ]
-        ]);
-
-
-    }
-
-    /** @test */
-    public function instanceRequiredLookup(): void
-    {
-        $this->expectException(RequiredValueException::class);
-
-        $instanceCache = Mockery::mock(InstanceCacheInterface::class);
-        $instanceCache->shouldReceive('get')->andReturn(null)->once();
-        $instanceCache->shouldReceive('put')->andReturn(null)->once();
-
-        $instance = (new InstanceBuilder($instanceCache))
-            ->setLanguages($this->languages)
-            ->setStructure([
-                'attributes' => [
-                    'AllLanguagesAttribute' => [
-                        'values' => [
-                            'type' => "LookupValue",
-                            'languages' => [
-                                '*' => [
-                                    'configuration' => [
-                                        'options' => [
-                                            'key1',
-                                            'key2'
-                                        ],
-                                    ],
-                                    'rules' => [
-                                        'required' => true
-                                    ]
-                                ],
-
-                            ]
-                        ],
-                    ],
-                ],
-            ])
-            ->setClassName($this->className)
-            ->build();
-
-        $instance->fill([
-            'metadata' => [],
-            'attributes' => []
-        ]);
-
-
     }
 }

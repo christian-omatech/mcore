@@ -160,7 +160,9 @@ return [
             'values' => [
                 [
                     'language' => '*',
-                    'rules' => [],
+                    'rules' => [
+                        'required' => false,
+                    ],
                     'configuration' => [
                         'options' => [
                             'key1',

@@ -32,6 +32,8 @@ class Utils
 
     public function isEmpty(mixed $value): bool
     {
-        return $value === null || $value === '';
+        return $value === null ||
+            $value === '' ||
+            $value === [];
     }
 }

@@ -49,6 +49,8 @@ ClassOne:
         languages:
           "*":
             type: LookupValue
+            rules:
+              required: false
             configuration:
               options:
                 - key1

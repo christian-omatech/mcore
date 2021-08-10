@@ -15,13 +15,9 @@ final class RuleCollection
     /** @var array<Rule> $rules */
     private array $rules;
 
-    public function __construct(RulesListInterface $rulesList)
+    public function __construct(RulesListInterface $rulesList, array $rules)
     {
         $this->rulesList = $rulesList->get();
-    }
-
-    public function addRules(array $rules): void
-    {
         $this->rules = map(function (mixed $condition, string $rule): Rule {
             return $this->find($rule, $condition);
         }, $rules);
