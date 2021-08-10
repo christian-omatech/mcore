@@ -5,23 +5,25 @@ namespace Omatech\Ecore\Editora\Domain\Value;
 abstract class BaseValue
 {
     protected mixed $value = null;
+    private string $key;
+    private string $language;
     private RuleCollection $ruleCollection;
     private array $configuration;
-    private string $language;
 
-    public function __construct(string $language, array $properties)
+    public function __construct(string $key, string $language, array $properties)
     {
         $this->ruleCollection = new RuleCollection(new Rules());
         $this->ruleCollection->addRules($properties['rules']);
         $this->language = $language;
         $this->configuration = $properties['configuration'];
+        $this->key = $key;
     }
 
     abstract public function value(): mixed;
 
-    public function validate(string $key): void
+    public function validate(): void
     {
-        $this->ruleCollection->validate($key, $this->language, $this->value);
+        $this->ruleCollection->validate($this->key, $this->language, $this->value);
     }
 
     public function fill(mixed $value): void
@@ -32,6 +34,16 @@ abstract class BaseValue
     public function language(): string
     {
         return $this->language;
+    }
+
+    protected function configuration(): array
+    {
+        return $this->configuration;
+    }
+
+    protected function key(): string
+    {
+        return $this->key;
     }
 
     public function toArray(): array

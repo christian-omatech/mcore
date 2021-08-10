@@ -27,9 +27,9 @@ final class ValueCollection
         }, $values);
     }
 
-    public function validate(string $key): void
+    public function validate(): void
     {
-        each(static fn (BaseValue $value) => $value->validate($key), $this->values);
+        each(static fn (BaseValue $value) => $value->validate(), $this->values);
     }
 
     /** @return array<BaseValue> */

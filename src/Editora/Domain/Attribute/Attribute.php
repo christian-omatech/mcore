@@ -27,7 +27,7 @@ final class Attribute
 
     public function validate(): void
     {
-        $this->valueCollection->validate($this->key());
+        $this->valueCollection->validate();
         $this->attributeCollection->validate();
     }
 

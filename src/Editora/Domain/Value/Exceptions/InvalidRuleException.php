@@ -8,6 +8,6 @@ final class InvalidRuleException extends Exception
 {
     public static function withRule(string $rule): self
     {
-        throw new self("The property ${rule} do not exists.");
+        throw new self("The rule ${rule} do not exists.");
     }
 }

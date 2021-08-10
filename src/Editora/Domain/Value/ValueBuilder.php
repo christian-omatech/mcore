@@ -10,7 +10,7 @@ final class ValueBuilder
 {
     private const NAMESPACE = 'Omatech\\Ecore\\Editora\\Domain\\Value\\Types\\';
     private array $languages;
-    private array $values;
+    private string $key;
 
     public function build(): array
     {
@@ -52,14 +52,14 @@ final class ValueBuilder
 
     private function instanceValues(): array
     {
-        return flat_map(static function ($properties, $language): BaseValue {
+        return flat_map(function ($properties, $language): BaseValue {
             if (! class_exists($properties['type'])) {
                 $properties['type'] = self::NAMESPACE . $properties['type'];
                 if (! class_exists($properties['type'])) {
                     InvalidValueTypeException::withType($properties['type']);
                 }
             }
-            return new $properties['type']($language, $properties);
+            return new $properties['type']($this->key, $language, $properties);
         }, $this->values);
     }
 
@@ -72,6 +72,12 @@ final class ValueBuilder
     public function setValues(array $values): ValueBuilder
     {
         $this->values = $values;
+        return $this;
+    }
+
+    public function setKey(string $key): ValueBuilder
+    {
+        $this->key = $key;
         return $this;
     }
 }

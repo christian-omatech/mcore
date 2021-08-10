@@ -7,7 +7,7 @@ use Omatech\Ecore\Editora\Domain\Instance\Contracts\InstanceCacheInterface;
 use Omatech\Ecore\Editora\Domain\Instance\Exceptions\InvalidClassNameException;
 use Omatech\Ecore\Editora\Domain\Instance\Exceptions\InvalidLanguagesException;
 use Omatech\Ecore\Editora\Domain\Instance\Exceptions\InvalidStructureException;
-use Omatech\Ecore\Shared\Utils\Stringify;
+use Omatech\Ecore\Shared\Utils\Utils;
 use function Lambdish\Phunctional\map;
 
 final class InstanceBuilder
@@ -62,9 +62,9 @@ final class InstanceBuilder
     private function normalizeRelations(): array
     {
         return map(static function (array $relations, string &$key): array {
-            $key = Stringify::getInstance()->slug($key);
+            $key = Utils::getInstance()->slug($key);
             return map(static function ($class): string {
-                return Stringify::getInstance()->slug($class);
+                return Utils::getInstance()->slug($class);
             }, $relations);
         }, $this->structure['relations'] ?? []);
     }
@@ -83,7 +83,7 @@ final class InstanceBuilder
 
     public function setClassName(string $className): InstanceBuilder
     {
-        $this->className = Stringify::getInstance()->slug($className);
+        $this->className = Utils::getInstance()->slug($className);
         return $this;
     }
 }

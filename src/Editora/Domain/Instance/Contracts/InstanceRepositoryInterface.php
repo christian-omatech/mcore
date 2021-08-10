@@ -8,7 +8,6 @@ interface InstanceRepositoryInterface
 {
     public function build(string $classKey): Instance;
     public function find(int $id): ?Instance;
-    public function update(Instance $instance): void;
     public function delete(Instance $instance): void;
     public function save(Instance $instance): void;
 }

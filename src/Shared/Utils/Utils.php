@@ -4,9 +4,9 @@ namespace Omatech\Ecore\Shared\Utils;
 
 use Cocur\Slugify\Slugify;
 
-class Stringify
+class Utils
 {
-    private static ?Stringify $instance = null;
+    private static ?Utils $instance = null;
     private Slugify $slugify;
 
     private function __construct()
@@ -14,10 +14,10 @@ class Stringify
         $this->slugify = new Slugify();
     }
 
-    public static function getInstance(): Stringify
+    public static function getInstance(): Utils
     {
         if (! self::$instance) {
-            self::$instance = new Stringify();
+            self::$instance = new Utils();
         }
         return self::$instance;
     }
@@ -28,5 +28,10 @@ class Stringify
             'regexp' => '/(?<=[[:^upper:]])(?=[[:upper:]])/',
             'lowercase_after_regexp' => true,
         ]);
+    }
+
+    public function isEmpty(mixed $value): bool
+    {
+        return $value === null || $value === '';
     }
 }
