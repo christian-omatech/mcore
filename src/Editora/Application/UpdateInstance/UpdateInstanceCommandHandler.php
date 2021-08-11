@@ -18,11 +18,12 @@ final class UpdateInstanceCommandHandler
 
     public function __invoke(UpdateInstanceCommand $command): void
     {
+        $relations = $this->instanceFinder->findClassKeysGivenInstances($command->relations());
         $instance = $this->instanceFinder->findOrFail($command->id());
         $instance->fill([
             'metadata' => $command->metadata(),
             'attributes' => $command->attributes(),
-            'relations' => $command->relations(),
+            'relations' => $relations,
         ]);
         $this->instanceRepository->save($instance);
     }

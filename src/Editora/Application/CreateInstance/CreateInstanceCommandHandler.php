@@ -3,23 +3,27 @@
 namespace Omatech\Mcore\Editora\Application\CreateInstance;
 
 use Omatech\Mcore\Editora\Domain\Instance\Contracts\InstanceRepositoryInterface;
+use Omatech\Mcore\Editora\Domain\Instance\Services\InstanceFinder;
 
 final class CreateInstanceCommandHandler
 {
     private InstanceRepositoryInterface $instanceRepository;
+    private InstanceFinder $instanceFinder;
 
     public function __construct(InstanceRepositoryInterface $instanceRepository)
     {
         $this->instanceRepository = $instanceRepository;
+        $this->instanceFinder = new InstanceFinder($instanceRepository);
     }
 
     public function __invoke(CreateInstanceCommand $command): void
     {
+        $relations = $this->instanceFinder->findClassKeysGivenInstances($command->relations());
         $instance = $this->instanceRepository->build($command->classKey());
         $instance->fill([
             'metadata' => $command->metadata(),
             'attributes' => $command->attributes(),
-            'relations' => $command->relations(),
+            'relations' => $relations,
         ]);
         $this->instanceRepository->save($instance);
     }

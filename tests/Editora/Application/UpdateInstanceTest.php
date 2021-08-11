@@ -36,7 +36,7 @@ class UpdateInstanceTest extends TestCase
             'attributes' => [],
             'relations' => [
                 'relation-key1' => [
-                    1 => 'class-one'
+                    1
                 ]
             ],
         ]);
@@ -47,7 +47,7 @@ class UpdateInstanceTest extends TestCase
         $this->assertSame([], $command->attributes());
         $this->assertSame([
             'relation-key1' => [
-                1 => 'class-one'
+                1
             ]
         ], $command->relations());
     }
@@ -63,14 +63,34 @@ class UpdateInstanceTest extends TestCase
                 'id' => 1,
             ],
             'attributes' => [],
-            'relations' => [],
+            'relations' => [
+                'relation-key1' => [
+                    1,2,3,4,5,6
+                ]
+            ],
         ]);
+
+        $repository->shouldReceive('classKey')->with(1)->andReturn('class-one')->once();
+        $repository->shouldReceive('classKey')->with(2)->andReturn('class-one')->once();
+        $repository->shouldReceive('classKey')->with(3)->andReturn('class-one')->once();
+        $repository->shouldReceive('classKey')->with(4)->andReturn('class-two')->once();
+        $repository->shouldReceive('classKey')->with(5)->andReturn('class-two')->once();
+        $repository->shouldReceive('classKey')->with(6)->andReturn('class-two')->once();
 
         $instance->shouldReceive('fill')
             ->with([
                 'metadata' => $command->metadata(),
                 'attributes' => $command->attributes(),
-                'relations' => $command->relations(),
+                'relations' => [
+                    'relation-key1' => [
+                        1 => 'class-one',
+                        2 => 'class-one',
+                        3 => 'class-one',
+                        4 => 'class-two',
+                        5 => 'class-two',
+                        6 => 'class-two'
+                    ]
+                ],
             ])
             ->andReturn(null)
             ->once();
@@ -82,6 +102,34 @@ class UpdateInstanceTest extends TestCase
             ->with($instance)
             ->andReturn(null)
             ->once();
+
+        (new UpdateInstanceCommandHandler($repository))->__invoke($command);
+    }
+
+    /** @test */
+    public function updateInstanceWithInvalidRelation(): void
+    {
+        $this->expectException(InstanceDoesNotExistsException::class);
+        $repository = Mockery::mock(InstanceRepositoryInterface::class);
+
+        $command = new UpdateInstanceCommand([
+            'metadata' => [
+                'id' => 1,
+            ],
+            'attributes' => [],
+            'relations' => [
+                'relation-key1' => [
+                    1,2,3,4,5,6
+                ]
+            ],
+        ]);
+
+        $repository->shouldReceive('classKey')->with(1)->andReturn('class-one')->once();
+        $repository->shouldReceive('classKey')->with(2)->andReturn('class-one')->once();
+        $repository->shouldReceive('classKey')->with(3)->andReturn(null)->once();
+        $repository->shouldReceive('classKey')->with(4)->andReturn('class-two')->never();
+        $repository->shouldReceive('classKey')->with(5)->andReturn('class-two')->never();
+        $repository->shouldReceive('classKey')->with(6)->andReturn('class-two')->never();
 
         (new UpdateInstanceCommandHandler($repository))->__invoke($command);
     }
