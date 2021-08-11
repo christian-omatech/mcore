@@ -18,17 +18,15 @@ final class Publication
         $this->status = $publication['status'] ?? PublicationStatus::PENDING;
         $this->startPublishingDate = $publication['startPublishingDate'];
         $this->endPublishingDate = $publication['endPublishingDate'] ?? null;
-
         $this->validateEndPublishingDate();
     }
 
     private function validateEndPublishingDate(): void
     {
-        if ($this->endPublishingDate !== null &&
-        $this->endPublishingDate <= $this->startPublishingDate) {
+        if ($this->endPublishingDate?->diff($this->startPublishingDate)->invert === 0) {
             InvalidEndDatePublishingException::withDate(
-                $this->endPublishingDate->format('Y-m-d H:i:s'),
-                $this->startPublishingDate->format('Y-m-d H:i:s')
+                $this->endPublishingDate->format($this::DATE_FORMAT),
+                $this->startPublishingDate->format($this::DATE_FORMAT)
             );
         }
     }
