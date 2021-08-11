@@ -14,7 +14,7 @@ final class UpdateInstanceCommand
         $this->id = $data['metadata']['id'];
         $this->metadata = $data['metadata'];
         $this->attributes = $data['attributes'];
-        $this->relations = $data['relations'];
+        $this->relations = $data['relations'] ?? [];
     }
 
     public function id(): int

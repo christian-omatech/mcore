@@ -15,9 +15,11 @@ final class Metadata
 
     public function fill(array $metadata): void
     {
+        assert(isset($metadata['key']));
+        assert(isset($metadata['publication']));
         $this->id = $metadata['id'] ?? null;
-        $this->key = $metadata['key'] ?? null;
-        $this->publication->fill($metadata['publication'] ?? []);
+        $this->key = $metadata['key'];
+        $this->publication->fill($metadata['publication']);
     }
 
     public function toArray(): array

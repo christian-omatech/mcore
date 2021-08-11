@@ -14,7 +14,7 @@ final class CreateInstanceCommand
         $this->classKey = $data['classKey'];
         $this->metadata = $data['metadata'];
         $this->attributes = $data['attributes'];
-        $this->relations = $data['relations'];
+        $this->relations = $data['relations'] ?? [];
     }
 
     public function classKey(): string

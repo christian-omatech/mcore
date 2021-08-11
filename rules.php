@@ -31,7 +31,7 @@ return [
             'declareOnFirstLine' => true
         ],
         CyclomaticComplexityIsHigh::class => [
-            'maxComplexity' => 10
+            'maxComplexity' => 5
         ],
         LineLengthSniff::class => [
             'lineLimit' => 100,

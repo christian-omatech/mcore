@@ -15,10 +15,11 @@ final class Relation
         $this->classes = $classes;
     }
 
-    public function validate(string $class): void
+    public function validate(array $classes): void
     {
-        if (! in_array($class, $this->classes, true)) {
-            InvalidRelationClassException::withRelationClasses($this->key, $class);
+        $diff = array_diff($classes, $this->classes);
+        if (count($diff)) {
+            InvalidRelationClassException::withRelationClasses($this->key, $diff);
         }
     }
 

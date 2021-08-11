@@ -56,7 +56,10 @@ class InstanceTest extends TestCase
             ->build();
 
         $instance->fill([
-            'metadata' => [],
+            'metadata' => [
+                'key' => 'instance',
+                'publication' => []
+            ],
             'attributes' => [],
             'relations' => [],
         ]);
@@ -97,7 +100,10 @@ class InstanceTest extends TestCase
             ->build();
 
         $instance->fill([
-            'metadata' => [],
+            'metadata' => [
+                'key' => 'instance',
+                'publication' => []
+            ],
             'attributes' => [
                 'all-languages-attribute' => [
                     'values' => [
@@ -105,6 +111,7 @@ class InstanceTest extends TestCase
                     ],
                 ],
             ],
+            'relations' => [],
         ]);
     }
 
@@ -146,8 +153,12 @@ class InstanceTest extends TestCase
             ->build();
 
         $instance->fill([
-            'metadata' => [],
+            'metadata' => [
+                'key' => 'instance',
+                'publication' => []
+            ],
             'attributes' => [],
+            'relations' => []
         ]);
     }
 
@@ -188,7 +199,10 @@ class InstanceTest extends TestCase
             ->build();
 
         $instance->fill([
-            'metadata' => [],
+            'metadata' => [
+                'key' => 'instance',
+                'publication' => []
+            ],
             'attributes' => [],
             'relations' => [],
         ]);
@@ -217,11 +231,16 @@ class InstanceTest extends TestCase
             ->build();
 
         $instance->fill([
-            'metadata' => [],
+            'metadata' => [
+                'key' => 'instance',
+                'publication' => []
+            ],
             'attributes' => [],
             'relations' => [
                 'relation-key2' => [
-                    'class-two' => [1,2,3],
+                    1 => 'class-two',
+                    2 => 'class-two',
+                    3 => 'class-two',
                 ],
             ],
         ]);
@@ -250,11 +269,14 @@ class InstanceTest extends TestCase
             ->build();
 
         $instance->fill([
-            'metadata' => [],
+            'metadata' => [
+                'key' => 'instance',
+                'publication' => []
+            ],
             'attributes' => [],
             'relations' => [
                 'relation-key1' => [
-                    'class-two' => [1],
+                    1 => 'class-two',
                 ],
             ],
         ]);
@@ -332,12 +354,20 @@ class InstanceTest extends TestCase
             ],
             'relations' => [
                 'relation-key1' => [
-                    'class-two' => [1,2,3],
-                    'class-three' => [4,5,6],
+                    1 => 'class-two',
+                    2 => 'class-two',
+                    3 => 'class-two',
+                    4 => 'class-three',
+                    5 => 'class-three',
+                    6 => 'class-three'
                 ],
                 'relation-key2' => [
-                    'class-four' => [7,8,9],
-                    'class-five' => [10,11,12],
+                    7 => 'class-four',
+                    8 => 'class-four',
+                    9 => 'class-four',
+                    10 => 'class-five',
+                    11 => 'class-five',
+                    12 => 'class-five',
                 ],
             ],
         ]);

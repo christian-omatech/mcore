@@ -22,9 +22,12 @@ abstract class Instance
 
     public function fill(array $instance): void
     {
+        assert(isset($instance['metadata']));
+        assert(isset($instance['attributes']));
+        assert(isset($instance['relations']));
         $this->metadata->fill($instance['metadata']);
         $this->attributesCollection->fill($instance['attributes']);
-        $this->instanceRelationCollection->fill($instance['relations'] ?? []);
+        $this->instanceRelationCollection->fill($instance['relations']);
         $this->validate();
     }
 

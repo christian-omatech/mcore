@@ -178,20 +178,24 @@ return [
     'relations' => [
         [
             'key' => 'relation-key1',
-            'class' => 'class-two',
-            'instanceIds' => [1,2,3],
-        ], [
-            'key' => 'relation-key1',
-            'class' => 'class-three',
-            'instanceIds' => [4,5,6],
-        ], [
-            'key' => 'relation-key2',
-            'class' => 'class-four',
-            'instanceIds' => [7,8,9],
+            'instances' => [
+                1 => "class-two",
+                2 => "class-two",
+                3 => "class-two",
+                4 => "class-three",
+                5 => "class-three",
+                6 => "class-three",
+            ],
         ], [
             'key' => 'relation-key2',
-            'class' => 'class-five',
-            'instanceIds' => [10,11,12],
+            'instances' => [
+                7 => "class-four",
+                8 => "class-four",
+                9 => "class-four",
+                10 => "class-five",
+                11 => "class-five",
+                12 => "class-five",
+            ],
         ],
     ],
 ];

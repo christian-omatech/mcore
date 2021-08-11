@@ -6,8 +6,9 @@ use Exception;
 
 final class InvalidRelationClassException extends Exception
 {
-    public static function withRelationClasses(string $key, string $class): self
+    public static function withRelationClasses(string $key, array $classes): self
     {
-        throw new self("Class {$class} is not valid for relation {$key}");
+        $classes = implode(', ', $classes);
+        throw new self("Classes {$classes} are not valid for relation {$key}");
     }
 }

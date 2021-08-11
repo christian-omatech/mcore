@@ -15,6 +15,41 @@ class CreateInstanceTest extends TestCase
     use MockeryPHPUnitIntegration;
 
     /** @test */
+    public function createInstanceCommand(): void
+    {
+        $command = new CreateInstanceCommand([
+            'classKey' => 'test',
+            'metadata' => [],
+            'attributes' => []
+        ]);
+
+        $this->assertSame('test', $command->classKey());
+        $this->assertSame([], $command->metadata());
+        $this->assertSame([], $command->attributes());
+        $this->assertSame([], $command->relations());
+
+        $command = new CreateInstanceCommand([
+            'classKey' => 'test',
+            'metadata' => [],
+            'attributes' => [],
+            'relations' => [
+                'relation-key1' => [
+                    1 => 'class-one'
+                ]
+            ],
+        ]);
+
+        $this->assertSame('test', $command->classKey());
+        $this->assertSame([], $command->metadata());
+        $this->assertSame([], $command->attributes());
+        $this->assertSame([
+            'relation-key1' => [
+                1 => 'class-one'
+            ]
+        ], $command->relations());
+    }
+
+    /** @test */
     public function createInstanceSuccessfully(): void
     {
         $instance = Mockery::mock(Instance::class);

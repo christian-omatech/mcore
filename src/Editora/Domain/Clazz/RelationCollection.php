@@ -30,7 +30,7 @@ final class RelationCollection
             if (is_null($relation)) {
                 InvalidRelationException::withRelation($instanceRelation->key());
             }
-            $relation->validate($instanceRelation->clazz());
+            $relation->validate($instanceRelation->classes());
         }, $instanceRelations);
     }
 

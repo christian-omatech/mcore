@@ -16,6 +16,43 @@ class UpdateInstanceTest extends TestCase
     use MockeryPHPUnitIntegration;
 
     /** @test */
+    public function updateInstanceCommand(): void
+    {
+        $command = new UpdateInstanceCommand([
+            'metadata' => [
+                'id' => 1
+            ],
+            'attributes' => []
+        ]);
+
+        $this->assertSame(['id' => 1], $command->metadata());
+        $this->assertSame([], $command->attributes());
+        $this->assertSame([], $command->relations());
+
+        $command = new UpdateInstanceCommand([
+            'metadata' => [
+                'id' => 1
+            ],
+            'attributes' => [],
+            'relations' => [
+                'relation-key1' => [
+                    1 => 'class-one'
+                ]
+            ],
+        ]);
+
+        $this->assertSame([
+            'id' => 1
+        ], $command->metadata());
+        $this->assertSame([], $command->attributes());
+        $this->assertSame([
+            'relation-key1' => [
+                1 => 'class-one'
+            ]
+        ], $command->relations());
+    }
+
+    /** @test */
     public function updateInstanceSuccessfully(): void
     {
         $instance = Mockery::mock(Instance::class);
