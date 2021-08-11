@@ -11,6 +11,7 @@ use Omatech\Mcore\Editora\Domain\Clazz\Exceptions\InvalidRelationException;
 use Omatech\Mcore\Editora\Domain\Instance\Contracts\InstanceCacheInterface;
 use Omatech\Mcore\Editora\Domain\Instance\InstanceBuilder;
 use Omatech\Mcore\Editora\Domain\Instance\PublicationStatus;
+use Omatech\Mcore\Editora\Domain\Value\Exceptions\Rules\InvalidEndDatePublishingException;
 use Omatech\Mcore\Editora\Domain\Value\Exceptions\Rules\LookupValueOptionException;
 use Omatech\Mcore\Editora\Domain\Value\Exceptions\Rules\RequiredValueException;
 use PHPUnit\Framework\TestCase;
@@ -58,7 +59,13 @@ class InstanceTest extends TestCase
         $instance->fill([
             'metadata' => [
                 'key' => 'instance',
-                'publication' => []
+                'publication' => [
+                    'startPublishingDate' => DateTime::createFromFormat(
+                        'Y-m-d H:i:s',
+                        '1989-03-08 09:00:00',
+                        new DateTimeZone('Europe/Madrid')
+                    ),
+                ]
             ],
             'attributes' => [],
             'relations' => [],
@@ -102,7 +109,13 @@ class InstanceTest extends TestCase
         $instance->fill([
             'metadata' => [
                 'key' => 'instance',
-                'publication' => []
+                'publication' => [
+                    'startPublishingDate' => DateTime::createFromFormat(
+                        'Y-m-d H:i:s',
+                        '1989-03-08 09:00:00',
+                        new DateTimeZone('Europe/Madrid')
+                    ),
+                ]
             ],
             'attributes' => [
                 'all-languages-attribute' => [
@@ -155,7 +168,13 @@ class InstanceTest extends TestCase
         $instance->fill([
             'metadata' => [
                 'key' => 'instance',
-                'publication' => []
+                'publication' => [
+                    'startPublishingDate' => DateTime::createFromFormat(
+                        'Y-m-d H:i:s',
+                        '1989-03-08 09:00:00',
+                        new DateTimeZone('Europe/Madrid')
+                    ),
+                ]
             ],
             'attributes' => [],
             'relations' => []
@@ -201,7 +220,13 @@ class InstanceTest extends TestCase
         $instance->fill([
             'metadata' => [
                 'key' => 'instance',
-                'publication' => []
+                'publication' => [
+                    'startPublishingDate' => DateTime::createFromFormat(
+                        'Y-m-d H:i:s',
+                        '1989-03-08 09:00:00',
+                        new DateTimeZone('Europe/Madrid')
+                    ),
+                ]
             ],
             'attributes' => [],
             'relations' => [],
@@ -233,7 +258,13 @@ class InstanceTest extends TestCase
         $instance->fill([
             'metadata' => [
                 'key' => 'instance',
-                'publication' => []
+                'publication' => [
+                    'startPublishingDate' => DateTime::createFromFormat(
+                        'Y-m-d H:i:s',
+                        '1989-03-08 09:00:00',
+                        new DateTimeZone('Europe/Madrid')
+                    ),
+                ]
             ],
             'attributes' => [],
             'relations' => [
@@ -271,7 +302,13 @@ class InstanceTest extends TestCase
         $instance->fill([
             'metadata' => [
                 'key' => 'instance',
-                'publication' => []
+                'publication' => [
+                    'startPublishingDate' => DateTime::createFromFormat(
+                        'Y-m-d H:i:s',
+                        '1989-03-08 09:00:00',
+                        new DateTimeZone('Europe/Madrid')
+                    ),
+                ]
             ],
             'attributes' => [],
             'relations' => [
@@ -373,5 +410,95 @@ class InstanceTest extends TestCase
         ]);
 
         $this->assertEquals($expected, $instance->toArray());
+    }
+
+    /** @test  */
+    public function instanceInvalidWhenEndDateIsLessThanStartDatePublishing(): void
+    {
+        $this->expectException(InvalidEndDatePublishingException::class);
+
+        $instanceCache = Mockery::mock(InstanceCacheInterface::class);
+        $instanceCache->shouldReceive('get')->andReturn(null)->once();
+        $instanceCache->shouldReceive('put')->andReturn(null)->once();
+
+        $instance = (new InstanceBuilder($instanceCache))
+            ->setLanguages($this->languages)
+            ->setStructure([
+                'metadata' => [
+                    'key' => 'instance',
+                    'publication' => []
+                ],
+                'attributes' => [],
+                'relations' => []
+            ])
+            ->setClassName($this->className)
+            ->build();
+
+        
+        $instance->fill([
+            'metadata' => [
+                'key' => 'instance',
+                'publication' => [
+                    'status' => PublicationStatus::REVISION,
+                    'startPublishingDate' => DateTime::createFromFormat(
+                        'Y-m-d H:i:s',
+                        '2022-03-08 09:00:00',
+                        new DateTimeZone('Europe/Madrid')
+                    ),
+                    'endPublishingDate' => DateTime::createFromFormat(
+                        'Y-m-d H:i:s',
+                        '2021-07-27 14:30:00',
+                        new DateTimeZone('Europe/Madrid')
+                    ),
+                ],
+            ],
+            'attributes' => [],
+            'relations' => []
+        ]);
+    }
+
+    /** @test  */
+    public function instanceInvalidWhenEndDateIsEqualThanStartDatePublishing(): void
+    {
+        $this->expectException(InvalidEndDatePublishingException::class);
+
+        $instanceCache = Mockery::mock(InstanceCacheInterface::class);
+        $instanceCache->shouldReceive('get')->andReturn(null)->once();
+        $instanceCache->shouldReceive('put')->andReturn(null)->once();
+
+        $instance = (new InstanceBuilder($instanceCache))
+            ->setLanguages($this->languages)
+            ->setStructure([
+                'metadata' => [
+                    'key' => 'instance',
+                    'publication' => []
+                ],
+                'attributes' => [],
+                'relations' => []
+            ])
+            ->setClassName($this->className)
+            ->build();
+
+        
+        $instance->fill([
+            'metadata' => [
+                'key' => 'instance',
+                'publication' => [
+                    'status' => PublicationStatus::REVISION,
+                    'startPublishingDate' => DateTime::createFromFormat(
+                        'Y-m-d H:i:s',
+                        '2022-03-08 09:00:00',
+                        new DateTimeZone('Europe/Madrid')
+                    ),
+                    'endPublishingDate' => DateTime::createFromFormat(
+                        'Y-m-d H:i:s',
+                        '2022-03-08 09:00:00',
+                        new DateTimeZone('Europe/Madrid')
+                    ),
+                ],
+            ],
+            'attributes' => [],
+            'relations' => []
+        ]);
     }
 }
