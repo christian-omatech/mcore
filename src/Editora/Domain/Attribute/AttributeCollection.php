@@ -17,7 +17,6 @@ final class AttributeCollection
         $this->attributes = map(static fn (Attribute $attribute) => $attribute, $attributes);
     }
 
-    /** @param array<Attribute> $attributes */
     public function fill(array $attributes): void
     {
         each(function (array $values, string $key): void {
@@ -32,7 +31,6 @@ final class AttributeCollection
         each(static fn (Attribute $attribute) => $attribute->validate(), $this->attributes);
     }
 
-    /** @return array<Attribute> */
     public function get(): array
     {
         return map(static fn (Attribute $attribute) => $attribute->toArray(), $this->attributes);

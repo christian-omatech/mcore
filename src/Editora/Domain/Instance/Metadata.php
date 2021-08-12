@@ -5,7 +5,7 @@ namespace Omatech\Mcore\Editora\Domain\Instance;
 final class Metadata
 {
     private ?int $id = null;
-    private ?string $key = null;
+    private string $key = '';
     private Publication $publication;
 
     public function __construct()

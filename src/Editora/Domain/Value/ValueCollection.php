@@ -17,7 +17,6 @@ final class ValueCollection
         $this->values = map(static fn (BaseValue $value) => $value, $values);
     }
 
-    /** @param array<BaseValue> $values */
     public function fill(array $values): void
     {
         each(function (mixed $value, string $language): void {
@@ -32,7 +31,6 @@ final class ValueCollection
         each(static fn (BaseValue $value) => $value->validate(), $this->values);
     }
 
-    /** @return array<BaseValue> */
     public function get(): array
     {
         return map(static fn (BaseValue $value) => $value->toArray(), $this->values);

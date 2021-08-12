@@ -20,6 +20,7 @@ final class InstanceRelationCollection
         }, $relations);
     }
 
+    /** @return array<InstanceRelation> */
     public function instanceRelations(): array
     {
         return $this->instanceRelations;
