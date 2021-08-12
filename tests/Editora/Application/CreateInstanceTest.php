@@ -21,7 +21,7 @@ class CreateInstanceTest extends TestCase
         $command = new CreateInstanceCommand([
             'classKey' => 'test',
             'metadata' => [],
-            'attributes' => []
+            'attributes' => [],
         ]);
 
         $this->assertSame('test', $command->classKey());
@@ -35,8 +35,8 @@ class CreateInstanceTest extends TestCase
             'attributes' => [],
             'relations' => [
                 'relation-key1' => [
-                    1
-                ]
+                    1,
+                ],
             ],
         ]);
 
@@ -45,8 +45,8 @@ class CreateInstanceTest extends TestCase
         $this->assertSame([], $command->attributes());
         $this->assertSame([
             'relation-key1' => [
-                1
-            ]
+                1,
+            ],
         ], $command->relations());
     }
 
@@ -62,8 +62,8 @@ class CreateInstanceTest extends TestCase
             'attributes' => [],
             'relations' => [
                 'relation-key1' => [
-                    1,2,3,4,5,6
-                ]
+                    1,2,3,4,5,6,
+                ],
             ],
         ]);
 
@@ -85,8 +85,8 @@ class CreateInstanceTest extends TestCase
                         3 => 'class-one',
                         4 => 'class-two',
                         5 => 'class-two',
-                        6 => 'class-two'
-                    ]
+                        6 => 'class-two',
+                    ],
                 ],
             ])
             ->andReturn(null)
@@ -115,8 +115,8 @@ class CreateInstanceTest extends TestCase
             'attributes' => [],
             'relations' => [
                 'relation-key1' => [
-                    1,2,3,4,5,6
-                ]
+                    1,2,3,4,5,6,
+                ],
             ],
         ]);
 

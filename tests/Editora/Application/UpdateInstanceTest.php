@@ -20,9 +20,9 @@ class UpdateInstanceTest extends TestCase
     {
         $command = new UpdateInstanceCommand([
             'metadata' => [
-                'id' => 1
+                'id' => 1,
             ],
-            'attributes' => []
+            'attributes' => [],
         ]);
 
         $this->assertSame(['id' => 1], $command->metadata());
@@ -31,24 +31,24 @@ class UpdateInstanceTest extends TestCase
 
         $command = new UpdateInstanceCommand([
             'metadata' => [
-                'id' => 1
+                'id' => 1,
             ],
             'attributes' => [],
             'relations' => [
                 'relation-key1' => [
-                    1
-                ]
+                    1,
+                ],
             ],
         ]);
 
         $this->assertSame([
-            'id' => 1
+            'id' => 1,
         ], $command->metadata());
         $this->assertSame([], $command->attributes());
         $this->assertSame([
             'relation-key1' => [
-                1
-            ]
+                1,
+            ],
         ], $command->relations());
     }
 
@@ -65,8 +65,8 @@ class UpdateInstanceTest extends TestCase
             'attributes' => [],
             'relations' => [
                 'relation-key1' => [
-                    1,2,3,4,5,6
-                ]
+                    1,2,3,4,5,6,
+                ],
             ],
         ]);
 
@@ -88,8 +88,8 @@ class UpdateInstanceTest extends TestCase
                         3 => 'class-one',
                         4 => 'class-two',
                         5 => 'class-two',
-                        6 => 'class-two'
-                    ]
+                        6 => 'class-two',
+                    ],
                 ],
             ])
             ->andReturn(null)
@@ -119,8 +119,8 @@ class UpdateInstanceTest extends TestCase
             'attributes' => [],
             'relations' => [
                 'relation-key1' => [
-                    1,2,3,4,5,6
-                ]
+                    1,2,3,4,5,6,
+                ],
             ],
         ]);
 

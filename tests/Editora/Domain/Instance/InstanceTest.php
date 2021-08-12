@@ -4,23 +4,17 @@ namespace Tests\Editora\Domain\Instance;
 
 use DateTime;
 use DateTimeZone;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Omatech\Mcore\Editora\Domain\Clazz\Exceptions\InvalidRelationClassException;
 use Omatech\Mcore\Editora\Domain\Clazz\Exceptions\InvalidRelationException;
-use Omatech\Mcore\Editora\Domain\Instance\Contracts\InstanceCacheInterface;
 use Omatech\Mcore\Editora\Domain\Instance\InstanceBuilder;
 use Omatech\Mcore\Editora\Domain\Instance\PublicationStatus;
 use Omatech\Mcore\Editora\Domain\Value\Exceptions\Rules\InvalidEndDatePublishingException;
 use Omatech\Mcore\Editora\Domain\Value\Exceptions\Rules\LookupValueOptionException;
 use Omatech\Mcore\Editora\Domain\Value\Exceptions\Rules\RequiredValueException;
-use PHPUnit\Framework\TestCase;
 use Symfony\Component\Yaml\Yaml;
 
 class InstanceTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     private array $languages;
     private string $className = 'ClassOne';
 
@@ -34,11 +28,7 @@ class InstanceTest extends TestCase
     {
         $this->expectException(RequiredValueException::class);
 
-        $instanceCache = Mockery::mock(InstanceCacheInterface::class);
-        $instanceCache->shouldReceive('get')->andReturn(null)->once();
-        $instanceCache->shouldReceive('put')->andReturn(null)->once();
-
-        $instance = (new InstanceBuilder($instanceCache))
+        $instance = (new InstanceBuilder($this->mockInstanceCache()))
             ->setLanguages($this->languages)
             ->setStructure([
                 'attributes' => [
@@ -57,16 +47,7 @@ class InstanceTest extends TestCase
             ->build();
 
         $instance->fill([
-            'metadata' => [
-                'key' => 'instance',
-                'publication' => [
-                    'startPublishingDate' => DateTime::createFromFormat(
-                        'Y-m-d H:i:s',
-                        '1989-03-08 09:00:00',
-                        new DateTimeZone('Europe/Madrid')
-                    ),
-                ]
-            ],
+            'metadata' => $this->fillMetadataInstance(),
             'attributes' => [],
             'relations' => [],
         ]);
@@ -77,11 +58,7 @@ class InstanceTest extends TestCase
     {
         $this->expectException(LookupValueOptionException::class);
 
-        $instanceCache = Mockery::mock(InstanceCacheInterface::class);
-        $instanceCache->shouldReceive('get')->andReturn(null)->once();
-        $instanceCache->shouldReceive('put')->andReturn(null)->once();
-
-        $instance = (new InstanceBuilder($instanceCache))
+        $instance = (new InstanceBuilder($this->mockInstanceCache()))
             ->setLanguages($this->languages)
             ->setStructure([
                 'attributes' => [
@@ -107,16 +84,7 @@ class InstanceTest extends TestCase
             ->build();
 
         $instance->fill([
-            'metadata' => [
-                'key' => 'instance',
-                'publication' => [
-                    'startPublishingDate' => DateTime::createFromFormat(
-                        'Y-m-d H:i:s',
-                        '1989-03-08 09:00:00',
-                        new DateTimeZone('Europe/Madrid')
-                    ),
-                ]
-            ],
+            'metadata' => $this->fillMetadataInstance(),
             'attributes' => [
                 'all-languages-attribute' => [
                     'values' => [
@@ -133,11 +101,7 @@ class InstanceTest extends TestCase
     {
         $this->expectException(RequiredValueException::class);
 
-        $instanceCache = Mockery::mock(InstanceCacheInterface::class);
-        $instanceCache->shouldReceive('get')->andReturn(null)->once();
-        $instanceCache->shouldReceive('put')->andReturn(null)->once();
-
-        $instance = (new InstanceBuilder($instanceCache))
+        $instance = (new InstanceBuilder($this->mockInstanceCache()))
             ->setLanguages($this->languages)
             ->setStructure([
                 'attributes' => [
@@ -166,18 +130,9 @@ class InstanceTest extends TestCase
             ->build();
 
         $instance->fill([
-            'metadata' => [
-                'key' => 'instance',
-                'publication' => [
-                    'startPublishingDate' => DateTime::createFromFormat(
-                        'Y-m-d H:i:s',
-                        '1989-03-08 09:00:00',
-                        new DateTimeZone('Europe/Madrid')
-                    ),
-                ]
-            ],
+            'metadata' => $this->fillMetadataInstance(),
             'attributes' => [],
-            'relations' => []
+            'relations' => [],
         ]);
     }
 
@@ -186,11 +141,7 @@ class InstanceTest extends TestCase
     {
         $this->expectException(RequiredValueException::class);
 
-        $instanceCache = Mockery::mock(InstanceCacheInterface::class);
-        $instanceCache->shouldReceive('get')->andReturn(null)->once();
-        $instanceCache->shouldReceive('put')->andReturn(null)->once();
-
-        $instance = (new InstanceBuilder($instanceCache))
+        $instance = (new InstanceBuilder($this->mockInstanceCache()))
             ->setLanguages($this->languages)
             ->setStructure([
                 'attributes' => [
@@ -218,16 +169,7 @@ class InstanceTest extends TestCase
             ->build();
 
         $instance->fill([
-            'metadata' => [
-                'key' => 'instance',
-                'publication' => [
-                    'startPublishingDate' => DateTime::createFromFormat(
-                        'Y-m-d H:i:s',
-                        '1989-03-08 09:00:00',
-                        new DateTimeZone('Europe/Madrid')
-                    ),
-                ]
-            ],
+            'metadata' => $this->fillMetadataInstance(),
             'attributes' => [],
             'relations' => [],
         ]);
@@ -238,11 +180,7 @@ class InstanceTest extends TestCase
     {
         $this->expectException(InvalidRelationException::class);
 
-        $instanceCache = Mockery::mock(InstanceCacheInterface::class);
-        $instanceCache->shouldReceive('get')->andReturn(null)->once();
-        $instanceCache->shouldReceive('put')->andReturn(null)->once();
-
-        $instance = (new InstanceBuilder($instanceCache))
+        $instance = (new InstanceBuilder($this->mockInstanceCache()))
             ->setLanguages($this->languages)
             ->setStructure([
                 'relations' => [
@@ -256,16 +194,7 @@ class InstanceTest extends TestCase
             ->build();
 
         $instance->fill([
-            'metadata' => [
-                'key' => 'instance',
-                'publication' => [
-                    'startPublishingDate' => DateTime::createFromFormat(
-                        'Y-m-d H:i:s',
-                        '1989-03-08 09:00:00',
-                        new DateTimeZone('Europe/Madrid')
-                    ),
-                ]
-            ],
+            'metadata' => $this->fillMetadataInstance(),
             'attributes' => [],
             'relations' => [
                 'relation-key2' => [
@@ -282,11 +211,7 @@ class InstanceTest extends TestCase
     {
         $this->expectException(InvalidRelationClassException::class);
 
-        $instanceCache = Mockery::mock(InstanceCacheInterface::class);
-        $instanceCache->shouldReceive('get')->andReturn(null)->once();
-        $instanceCache->shouldReceive('put')->andReturn(null)->once();
-
-        $instance = (new InstanceBuilder($instanceCache))
+        $instance = (new InstanceBuilder($this->mockInstanceCache()))
             ->setLanguages($this->languages)
             ->setStructure([
                 'relations' => [
@@ -300,16 +225,7 @@ class InstanceTest extends TestCase
             ->build();
 
         $instance->fill([
-            'metadata' => [
-                'key' => 'instance',
-                'publication' => [
-                    'startPublishingDate' => DateTime::createFromFormat(
-                        'Y-m-d H:i:s',
-                        '1989-03-08 09:00:00',
-                        new DateTimeZone('Europe/Madrid')
-                    ),
-                ]
-            ],
+            'metadata' => $this->fillMetadataInstance(),
             'attributes' => [],
             'relations' => [
                 'relation-key1' => [
@@ -325,11 +241,7 @@ class InstanceTest extends TestCase
         $structure = Yaml::parseFile(dirname(__DIR__, 3).'/Data/data.yml');
         $expected = include dirname(__DIR__, 3).'/Data/ExpectedInstance2.php';
 
-        $instanceCache = Mockery::mock(InstanceCacheInterface::class);
-        $instanceCache->shouldReceive('get')->andReturn(null)->once();
-        $instanceCache->shouldReceive('put')->andReturn(null)->once();
-
-        $instance = (new InstanceBuilder($instanceCache))
+        $instance = (new InstanceBuilder($this->mockInstanceCache()))
             ->setLanguages($this->languages)
             ->setStructure($structure[$this->className])
             ->setClassName($this->className)
@@ -396,7 +308,7 @@ class InstanceTest extends TestCase
                     3 => 'class-two',
                     4 => 'class-three',
                     5 => 'class-three',
-                    6 => 'class-three'
+                    6 => 'class-three',
                 ],
                 'relation-key2' => [
                     7 => 'class-four',
@@ -417,24 +329,19 @@ class InstanceTest extends TestCase
     {
         $this->expectException(InvalidEndDatePublishingException::class);
 
-        $instanceCache = Mockery::mock(InstanceCacheInterface::class);
-        $instanceCache->shouldReceive('get')->andReturn(null)->once();
-        $instanceCache->shouldReceive('put')->andReturn(null)->once();
-
-        $instance = (new InstanceBuilder($instanceCache))
+        $instance = (new InstanceBuilder($this->mockInstanceCache()))
             ->setLanguages($this->languages)
             ->setStructure([
                 'metadata' => [
                     'key' => 'instance',
-                    'publication' => []
+                    'publication' => [],
                 ],
                 'attributes' => [],
-                'relations' => []
+                'relations' => [],
             ])
             ->setClassName($this->className)
             ->build();
 
-        
         $instance->fill([
             'metadata' => [
                 'key' => 'instance',
@@ -453,7 +360,7 @@ class InstanceTest extends TestCase
                 ],
             ],
             'attributes' => [],
-            'relations' => []
+            'relations' => [],
         ]);
     }
 
@@ -462,24 +369,19 @@ class InstanceTest extends TestCase
     {
         $this->expectException(InvalidEndDatePublishingException::class);
 
-        $instanceCache = Mockery::mock(InstanceCacheInterface::class);
-        $instanceCache->shouldReceive('get')->andReturn(null)->once();
-        $instanceCache->shouldReceive('put')->andReturn(null)->once();
-
-        $instance = (new InstanceBuilder($instanceCache))
+        $instance = (new InstanceBuilder($this->mockInstanceCache()))
             ->setLanguages($this->languages)
             ->setStructure([
                 'metadata' => [
                     'key' => 'instance',
-                    'publication' => []
+                    'publication' => [],
                 ],
                 'attributes' => [],
-                'relations' => []
+                'relations' => [],
             ])
             ->setClassName($this->className)
             ->build();
 
-        
         $instance->fill([
             'metadata' => [
                 'key' => 'instance',
@@ -498,7 +400,21 @@ class InstanceTest extends TestCase
                 ],
             ],
             'attributes' => [],
-            'relations' => []
+            'relations' => [],
         ]);
+    }
+
+    private function fillMetadataInstance()
+    {
+        return [
+            'key' => 'instance',
+            'publication' => [
+                'startPublishingDate' => DateTime::createFromFormat(
+                    'Y-m-d H:i:s',
+                    '1989-03-08 09:00:00',
+                    new DateTimeZone('Europe/Madrid')
+                ),
+            ],
+        ];
     }
 }
