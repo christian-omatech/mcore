@@ -253,16 +253,8 @@ class InstanceTest extends TestCase
                 'id' => 1,
                 'publication' => [
                     'status' => PublicationStatus::REVISION,
-                    'startPublishingDate' => DateTime::createFromFormat(
-                        'Y-m-d H:i:s',
-                        '1989-03-08 09:00:00',
-                        new DateTimeZone('Europe/Madrid')
-                    ),
-                    'endPublishingDate' => DateTime::createFromFormat(
-                        'Y-m-d H:i:s',
-                        '2021-07-27 14:30:00',
-                        new DateTimeZone('Europe/Madrid')
-                    ),
+                    'startPublishingDate' => '1989-03-08 09:00:00',
+                    'endPublishingDate' => '2021-07-27 14:30:00',
                 ],
             ],
             'attributes' => [
@@ -347,16 +339,8 @@ class InstanceTest extends TestCase
                 'key' => 'instance',
                 'publication' => [
                     'status' => PublicationStatus::REVISION,
-                    'startPublishingDate' => DateTime::createFromFormat(
-                        'Y-m-d H:i:s',
-                        '2022-03-08 09:00:00',
-                        new DateTimeZone('Europe/Madrid')
-                    ),
-                    'endPublishingDate' => DateTime::createFromFormat(
-                        'Y-m-d H:i:s',
-                        '2021-07-27 14:30:00',
-                        new DateTimeZone('Europe/Madrid')
-                    ),
+                    'startPublishingDate' => '2022-03-08 09:00:00',
+                    'endPublishingDate' => '2021-07-27 14:30:00',
                 ],
             ],
             'attributes' => [],
@@ -387,16 +371,8 @@ class InstanceTest extends TestCase
                 'key' => 'instance',
                 'publication' => [
                     'status' => PublicationStatus::REVISION,
-                    'startPublishingDate' => DateTime::createFromFormat(
-                        'Y-m-d H:i:s',
-                        '2022-03-08 09:00:00',
-                        new DateTimeZone('Europe/Madrid')
-                    ),
-                    'endPublishingDate' => DateTime::createFromFormat(
-                        'Y-m-d H:i:s',
-                        '2022-03-08 09:00:00',
-                        new DateTimeZone('Europe/Madrid')
-                    ),
+                    'startPublishingDate' => '2022-03-08 09:00:00',
+                    'endPublishingDate' => '2022-03-08 09:00:00',
                 ],
             ],
             'attributes' => [],
@@ -409,11 +385,7 @@ class InstanceTest extends TestCase
         return [
             'key' => 'instance',
             'publication' => [
-                'startPublishingDate' => DateTime::createFromFormat(
-                    'Y-m-d H:i:s',
-                    '1989-03-08 09:00:00',
-                    new DateTimeZone('Europe/Madrid')
-                ),
+                'startPublishingDate' => '1989-03-08 09:00:00',
             ],
         ];
     }

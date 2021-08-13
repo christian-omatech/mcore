@@ -21,17 +21,31 @@ class UpdateInstanceTest extends TestCase
         $command = new UpdateInstanceCommand([
             'metadata' => [
                 'id' => 1,
+                'key' => 'test',
+                'publication' => [
+                    'start_publishing_date' => '1989-03-08 09:00:00'
+                ]
             ],
             'attributes' => [],
         ]);
 
-        $this->assertSame(['id' => 1], $command->metadata());
+        $this->assertSame([
+            'key' => 'test',
+            'publication' => [
+                'startPublishingDate' => '1989-03-08 09:00:00',
+                'endPublishingDate' => null,
+            ]
+        ], $command->metadata());
         $this->assertSame([], $command->attributes());
         $this->assertSame([], $command->relations());
 
         $command = new UpdateInstanceCommand([
             'metadata' => [
                 'id' => 1,
+                'key' => 'test',
+                'publication' => [
+                    'start_publishing_date' => '1989-03-08 09:00:00'
+                ]
             ],
             'attributes' => [],
             'relations' => [
@@ -42,7 +56,11 @@ class UpdateInstanceTest extends TestCase
         ]);
 
         $this->assertSame([
-            'id' => 1,
+            'key' => 'test',
+            'publication' => [
+                'startPublishingDate' => '1989-03-08 09:00:00',
+                'endPublishingDate' => null,
+            ]
         ], $command->metadata());
         $this->assertSame([], $command->attributes());
         $this->assertSame([
@@ -61,6 +79,10 @@ class UpdateInstanceTest extends TestCase
         $command = new UpdateInstanceCommand([
             'metadata' => [
                 'id' => 1,
+                'key' => 'test',
+                'publication' => [
+                    'start_publishing_date' => '1989-03-08 09:00:00'
+                ]
             ],
             'attributes' => [],
             'relations' => [

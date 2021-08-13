@@ -24,7 +24,15 @@ final class CreateInstanceCommand
 
     public function metadata(): array
     {
-        return $this->metadata;
+        $startPublishingDate = $this->metadata['publication']['start_publishing_date'];
+        $endPublishingDate = $this->metadata['publication']['end_publishing_date'] ?? null;
+        return [
+            'key' => $this->metadata['key'],
+            'publication' => [
+                'startPublishingDate' => $startPublishingDate,
+                'endPublishingDate' => $endPublishingDate,
+            ],
+        ];
     }
 
     public function attributes(): array

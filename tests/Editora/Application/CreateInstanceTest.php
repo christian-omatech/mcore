@@ -2,6 +2,7 @@
 
 namespace Tests\Editora\Application;
 
+use DateTime;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Omatech\Mcore\Editora\Application\CreateInstance\CreateInstanceCommand;
@@ -20,18 +21,34 @@ class CreateInstanceTest extends TestCase
     {
         $command = new CreateInstanceCommand([
             'classKey' => 'test',
-            'metadata' => [],
+            'metadata' => [
+                'key' => 'test',
+                'publication' => [
+                    'start_publishing_date' => '1989-03-08 09:00:00'
+                ]
+            ],
             'attributes' => [],
         ]);
 
         $this->assertSame('test', $command->classKey());
-        $this->assertSame([], $command->metadata());
+        $this->assertSame([
+            'key' => 'test',
+            'publication' => [
+                'startPublishingDate' => '1989-03-08 09:00:00',
+                'endPublishingDate' => null
+            ]
+        ], $command->metadata());
         $this->assertSame([], $command->attributes());
         $this->assertSame([], $command->relations());
 
         $command = new CreateInstanceCommand([
             'classKey' => 'test',
-            'metadata' => [],
+            'metadata' => [
+                'key' => 'test',
+                'publication' => [
+                    'start_publishing_date' => '1989-03-08 09:00:00'
+                ]
+            ],
             'attributes' => [],
             'relations' => [
                 'relation-key1' => [
@@ -41,7 +58,13 @@ class CreateInstanceTest extends TestCase
         ]);
 
         $this->assertSame('test', $command->classKey());
-        $this->assertSame([], $command->metadata());
+        $this->assertSame([
+            'key' => 'test',
+            'publication' => [
+                'startPublishingDate' => '1989-03-08 09:00:00',
+                'endPublishingDate' => null
+            ]
+        ], $command->metadata());
         $this->assertSame([], $command->attributes());
         $this->assertSame([
             'relation-key1' => [
@@ -58,7 +81,12 @@ class CreateInstanceTest extends TestCase
 
         $command = new CreateInstanceCommand([
             'classKey' => 'test',
-            'metadata' => [],
+            'metadata' => [
+                'key' => 'test',
+                'publication' => [
+                    'start_publishing_date' => '1989-03-08 09:00:00',
+                ],
+            ],
             'attributes' => [],
             'relations' => [
                 'relation-key1' => [
@@ -111,7 +139,12 @@ class CreateInstanceTest extends TestCase
 
         $command = new CreateInstanceCommand([
             'classKey' => 'test',
-            'metadata' => [],
+            'metadata' => [
+                'key' => 'test',
+                'publication' => [
+                    'start_publishing_date' => new DateTime('1989-03-08 09:00:00'),
+                ],
+            ],
             'attributes' => [],
             'relations' => [
                 'relation-key1' => [
@@ -138,7 +171,13 @@ class CreateInstanceTest extends TestCase
 
         $command = new CreateInstanceCommand([
             'classKey' => 'test',
-            'metadata' => [],
+            'metadata' => [
+                'key' => 'test',
+                'publication' => [
+                    'start_publishing_date' => '1989-03-08 09:00:00',
+                    'end_publishing_date' => null
+                ],
+            ],
             'attributes' => [],
         ]);
 

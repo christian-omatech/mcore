@@ -16,8 +16,10 @@ final class Publication
     {
         assert(isset($publication['startPublishingDate']));
         $this->status = $publication['status'] ?? PublicationStatus::PENDING;
-        $this->startPublishingDate = $publication['startPublishingDate'];
-        $this->endPublishingDate = $publication['endPublishingDate'] ?? null;
+        $this->startPublishingDate = new DateTime($publication['startPublishingDate']);
+        if (isset($publication['endPublishingDate'])) {
+            $this->endPublishingDate = new DateTime($publication['endPublishingDate']);
+        }
         $this->validateEndPublishingDate();
     }
 
