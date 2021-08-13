@@ -1,0 +1,12 @@
+version: '3.8'
+services:
+  php:
+    container_name: mcore-php
+    build:
+      context: "."
+      dockerfile: "php/Dockerfile"
+      args:
+        UID: ${UID}
+        GID: ${GID}
+    volumes:
+      - ../:/app

@@ -35,8 +35,8 @@ final class Publication
     {
         return [
             'status' => $this->status,
-            'startPublishingDate' => $this->startPublishingDate?->format($this::DATE_FORMAT),
-            'endPublishingDate' => $this->endPublishingDate?->format($this::DATE_FORMAT),
+            'startPublishingDate' => $this->startPublishingDate?->format('Y-m-d H:i:s'),
+            'endPublishingDate' => $this->endPublishingDate?->format('Y-m-d H:i:s'),
         ];
     }
 }

@@ -1,22 +1,24 @@
 #!/bin/sh
+.PHONY: build down clear install init update dump analyse test
 
-ifeq (composer, $(firstword $(MAKECMDGOALS)))
-  RUN_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
-  $(eval $(RUN_ARGS):;@:)
-endif
-
-.PHONY: build install init update analyse test
-NAME = $(notdir $(CURDIR))
+UID := $(shell id -u)
+GID := $(shell id -g)
 
 build:
-	@docker build --no-cache -f .docker/php/Dockerfile -t $(NAME) .
+	@env UID=${UID} GID=${GID} docker-compose -f .docker/docker-compose.yml build --force-rm --no-cache
+down:
+	@env UID=${UID} GID=${GID} docker-compose -f .docker/docker-compose.yml down
+clear:
+	@env UID=${UID} GID=${GID} docker-compose -f .docker/docker-compose.yml down --rmi all --volumes
+	@env UID=${UID} GID=${GID} docker system prune --all --force
 install:
-	@docker run -t --rm --name $(NAME) -v $(shell pwd)/:/app $(NAME) composer install
+	@env UID=${UID} GID=${GID} docker-compose -f .docker/docker-compose.yml run --rm php composer install
 init: build install
+update:
+	@env UID=${UID} GID=${GID} docker-compose -f .docker/docker-compose.yml run --rm php composer update
+dump:
+	@env UID=${UID} GID=${GID} docker-compose -f .docker/docker-compose.yml run --rm php composer dump
 analyse:
-	@docker run -t --rm --name $(NAME) -v $(shell pwd)/:/app $(NAME) composer analyse
+	@env UID=${UID} GID=${GID} docker-compose -f .docker/docker-compose.yml run --rm php composer analyse
 test:
-	@docker run -t --rm --name $(NAME) -v $(shell pwd)/:/app $(NAME) composer test
-	@docker run -t --rm --name $(NAME) -v $(shell pwd)/:/app $(NAME) composer infection
-composer:
-	@docker run -t --rm --name $(NAME) -v $(shell pwd)/:/app $(NAME) composer $(RUN_ARGS)
+	@env UID=${UID} GID=${GID} docker-compose -f .docker/docker-compose.yml run --rm php composer test

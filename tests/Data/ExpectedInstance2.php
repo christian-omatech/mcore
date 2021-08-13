@@ -24,8 +24,8 @@ return [
         'id' => 1,
         'publication' => [
             'status' => 'in-revision',
-            'startPublishingDate' => '08/03/1989 09:00:00',
-            'endPublishingDate' => '27/07/2021 14:30:00',
+            'startPublishingDate' => '1989-03-08 09:00:00',
+            'endPublishingDate' => '2021-07-27 14:30:00',
         ],
     ],
     'attributes' => [
