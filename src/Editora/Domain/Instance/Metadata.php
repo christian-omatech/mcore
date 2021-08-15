@@ -17,7 +17,7 @@ final class Metadata
     {
         assert(isset($metadata['key']));
         assert(isset($metadata['publication']));
-        $this->id = $metadata['id'] ?? null;
+        $this->id = $metadata['id'] ?? $this->id;
         $this->key = $metadata['key'];
         $this->publication->fill($metadata['publication']);
     }

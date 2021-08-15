@@ -110,7 +110,7 @@ class InstanceBuilderTest extends TestCase
             ->setClassName($this->className)
             ->build();
 
-        $this->assertEquals($instance->toArray(), $this->expected);
+        $this->assertEquals($this->expected, $instance->toArray());
     }
 
     /** @test */

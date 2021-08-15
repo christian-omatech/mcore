@@ -2,8 +2,6 @@
 
 namespace Tests\Editora\Domain\Instance;
 
-use DateTime;
-use DateTimeZone;
 use Omatech\Mcore\Editora\Domain\Clazz\Exceptions\InvalidRelationClassException;
 use Omatech\Mcore\Editora\Domain\Clazz\Exceptions\InvalidRelationException;
 use Omatech\Mcore\Editora\Domain\Instance\InstanceBuilder;
@@ -74,7 +72,6 @@ class InstanceTest extends TestCase
                                         ],
                                     ],
                                 ],
-
                             ],
                         ],
                     ],
@@ -88,7 +85,11 @@ class InstanceTest extends TestCase
             'attributes' => [
                 'all-languages-attribute' => [
                     'values' => [
-                        '*' => 'hola',
+                        [
+                            'id' => 1,
+                            'language' => '*',
+                            'value' => 'hola',
+                        ],
                     ],
                 ],
             ],
@@ -260,35 +261,73 @@ class InstanceTest extends TestCase
             'attributes' => [
                 'default-attribute' => [
                     'values' => [
-                        'es' => 'hola',
-                        'en' => 'adios',
+                        [
+                            'id' => 1,
+                            'language' => 'es',
+                            'value' => 'hola',
+                        ], [
+                            'id' => 2,
+                            'language' => 'en',
+                            'value' => 'adios',
+                        ],
                     ],
                     'attributes' => [
                         'sub-attribute' => [
                             'values' => [
-                                'es' => 'hola',
-                                'en' => 'adios',
-                                'non-existent-language' => 'value',
+                                [
+                                    'id' => 3,
+                                    'language' => 'es',
+                                    'value' => 'hola',
+                                ], [
+                                    'id' => 4,
+                                    'language' => 'en',
+                                    'value' => 'adios',
+                                ], [
+                                    'id' => null,
+                                    'language' => 'non-existent-language',
+                                    'value' => 'value',
+                                ],
                             ],
                         ],
                     ],
                 ],
                 'global-attribute' => [
                     'values' => [
-                        'es' => 'hola',
-                        'en' => 'adios',
+                        [
+                            'id' => 5,
+                            'language' => 'es',
+                            'value' => 'hola',
+                        ], [
+                            'id' => 6,
+                            'language' => 'en',
+                            'value' => 'adios',
+                        ],
                     ],
                 ],
                 'specific-attribute' => [
                     'values' => [
-                        '+' => 'default',
-                        'es' => 'hola',
-                        'en' => 'adios',
+                        [
+                            'id' => 7,
+                            'language' => '+',
+                            'value' => 'default',
+                        ], [
+                            'id' => 8,
+                            'language' => 'es',
+                            'value' => 'hola',
+                        ], [
+                            'id' => 9,
+                            'language' => 'en',
+                            'value' => 'adios',
+                        ],
                     ],
                 ],
                 'all-languages-attribute' => [
                     'values' => [
-                        '*' => 'key1',
+                        [
+                            'id' => 10,
+                            'language' => '*',
+                            'value' => 'key1',
+                        ],
                     ],
                 ],
                 'non-existent-attribute' => [],
@@ -378,6 +417,130 @@ class InstanceTest extends TestCase
             'attributes' => [],
             'relations' => [],
         ]);
+    }
+
+    /** @test */
+    public function instanceUpdateSuccessfully(): void
+    {
+        $instance = (new InstanceBuilder($this->mockInstanceCache()))
+            ->setLanguages($this->languages)
+            ->setStructure([
+                'attributes' => [
+                    'DefaultAttribute' => [],
+                ],
+            ])
+            ->setClassName($this->className)
+            ->build();
+
+        $instance->fill([
+            'metadata' => $this->fillMetadataInstance(),
+            'attributes' => [
+                'default-attribute' => [
+                    'values' => [
+                        [
+                            'id' => null,
+                            'language' => 'es',
+                            'value' => 'hola',
+                        ],
+                    ],
+                ],
+            ],
+            'relations' => [],
+        ]);
+
+        $this->assertEquals([
+            'class' => [
+                'key' => 'class-one',
+                'relations' => [],
+            ],
+            'metadata' => [
+                'id' => null,
+                'key' => 'instance',
+                'publication' => [
+                    'status' => 'pending',
+                    'startPublishingDate' => '1989-03-08 09:00:00',
+                    'endPublishingDate' => null,
+                ],
+            ],
+            'attributes' => [
+                [
+                    'key' => 'default-attribute',
+                    'type' => 'string',
+                    'values' => [
+                        [
+                            'id' => null,
+                            'language' => 'es',
+                            'rules' => [],
+                            'configuration' => [],
+                            'value' => 'hola',
+                        ], [
+                            'id' => null,
+                            'language' => 'en',
+                            'rules' => [],
+                            'configuration' => [],
+                            'value' => null,
+                        ],
+                    ],
+                    'attributes' => [],
+                ],
+            ],
+            'relations' => [],
+        ], $instance->toArray());
+
+        $instance->fill([
+            'metadata' => $this->fillMetadataInstance(),
+            'attributes' => [
+                'default-attribute' => [
+                    'values' => [
+                        [
+                            'id' => 1,
+                            'language' => 'es',
+                            'value' => 'adios',
+                        ],
+                    ],
+                ],
+            ],
+            'relations' => [],
+        ]);
+
+        $this->assertEquals([
+            'class' => [
+                'key' => 'class-one',
+                'relations' => [],
+            ],
+            'metadata' => [
+                'id' => null,
+                'key' => 'instance',
+                'publication' => [
+                    'status' => 'pending',
+                    'startPublishingDate' => '1989-03-08 09:00:00',
+                    'endPublishingDate' => null,
+                ],
+            ],
+            'attributes' => [
+                [
+                    'key' => 'default-attribute',
+                    'type' => 'string',
+                    'values' => [
+                        [
+                            'id' => 1,
+                            'language' => 'es',
+                            'rules' => [],
+                            'configuration' => [],
+                            'value' => 'adios',
+                        ], [
+                            'id' => null,
+                            'language' => 'en',
+                            'rules' => [],
+                            'configuration' => [],
+                            'value' => null,
+                        ],
+                    ],
+                    'attributes' => [],
+                ],
+            ],
+            'relations' => [],
+        ], $instance->toArray());
     }
 
     private function fillMetadataInstance()

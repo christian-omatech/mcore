@@ -23,8 +23,8 @@ class UpdateInstanceTest extends TestCase
                 'id' => 1,
                 'key' => 'test',
                 'publication' => [
-                    'start_publishing_date' => '1989-03-08 09:00:00'
-                ]
+                    'start_publishing_date' => '1989-03-08 09:00:00',
+                ],
             ],
             'attributes' => [],
         ]);
@@ -34,7 +34,7 @@ class UpdateInstanceTest extends TestCase
             'publication' => [
                 'startPublishingDate' => '1989-03-08 09:00:00',
                 'endPublishingDate' => null,
-            ]
+            ],
         ], $command->metadata());
         $this->assertSame([], $command->attributes());
         $this->assertSame([], $command->relations());
@@ -44,8 +44,8 @@ class UpdateInstanceTest extends TestCase
                 'id' => 1,
                 'key' => 'test',
                 'publication' => [
-                    'start_publishing_date' => '1989-03-08 09:00:00'
-                ]
+                    'start_publishing_date' => '1989-03-08 09:00:00',
+                ],
             ],
             'attributes' => [],
             'relations' => [
@@ -60,7 +60,7 @@ class UpdateInstanceTest extends TestCase
             'publication' => [
                 'startPublishingDate' => '1989-03-08 09:00:00',
                 'endPublishingDate' => null,
-            ]
+            ],
         ], $command->metadata());
         $this->assertSame([], $command->attributes());
         $this->assertSame([
@@ -81,8 +81,8 @@ class UpdateInstanceTest extends TestCase
                 'id' => 1,
                 'key' => 'test',
                 'publication' => [
-                    'start_publishing_date' => '1989-03-08 09:00:00'
-                ]
+                    'start_publishing_date' => '1989-03-08 09:00:00',
+                ],
             ],
             'attributes' => [],
             'relations' => [

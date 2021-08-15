@@ -6,15 +6,15 @@ use Omatech\Mcore\Editora\Domain\Value\ValueCollection;
 
 final class Attribute
 {
-    private Metadata $metadata;
-    private Component $component;
+    private string $key;
+    private string $type;
     private ValueCollection $valueCollection;
     private AttributeCollection $attributeCollection;
 
     public function __construct(array $properties)
     {
-        $this->metadata = new Metadata($properties['key']);
-        $this->component = new Component($properties['type']);
+        $this->key = $properties['key'];
+        $this->type = $properties['type'];
         $this->valueCollection = new ValueCollection($properties['values']);
         $this->attributeCollection = new AttributeCollection($properties['attributes']);
     }
@@ -33,14 +33,14 @@ final class Attribute
 
     public function key(): string
     {
-        return $this->metadata->key();
+        return $this->key;
     }
 
     public function toArray(): array
     {
         return [
-            'metadata' => $this->metadata->toArray(),
-            'component' => $this->component->toArray(),
+            'key' => $this->key,
+            'type' => $this->type,
             'values' => $this->valueCollection->get(),
             'attributes' => $this->attributeCollection->get(),
         ];

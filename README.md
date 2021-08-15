@@ -1,11 +1,8 @@
-# MApi
+# MCore
 #### Build:
 `make init`
 
-#### Delete MariaDB Container:
-`make down`
-
-#### Clear Docker (destructive)
+#### Clear docker (destructive)
 `make clear`
 
 #### Install dependencies
@@ -14,10 +11,10 @@
 #### Update dependencies
 `make update`
 
-#### Composer dumpautoload
+#### Composer dump
 `make dump`
 
-#### Code Analysis:
+#### Code analysis:
 `make analyse`
 
 #### Tests:

@@ -26,11 +26,11 @@
     },
     "scripts": {
         "phpunit": "vendor/bin/phpunit",
-        "infection": "vendor/bin/infection -j$(nproc) --coverage=build --skip-initial-tests",
+        "infection": "vendor/bin/infection -j$(nproc) --coverage=build --skip-initial-tests --logger-github",
         "test": [
             "@phpunit",
             "@infection"
         ],
-        "analyse": "vendor/bin/phpinsights analyse --verbose --config-path=rules.php --no-interaction --fix src"
+        "analyse": "vendor/bin/phpinsights analyse --verbose --config-path=rules.php --no-interaction --ansi --format=github-action --fix src"
     }
 }

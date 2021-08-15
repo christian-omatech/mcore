@@ -24,8 +24,8 @@ class CreateInstanceTest extends TestCase
             'metadata' => [
                 'key' => 'test',
                 'publication' => [
-                    'start_publishing_date' => '1989-03-08 09:00:00'
-                ]
+                    'start_publishing_date' => '1989-03-08 09:00:00',
+                ],
             ],
             'attributes' => [],
         ]);
@@ -35,8 +35,8 @@ class CreateInstanceTest extends TestCase
             'key' => 'test',
             'publication' => [
                 'startPublishingDate' => '1989-03-08 09:00:00',
-                'endPublishingDate' => null
-            ]
+                'endPublishingDate' => null,
+            ],
         ], $command->metadata());
         $this->assertSame([], $command->attributes());
         $this->assertSame([], $command->relations());
@@ -46,8 +46,8 @@ class CreateInstanceTest extends TestCase
             'metadata' => [
                 'key' => 'test',
                 'publication' => [
-                    'start_publishing_date' => '1989-03-08 09:00:00'
-                ]
+                    'start_publishing_date' => '1989-03-08 09:00:00',
+                ],
             ],
             'attributes' => [],
             'relations' => [
@@ -62,8 +62,8 @@ class CreateInstanceTest extends TestCase
             'key' => 'test',
             'publication' => [
                 'startPublishingDate' => '1989-03-08 09:00:00',
-                'endPublishingDate' => null
-            ]
+                'endPublishingDate' => null,
+            ],
         ], $command->metadata());
         $this->assertSame([], $command->attributes());
         $this->assertSame([
@@ -175,7 +175,7 @@ class CreateInstanceTest extends TestCase
                 'key' => 'test',
                 'publication' => [
                     'start_publishing_date' => '1989-03-08 09:00:00',
-                    'end_publishing_date' => null
+                    'end_publishing_date' => null,
                 ],
             ],
             'attributes' => [],

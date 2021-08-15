@@ -19,10 +19,10 @@ final class ValueCollection
 
     public function fill(array $values): void
     {
-        each(function (mixed $value, string $language): void {
-            search(static function (BaseValue $value) use ($language): bool {
-                return $value->language() === $language;
-            }, $this->values)?->fill($value);
+        each(function (mixed $value): void {
+            search(static function (BaseValue $fillableValue) use ($value): bool {
+                return $fillableValue->language() === $value['language'];
+            }, $this->values)?->fill($value['value'], $value['id']);
         }, $values);
     }
 

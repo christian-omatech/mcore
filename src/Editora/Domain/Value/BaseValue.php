@@ -4,41 +4,45 @@ namespace Omatech\Mcore\Editora\Domain\Value;
 
 abstract class BaseValue
 {
-    protected string $attributeKey;
-    protected string $language;
+    protected Metadata $metadata;
     protected mixed $value = null;
     protected Configuration $configuration;
     private RuleCollection $ruleCollection;
 
     public function __construct(string $attributeKey, string $language, array $properties)
     {
+        $this->metadata = new Metadata($attributeKey, $language);
         $this->configuration = new Configuration($properties['configuration']);
         $this->ruleCollection = new RuleCollection(new Rules(), $properties['rules']);
-        $this->language = $language;
-        $this->attributeKey = $attributeKey;
     }
 
     abstract public function value(): mixed;
 
     public function validate(): void
     {
-        $this->ruleCollection->validate($this->attributeKey, $this->language, $this->value);
+        $this->ruleCollection->validate(
+            $this->metadata->attributeKey(),
+            $this->metadata->language(),
+            $this->value
+        );
     }
 
-    public function fill(mixed $value): void
+    public function fill(mixed $value, ?int $id): void
     {
         $this->value = $value;
+        $this->metadata->fill($id);
     }
 
     public function language(): string
     {
-        return $this->language;
+        return $this->metadata->language();
     }
 
     public function toArray(): array
     {
         return [
-            'language' => $this->language,
+            'id' => $this->metadata->id(),
+            'language' => $this->metadata->language(),
             'rules' => $this->ruleCollection->get(),
             'configuration' => $this->configuration->get(),
             'value' => $this->value(),

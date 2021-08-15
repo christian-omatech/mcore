@@ -30,20 +30,17 @@ return [
     ],
     'attributes' => [
         [
-            'metadata' => [
-                'id' => null,
-                'key' => 'default-attribute',
-            ],
-            'component' => [
-                'type' => 'string',
-            ],
+            'key' => 'default-attribute',
+            'type' => 'string',
             'values' => [
                 [
+                    'id' => null,
                     'language' => 'es',
                     'rules' => [],
                     'configuration' => [],
                     'value' => null,
                 ], [
+                    'id' => null,
                     'language' => 'en',
                     'rules' => [],
                     'configuration' => [],
@@ -52,20 +49,17 @@ return [
             ],
             'attributes' => [
                 [
-                    'metadata' => [
-                        'id' => null,
-                        'key' => 'sub-attribute',
-                    ],
-                    'component' => [
-                        'type' => 'string',
-                    ],
+                    'key' => 'sub-attribute',
+                    'type' => 'string',
                     'values' => [
                         [
+                            'id' => null,
                             'language' => 'es',
                             'rules' => [],
                             'configuration' => [],
                             'value' => null,
                         ], [
+                            'id' => null,
                             'language' => 'en',
                             'rules' => [],
                             'configuration' => [],
@@ -76,15 +70,11 @@ return [
                 ],
             ],
         ], [
-            'metadata' => [
-                'id' => null,
-                'key' => 'global-attribute',
-            ],
-            'component' => [
-                'type' => 'textarea',
-            ],
+            'key' => 'global-attribute',
+            'type' => 'textarea',
             'values' => [
                 [
+                    'id' => null,
                     'language' => 'es',
                     'rules' => [
                         'required' => true,
@@ -95,6 +85,7 @@ return [
                     ],
                     'value' => null,
                 ], [
+                    'id' => null,
                     'language' => 'en',
                     'rules' => [
                         'required' => true,
@@ -108,15 +99,11 @@ return [
             ],
             'attributes' => [],
         ], [
-            'metadata' => [
-                'id' => null,
-                'key' => 'specific-attribute',
-            ],
-            'component' => [
-                'type' => 'string',
-            ],
+            'key' => 'specific-attribute',
+            'type' => 'string',
             'values' => [
                 [
+                    'id' => null,
                     'language' => 'es',
                     'rules' => [
                         'required' => true,
@@ -127,6 +114,7 @@ return [
                     ],
                     'value' => null,
                 ], [
+                    'id' => null,
                     'language' => 'en',
                     'rules' => [
                         'required' => false,
@@ -137,6 +125,7 @@ return [
                     ],
                     'value' => null,
                 ], [
+                    'id' => null,
                     'language' => '+',
                     'rules' => [
                         'required' => true,
@@ -150,15 +139,11 @@ return [
             ],
             'attributes' => [],
         ], [
-            'metadata' => [
-                'id' => null,
-                'key' => 'all-languages-attribute',
-            ],
-            'component' => [
-                'type' => 'lookup',
-            ],
+            'key' => 'all-languages-attribute',
+            'type' => 'lookup',
             'values' => [
                 [
+                    'id' => null,
                     'language' => '*',
                     'rules' => [
                         'required' => false,

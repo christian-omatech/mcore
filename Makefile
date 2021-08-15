@@ -6,8 +6,6 @@ GID := $(shell id -g)
 
 build:
 	@env UID=${UID} GID=${GID} docker-compose -f .docker/docker-compose.yml build --force-rm --no-cache
-down:
-	@env UID=${UID} GID=${GID} docker-compose -f .docker/docker-compose.yml down
 clear:
 	@env UID=${UID} GID=${GID} docker-compose -f .docker/docker-compose.yml down --rmi all --volumes
 	@env UID=${UID} GID=${GID} docker system prune --all --force

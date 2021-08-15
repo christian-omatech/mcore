@@ -17,7 +17,7 @@ final class LookupValue extends StringValue
     {
         if (! Utils::getInstance()->isEmpty($this->value) &&
             ! $this->configuration->exists($this->value, ['options'])) {
-            LookupValueOptionException::withAttributeLanguage($this->attributeKey, $this->language);
+            LookupValueOptionException::withAttributeLanguage($this->metadata);
         }
     }
 }
