@@ -13,6 +13,7 @@ final class UpdateInstanceCommand
     {
         $this->id = $data['id'];
         $this->metadata = [
+            'key' => $data['key'],
             'publication' => [
                 'startPublishingDate' => $data['startPublishingDate'],
                 'endPublishingDate' => $data['endPublishingDate'] ?? null,
