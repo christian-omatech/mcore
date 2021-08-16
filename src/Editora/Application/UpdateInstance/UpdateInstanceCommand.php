@@ -24,8 +24,8 @@ final class UpdateInstanceCommand
 
     public function metadata(): array
     {
-        $startPublishingDate = $this->metadata['publication']['start_publishing_date'];
-        $endPublishingDate = $this->metadata['publication']['end_publishing_date'] ?? null;
+        $startPublishingDate = $this->metadata['publication']['startPublishingDate'];
+        $endPublishingDate = $this->metadata['publication']['endPublishingDate'] ?? null;
         return [
             'key' => $this->metadata['key'],
             'publication' => [

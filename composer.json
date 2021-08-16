@@ -31,6 +31,6 @@
             "@phpunit",
             "@infection"
         ],
-        "analyse": "vendor/bin/phpinsights analyse --verbose --config-path=rules.php --no-interaction --ansi --format=github-action --fix src"
+        "analyse": "vendor/bin/phpinsights analyse --verbose --config-path=rules.php --no-interaction --fix src"
     }
 }

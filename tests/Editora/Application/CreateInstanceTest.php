@@ -24,7 +24,7 @@ class CreateInstanceTest extends TestCase
             'metadata' => [
                 'key' => 'test',
                 'publication' => [
-                    'start_publishing_date' => '1989-03-08 09:00:00',
+                    'startPublishingDate' => '1989-03-08 09:00:00',
                 ],
             ],
             'attributes' => [],
@@ -46,7 +46,7 @@ class CreateInstanceTest extends TestCase
             'metadata' => [
                 'key' => 'test',
                 'publication' => [
-                    'start_publishing_date' => '1989-03-08 09:00:00',
+                    'startPublishingDate' => '1989-03-08 09:00:00',
                 ],
             ],
             'attributes' => [],
@@ -84,7 +84,7 @@ class CreateInstanceTest extends TestCase
             'metadata' => [
                 'key' => 'test',
                 'publication' => [
-                    'start_publishing_date' => '1989-03-08 09:00:00',
+                    'startPublishingDate' => '1989-03-08 09:00:00',
                 ],
             ],
             'attributes' => [],
@@ -142,7 +142,7 @@ class CreateInstanceTest extends TestCase
             'metadata' => [
                 'key' => 'test',
                 'publication' => [
-                    'start_publishing_date' => new DateTime('1989-03-08 09:00:00'),
+                    'startPublishingDate' => new DateTime('1989-03-08 09:00:00'),
                 ],
             ],
             'attributes' => [],
@@ -174,8 +174,8 @@ class CreateInstanceTest extends TestCase
             'metadata' => [
                 'key' => 'test',
                 'publication' => [
-                    'start_publishing_date' => '1989-03-08 09:00:00',
-                    'end_publishing_date' => null,
+                    'startPublishingDate' => '1989-03-08 09:00:00',
+                    'endPublishingDate' => null,
                 ],
             ],
             'attributes' => [],

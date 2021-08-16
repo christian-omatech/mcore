@@ -23,7 +23,7 @@ class UpdateInstanceTest extends TestCase
                 'id' => 1,
                 'key' => 'test',
                 'publication' => [
-                    'start_publishing_date' => '1989-03-08 09:00:00',
+                    'startPublishingDate' => '1989-03-08 09:00:00',
                 ],
             ],
             'attributes' => [],
@@ -44,7 +44,7 @@ class UpdateInstanceTest extends TestCase
                 'id' => 1,
                 'key' => 'test',
                 'publication' => [
-                    'start_publishing_date' => '1989-03-08 09:00:00',
+                    'startPublishingDate' => '1989-03-08 09:00:00',
                 ],
             ],
             'attributes' => [],
@@ -81,7 +81,7 @@ class UpdateInstanceTest extends TestCase
                 'id' => 1,
                 'key' => 'test',
                 'publication' => [
-                    'start_publishing_date' => '1989-03-08 09:00:00',
+                    'startPublishingDate' => '1989-03-08 09:00:00',
                 ],
             ],
             'attributes' => [],
