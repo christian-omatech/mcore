@@ -7,9 +7,7 @@ use Omatech\Mcore\Editora\Domain\Instance\Exceptions\InvalidLanguagesException;
 use Omatech\Mcore\Editora\Domain\Instance\Exceptions\InvalidStructureException;
 use Omatech\Mcore\Editora\Domain\Instance\Exceptions\InvalidValueTypeException;
 use Omatech\Mcore\Editora\Domain\Instance\InstanceBuilder;
-use Omatech\Mcore\Editora\Domain\Instance\InstanceCache;
 use Omatech\Mcore\Editora\Domain\Value\Exceptions\InvalidRuleException;
-use ReflectionClass;
 use Symfony\Component\Yaml\Yaml;
 
 class InstanceBuilderTest extends TestCase
@@ -116,21 +114,19 @@ class InstanceBuilderTest extends TestCase
     /** @test */
     public function instanceBuildedWithLocalCache(): void
     {
-        $cache = InstanceCache::getInstance();
-        $instance1 = (new InstanceBuilder($cache))
+        $instance1 = (new InstanceBuilder())
             ->setLanguages($this->languages)
             ->setStructure($this->structure[$this->className])
             ->setClassName($this->className)
             ->build();
 
-        $instance2 = (new InstanceBuilder($cache))
+        $instance2 = (new InstanceBuilder())
             ->setLanguages($this->languages)
             ->setStructure($this->structure[$this->className])
             ->setClassName($this->className)
             ->build();
 
         $this->assertNotSame($instance1, $instance2);
-        (new ReflectionClass($cache))->setStaticPropertyValue('instance', null);
     }
 
     /** @test */

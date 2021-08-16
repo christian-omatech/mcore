@@ -15,17 +15,17 @@ final class InstanceBuilder
     private array $languages = [];
     private array $structure = [];
     private string $className = '';
-    private InstanceCacheInterface $instanceCache;
+    private ?InstanceCacheInterface $instanceCache;
 
     public function __construct(?InstanceCacheInterface $instanceCache = null)
     {
-        $this->instanceCache = $instanceCache ?? InstanceCache::getInstance();
+        $this->instanceCache = $instanceCache;
     }
 
     public function build(): Instance
     {
         $this->ensureBuilderIsValid();
-        return $this->instanceCache->get($this->className) ?? $this->buildInstance();
+        return $this->instanceCache?->get($this->className) ?? $this->buildInstance();
     }
 
     private function ensureBuilderIsValid(): void
@@ -55,7 +55,7 @@ final class InstanceBuilder
         ];
         $instance = new class($instance) extends Instance {
         };
-        $this->instanceCache->put($this->className, $instance);
+        $this->instanceCache?->put($this->className, $instance);
         return $instance;
     }
 
