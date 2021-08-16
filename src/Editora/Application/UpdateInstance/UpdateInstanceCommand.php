@@ -11,9 +11,14 @@ final class UpdateInstanceCommand
 
     public function __construct(array $data)
     {
-        $this->id = $data['metadata']['id'];
-        $this->metadata = $data['metadata'];
-        $this->attributes = $data['attributes'];
+        $this->id = $data['id'];
+        $this->metadata = [
+            'publication' => [
+                'startPublishingDate' => $data['startPublishingDate'],
+                'endPublishingDate' => $data['endPublishingDate'] ?? null,
+            ],
+        ];
+        $this->attributes = $data['attributes'] ?? [];
         $this->relations = $data['relations'] ?? [];
     }
 
@@ -24,15 +29,7 @@ final class UpdateInstanceCommand
 
     public function metadata(): array
     {
-        $startPublishingDate = $this->metadata['publication']['startPublishingDate'];
-        $endPublishingDate = $this->metadata['publication']['endPublishingDate'] ?? null;
-        return [
-            'key' => $this->metadata['key'],
-            'publication' => [
-                'startPublishingDate' => $startPublishingDate,
-                'endPublishingDate' => $endPublishingDate,
-            ],
-        ];
+        return $this->metadata;
     }
 
     public function attributes(): array

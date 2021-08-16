@@ -12,8 +12,14 @@ final class CreateInstanceCommand
     public function __construct(array $data)
     {
         $this->classKey = $data['classKey'];
-        $this->metadata = $data['metadata'];
-        $this->attributes = $data['attributes'];
+        $this->metadata = [
+            'key' => $data['key'],
+            'publication' => [
+                'startPublishingDate' => $data['startPublishingDate'],
+                'endPublishingDate' => $data['endPublishingDate'] ?? null,
+            ],
+        ];
+        $this->attributes = $data['attributes'] ?? [];
         $this->relations = $data['relations'] ?? [];
     }
 
@@ -24,15 +30,7 @@ final class CreateInstanceCommand
 
     public function metadata(): array
     {
-        $startPublishingDate = $this->metadata['publication']['startPublishingDate'];
-        $endPublishingDate = $this->metadata['publication']['endPublishingDate'] ?? null;
-        return [
-            'key' => $this->metadata['key'],
-            'publication' => [
-                'startPublishingDate' => $startPublishingDate,
-                'endPublishingDate' => $endPublishingDate,
-            ],
-        ];
+        return $this->metadata;
     }
 
     public function attributes(): array

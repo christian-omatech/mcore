@@ -18,11 +18,10 @@ class DeleteInstanceTest extends TestCase
     /** @test */
     public function deleteInstanceSuccessfully(): void
     {
-        $instance = Mockery::mock(Instance::class);
-        $repository = Mockery::mock(InstanceRepositoryInterface::class);
-
         $command = new DeleteInstanceCommand(1);
 
+        $repository = Mockery::mock(InstanceRepositoryInterface::class);
+        $instance = Mockery::mock(Instance::class);
         $repository->shouldReceive('find')
             ->with($command->id())
             ->andReturn($instance)
@@ -39,10 +38,10 @@ class DeleteInstanceTest extends TestCase
     public function failedToReadInstance(): void
     {
         $this->expectException(InstanceDoesNotExistsException::class);
-        $repository = Mockery::mock(InstanceRepositoryInterface::class);
 
         $command = new DeleteInstanceCommand(1);
 
+        $repository = Mockery::mock(InstanceRepositoryInterface::class);
         $repository->shouldReceive('find')
             ->with($command->id())
             ->andReturn(null)

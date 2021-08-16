@@ -18,11 +18,9 @@ class ReadInstanceTest extends TestCase
     /** @test */
     public function readInstanceSuccessfully(): void
     {
-        $instance = Mockery::mock(Instance::class);
-        $repository = Mockery::mock(InstanceRepositoryInterface::class);
-
         $command = new ReadInstanceCommand(1);
 
+        $instance = Mockery::mock(Instance::class);
         $instance->shouldReceive('toArray')
             ->andReturn([
                 'class' => [],
@@ -33,6 +31,8 @@ class ReadInstanceTest extends TestCase
                 'relations' => [],
             ])
             ->once();
+
+        $repository = Mockery::mock(InstanceRepositoryInterface::class);
         $repository->shouldReceive('find')
             ->with($command->id())
             ->andReturn($instance)
@@ -53,10 +53,10 @@ class ReadInstanceTest extends TestCase
     public function failedToReadInstance(): void
     {
         $this->expectException(InstanceDoesNotExistsException::class);
-        $repository = Mockery::mock(InstanceRepositoryInterface::class);
 
         $command = new ReadInstanceCommand(1);
 
+        $repository = Mockery::mock(InstanceRepositoryInterface::class);
         $repository->shouldReceive('find')
             ->with($command->id())
             ->andReturn(null)

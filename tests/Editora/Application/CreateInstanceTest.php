@@ -21,13 +21,18 @@ class CreateInstanceTest extends TestCase
     {
         $command = new CreateInstanceCommand([
             'classKey' => 'test',
-            'metadata' => [
-                'key' => 'test',
-                'publication' => [
-                    'startPublishingDate' => '1989-03-08 09:00:00',
+            'key' => 'test',
+            'startPublishingDate' => '1989-03-08 09:00:00',
+            'attributes' => [
+                'attribute-1' => [
+                    'values' => [
+                        [
+                            'value' => 'value-1',
+                            'language' => 'es',
+                        ],
+                    ],
                 ],
             ],
-            'attributes' => [],
         ]);
 
         $this->assertSame('test', $command->classKey());
@@ -38,17 +43,22 @@ class CreateInstanceTest extends TestCase
                 'endPublishingDate' => null,
             ],
         ], $command->metadata());
-        $this->assertSame([], $command->attributes());
+        $this->assertSame([
+            'attribute-1' => [
+                'values' => [
+                    [
+                        'value' => 'value-1',
+                        'language' => 'es',
+                    ],
+                ],
+            ],
+        ], $command->attributes());
         $this->assertSame([], $command->relations());
 
         $command = new CreateInstanceCommand([
             'classKey' => 'test',
-            'metadata' => [
-                'key' => 'test',
-                'publication' => [
-                    'startPublishingDate' => '1989-03-08 09:00:00',
-                ],
-            ],
+            'key' => 'test',
+            'startPublishingDate' => '1989-03-08 09:00:00',
             'attributes' => [],
             'relations' => [
                 'relation-key1' => [
@@ -81,12 +91,8 @@ class CreateInstanceTest extends TestCase
 
         $command = new CreateInstanceCommand([
             'classKey' => 'test',
-            'metadata' => [
-                'key' => 'test',
-                'publication' => [
-                    'startPublishingDate' => '1989-03-08 09:00:00',
-                ],
-            ],
+            'key' => 'test',
+            'startPublishingDate' => '1989-03-08 09:00:00',
             'attributes' => [],
             'relations' => [
                 'relation-key1' => [
@@ -139,12 +145,8 @@ class CreateInstanceTest extends TestCase
 
         $command = new CreateInstanceCommand([
             'classKey' => 'test',
-            'metadata' => [
-                'key' => 'test',
-                'publication' => [
-                    'startPublishingDate' => new DateTime('1989-03-08 09:00:00'),
-                ],
-            ],
+            'key' => 'test',
+            'startPublishingDate' => new DateTime('1989-03-08 09:00:00'),
             'attributes' => [],
             'relations' => [
                 'relation-key1' => [
@@ -171,13 +173,9 @@ class CreateInstanceTest extends TestCase
 
         $command = new CreateInstanceCommand([
             'classKey' => 'test',
-            'metadata' => [
-                'key' => 'test',
-                'publication' => [
-                    'startPublishingDate' => '1989-03-08 09:00:00',
-                    'endPublishingDate' => null,
-                ],
-            ],
+            'key' => 'test',
+            'startPublishingDate' => '1989-03-08 09:00:00',
+            'endPublishingDate' => null,
             'attributes' => [],
         ]);
 

@@ -19,34 +19,41 @@ class UpdateInstanceTest extends TestCase
     public function updateInstanceCommand(): void
     {
         $command = new UpdateInstanceCommand([
-            'metadata' => [
-                'id' => 1,
-                'key' => 'test',
-                'publication' => [
-                    'startPublishingDate' => '1989-03-08 09:00:00',
+            'id' => 1,
+            'startPublishingDate' => '1989-03-08 09:00:00',
+            'attributes' => [
+                'attribute-1' => [
+                    'values' => [
+                        [
+                            'value' => 'value-1',
+                            'language' => 'es',
+                        ],
+                    ],
                 ],
             ],
-            'attributes' => [],
         ]);
 
         $this->assertSame([
-            'key' => 'test',
             'publication' => [
                 'startPublishingDate' => '1989-03-08 09:00:00',
                 'endPublishingDate' => null,
             ],
         ], $command->metadata());
-        $this->assertSame([], $command->attributes());
+        $this->assertSame([
+            'attribute-1' => [
+                'values' => [
+                    [
+                        'value' => 'value-1',
+                        'language' => 'es',
+                    ],
+                ],
+            ],
+        ], $command->attributes());
         $this->assertSame([], $command->relations());
 
         $command = new UpdateInstanceCommand([
-            'metadata' => [
-                'id' => 1,
-                'key' => 'test',
-                'publication' => [
-                    'startPublishingDate' => '1989-03-08 09:00:00',
-                ],
-            ],
+            'id' => 1,
+            'startPublishingDate' => '1989-03-08 09:00:00',
             'attributes' => [],
             'relations' => [
                 'relation-key1' => [
@@ -56,7 +63,6 @@ class UpdateInstanceTest extends TestCase
         ]);
 
         $this->assertSame([
-            'key' => 'test',
             'publication' => [
                 'startPublishingDate' => '1989-03-08 09:00:00',
                 'endPublishingDate' => null,
@@ -73,17 +79,10 @@ class UpdateInstanceTest extends TestCase
     /** @test */
     public function updateInstanceSuccessfully(): void
     {
-        $instance = Mockery::mock(Instance::class);
-        $repository = Mockery::mock(InstanceRepositoryInterface::class);
-
         $command = new UpdateInstanceCommand([
-            'metadata' => [
-                'id' => 1,
-                'key' => 'test',
-                'publication' => [
-                    'startPublishingDate' => '1989-03-08 09:00:00',
-                ],
-            ],
+            'id' => 1,
+            'key' => 'test',
+            'startPublishingDate' => '1989-03-08 09:00:00',
             'attributes' => [],
             'relations' => [
                 'relation-key1' => [
@@ -92,6 +91,7 @@ class UpdateInstanceTest extends TestCase
             ],
         ]);
 
+        $repository = Mockery::mock(InstanceRepositoryInterface::class);
         $repository->shouldReceive('classKey')->with(1)->andReturn('class-one')->once();
         $repository->shouldReceive('classKey')->with(2)->andReturn('class-one')->once();
         $repository->shouldReceive('classKey')->with(3)->andReturn('class-one')->once();
@@ -99,6 +99,7 @@ class UpdateInstanceTest extends TestCase
         $repository->shouldReceive('classKey')->with(5)->andReturn('class-two')->once();
         $repository->shouldReceive('classKey')->with(6)->andReturn('class-two')->once();
 
+        $instance = Mockery::mock(Instance::class);
         $instance->shouldReceive('fill')
             ->with([
                 'metadata' => $command->metadata(),
@@ -132,12 +133,10 @@ class UpdateInstanceTest extends TestCase
     public function updateInstanceWithInvalidRelation(): void
     {
         $this->expectException(InstanceDoesNotExistsException::class);
-        $repository = Mockery::mock(InstanceRepositoryInterface::class);
 
         $command = new UpdateInstanceCommand([
-            'metadata' => [
-                'id' => 1,
-            ],
+            'id' => 1,
+            'startPublishingDate' => '1989-03-08 09:00:00',
             'attributes' => [],
             'relations' => [
                 'relation-key1' => [
@@ -146,6 +145,7 @@ class UpdateInstanceTest extends TestCase
             ],
         ]);
 
+        $repository = Mockery::mock(InstanceRepositoryInterface::class);
         $repository->shouldReceive('classKey')->with(1)->andReturn('class-one')->once();
         $repository->shouldReceive('classKey')->with(2)->andReturn('class-one')->once();
         $repository->shouldReceive('classKey')->with(3)->andReturn(null)->once();
@@ -160,16 +160,15 @@ class UpdateInstanceTest extends TestCase
     public function failedToReadInstance(): void
     {
         $this->expectException(InstanceDoesNotExistsException::class);
-        $repository = Mockery::mock(InstanceRepositoryInterface::class);
 
         $command = new UpdateInstanceCommand([
-            'metadata' => [
-                'id' => 1,
-            ],
+            'id' => 1,
+            'startPublishingDate' => '1989-03-08 09:00:00',
             'attributes' => [],
             'relations' => [],
         ]);
 
+        $repository = Mockery::mock(InstanceRepositoryInterface::class);
         $repository->shouldReceive('find')
             ->with($command->id())
             ->andReturn(null)
