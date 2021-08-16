@@ -180,7 +180,6 @@ class CreateInstanceTest extends TestCase
         $command = new CreateInstanceCommand([
             'classKey' => 'test',
             'key' => 'test',
-            'status' => 'published',
             'startPublishingDate' => '1989-03-08 09:00:00',
             'endPublishingDate' => null,
             'attributes' => [],

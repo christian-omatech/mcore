@@ -175,7 +175,6 @@ class UpdateInstanceTest extends TestCase
         $command = new UpdateInstanceCommand([
             'id' => 1,
             'key' => 'test',
-            'status' => 'published',
             'startPublishingDate' => '1989-03-08 09:00:00',
             'attributes' => [],
             'relations' => [],

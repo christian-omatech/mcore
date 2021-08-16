@@ -15,7 +15,7 @@ final class CreateInstanceCommand
         $this->metadata = [
             'key' => $data['key'],
             'publication' => [
-                'status' => $data['status'],
+                'status' => $data['status'] ?? null,
                 'startPublishingDate' => $data['startPublishingDate'],
                 'endPublishingDate' => $data['endPublishingDate'] ?? null,
             ],

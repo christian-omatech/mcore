@@ -26,7 +26,7 @@
     },
     "scripts": {
         "phpunit": "vendor/bin/phpunit",
-        "infection": "vendor/bin/infection --coverage=build --skip-initial-tests --logger-github",
+        "infection": "vendor/bin/infection --coverage=build --skip-initial-tests",
         "test": [
             "@phpunit",
             "@infection"
