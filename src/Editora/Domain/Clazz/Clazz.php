@@ -18,6 +18,11 @@ final class Clazz
         $this->relationCollection->validate($instanceRelations);
     }
 
+    public function key(): string
+    {
+        return $this->key;
+    }
+
     public function toArray(): array
     {
         return [

@@ -2,6 +2,7 @@
 
 namespace Tests\Editora\Domain\Instance;
 
+use DateTime;
 use Omatech\Mcore\Editora\Domain\Clazz\Exceptions\InvalidRelationClassException;
 use Omatech\Mcore\Editora\Domain\Clazz\Exceptions\InvalidRelationException;
 use Omatech\Mcore\Editora\Domain\Instance\InstanceBuilder;
@@ -353,6 +354,15 @@ class InstanceTest extends TestCase
         ]);
 
         $this->assertEquals($expected, $instance->toArray());
+        $this->assertEquals(1, $instance->id());
+        $this->assertEquals([
+            'classKey' => 'class-one',
+            'key' => 'soy-la-key-de-la-instancia',
+            'status' => 'in-revision',
+            'startPublishingDate' => new DateTime('1989-03-08 09:00:00'),
+            'endPublishingDate' => new DateTime('2021-07-27 14:30:00'),
+        ], $instance->data());
+        $this->assertIsArray($instance->attributes());
     }
 
     /** @test  */

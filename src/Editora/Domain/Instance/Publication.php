@@ -33,6 +33,15 @@ final class Publication
         }
     }
 
+    public function data(): array
+    {
+        return [
+            'status' => $this->status,
+            'startPublishingDate' => $this->startPublishingDate,
+            'endPublishingDate' => $this->endPublishingDate,
+        ];
+    }
+
     public function toArray(): array
     {
         return [

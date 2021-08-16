@@ -22,6 +22,18 @@ final class Metadata
         $this->publication->fill($metadata['publication']);
     }
 
+    public function id(): ?int
+    {
+        return $this->id;
+    }
+
+    public function data(): array
+    {
+        return [
+            'key' => $this->key,
+        ] + $this->publication->data();
+    }
+
     public function toArray(): array
     {
         return [

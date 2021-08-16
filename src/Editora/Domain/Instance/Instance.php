@@ -37,6 +37,23 @@ abstract class Instance
         $this->clazz->validateRelations($this->instanceRelationCollection->instanceRelations());
     }
 
+    public function id(): ?int
+    {
+        return $this->metadata->id();
+    }
+
+    public function data(): array
+    {
+        return [
+            'classKey' => $this->clazz->key(),
+        ] + $this->metadata->data();
+    }
+
+    public function attributes(): array
+    {
+        return $this->attributesCollection->get();
+    }
+
     public function toArray(): array
     {
         return [
