@@ -15,6 +15,7 @@ final class UpdateInstanceCommand
         $this->metadata = [
             'key' => $data['key'],
             'publication' => [
+                'status' => $data['status'],
                 'startPublishingDate' => $data['startPublishingDate'],
                 'endPublishingDate' => $data['endPublishingDate'] ?? null,
             ],

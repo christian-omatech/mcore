@@ -21,6 +21,7 @@ class UpdateInstanceTest extends TestCase
         $command = new UpdateInstanceCommand([
             'id' => 1,
             'key' => 'test',
+            'status' => 'published',
             'startPublishingDate' => '1989-03-08 09:00:00',
             'attributes' => [
                 'attribute-1' => [
@@ -37,6 +38,7 @@ class UpdateInstanceTest extends TestCase
         $this->assertSame([
             'key' => 'test',
             'publication' => [
+                'status' => 'published',
                 'startPublishingDate' => '1989-03-08 09:00:00',
                 'endPublishingDate' => null,
             ],
@@ -56,6 +58,7 @@ class UpdateInstanceTest extends TestCase
         $command = new UpdateInstanceCommand([
             'id' => 1,
             'key' => 'test',
+            'status' => 'published',
             'startPublishingDate' => '1989-03-08 09:00:00',
             'attributes' => [],
             'relations' => [
@@ -68,6 +71,7 @@ class UpdateInstanceTest extends TestCase
         $this->assertSame([
             'key' => 'test',
             'publication' => [
+                'status' => 'published',
                 'startPublishingDate' => '1989-03-08 09:00:00',
                 'endPublishingDate' => null,
             ],
@@ -86,6 +90,7 @@ class UpdateInstanceTest extends TestCase
         $command = new UpdateInstanceCommand([
             'id' => 1,
             'key' => 'test',
+            'status' => 'published',
             'startPublishingDate' => '1989-03-08 09:00:00',
             'attributes' => [],
             'relations' => [
@@ -141,6 +146,7 @@ class UpdateInstanceTest extends TestCase
         $command = new UpdateInstanceCommand([
             'id' => 1,
             'key' => 'test',
+            'status' => 'published',
             'startPublishingDate' => '1989-03-08 09:00:00',
             'attributes' => [],
             'relations' => [
@@ -169,6 +175,7 @@ class UpdateInstanceTest extends TestCase
         $command = new UpdateInstanceCommand([
             'id' => 1,
             'key' => 'test',
+            'status' => 'published',
             'startPublishingDate' => '1989-03-08 09:00:00',
             'attributes' => [],
             'relations' => [],
