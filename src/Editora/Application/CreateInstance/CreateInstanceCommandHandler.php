@@ -18,6 +18,7 @@ final class CreateInstanceCommandHandler
 
     public function __invoke(CreateInstanceCommand $command): void
     {
+        $this->instanceFinder->exists($command->key());
         $relations = $this->instanceFinder->findClassKeysGivenInstances($command->relations());
         $instance = $this->instanceRepository->build($command->classKey());
         $instance->fill([

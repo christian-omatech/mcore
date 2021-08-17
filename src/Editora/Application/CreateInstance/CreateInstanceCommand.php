@@ -29,6 +29,11 @@ final class CreateInstanceCommand
         return $this->classKey;
     }
 
+    public function key(): string
+    {
+        return $this->metadata['key'];
+    }
+
     public function metadata(): array
     {
         return $this->metadata;

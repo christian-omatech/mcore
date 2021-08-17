@@ -9,6 +9,7 @@ use Omatech\Mcore\Editora\Application\CreateInstance\CreateInstanceCommand;
 use Omatech\Mcore\Editora\Application\CreateInstance\CreateInstanceCommandHandler;
 use Omatech\Mcore\Editora\Domain\Instance\Contracts\InstanceRepositoryInterface;
 use Omatech\Mcore\Editora\Domain\Instance\Exceptions\InstanceDoesNotExistsException;
+use Omatech\Mcore\Editora\Domain\Instance\Exceptions\InstanceExistsException;
 use Omatech\Mcore\Editora\Domain\Instance\Instance;
 use PHPUnit\Framework\TestCase;
 
@@ -37,6 +38,7 @@ class CreateInstanceTest extends TestCase
         ]);
 
         $this->assertSame('test', $command->classKey());
+        $this->assertSame('test', $command->key());
         $this->assertSame([
             'key' => 'test',
             'publication' => [
@@ -59,7 +61,7 @@ class CreateInstanceTest extends TestCase
 
         $command = new CreateInstanceCommand([
             'classKey' => 'test',
-            'key' => 'test',
+            'key' => 'test1',
             'status' => 'published',
             'startPublishingDate' => '1989-03-08 09:00:00',
             'attributes' => [],
@@ -71,8 +73,9 @@ class CreateInstanceTest extends TestCase
         ]);
 
         $this->assertSame('test', $command->classKey());
+        $this->assertSame('test1', $command->key());
         $this->assertSame([
-            'key' => 'test',
+            'key' => 'test1',
             'publication' => [
                 'status' => 'published',
                 'startPublishingDate' => '1989-03-08 09:00:00',
@@ -90,9 +93,6 @@ class CreateInstanceTest extends TestCase
     /** @test */
     public function createInstanceSuccessfully(): void
     {
-        $instance = Mockery::mock(Instance::class);
-        $repository = Mockery::mock(InstanceRepositoryInterface::class);
-
         $command = new CreateInstanceCommand([
             'classKey' => 'test',
             'key' => 'test',
@@ -106,6 +106,8 @@ class CreateInstanceTest extends TestCase
             ],
         ]);
 
+        $repository = Mockery::mock(InstanceRepositoryInterface::class);
+        $repository->shouldReceive('exists')->with('test')->andReturn(false)->once();
         $repository->shouldReceive('classKey')->with(1)->andReturn('class-one')->once();
         $repository->shouldReceive('classKey')->with(2)->andReturn('class-one')->once();
         $repository->shouldReceive('classKey')->with(3)->andReturn('class-one')->once();
@@ -113,6 +115,7 @@ class CreateInstanceTest extends TestCase
         $repository->shouldReceive('classKey')->with(5)->andReturn('class-two')->once();
         $repository->shouldReceive('classKey')->with(6)->andReturn('class-two')->once();
 
+        $instance = Mockery::mock(Instance::class);
         $instance->shouldReceive('fill')
             ->with([
                 'metadata' => $command->metadata(),
@@ -130,14 +133,28 @@ class CreateInstanceTest extends TestCase
             ])
             ->andReturn(null)
             ->once();
-        $repository->shouldReceive('build')
-            ->with($command->classKey())
-            ->andReturn($instance)
-            ->once();
-        $repository->shouldReceive('save')
-            ->with($instance)
-            ->andReturn(null)
-            ->once();
+        $repository->shouldReceive('build')->with($command->classKey())->andReturn($instance)->once();
+        $repository->shouldReceive('save')->with($instance)->andReturn(null)->once();
+
+        (new CreateInstanceCommandHandler($repository))->__invoke($command);
+    }
+
+    /** @test */
+    public function recreateExistingInstanceFail(): void
+    {
+        $this->expectException(InstanceExistsException::class);
+
+        $command = new CreateInstanceCommand([
+            'classKey' => 'test',
+            'key' => 'test',
+            'status' => 'published',
+            'startPublishingDate' => new DateTime('1989-03-08 09:00:00'),
+            'attributes' => [],
+            'relations' => [],
+        ]);
+
+        $repository = Mockery::mock(InstanceRepositoryInterface::class);
+        $repository->shouldReceive('exists')->with('test')->andReturn(true)->once();
 
         (new CreateInstanceCommandHandler($repository))->__invoke($command);
     }
@@ -146,7 +163,6 @@ class CreateInstanceTest extends TestCase
     public function createInstanceWithInvalidRelation(): void
     {
         $this->expectException(InstanceDoesNotExistsException::class);
-        $repository = Mockery::mock(InstanceRepositoryInterface::class);
 
         $command = new CreateInstanceCommand([
             'classKey' => 'test',
@@ -161,6 +177,8 @@ class CreateInstanceTest extends TestCase
             ],
         ]);
 
+        $repository = Mockery::mock(InstanceRepositoryInterface::class);
+        $repository->shouldReceive('exists')->with('test')->andReturn(false)->once();
         $repository->shouldReceive('classKey')->with(1)->andReturn('class-one')->once();
         $repository->shouldReceive('classKey')->with(2)->andReturn('class-one')->once();
         $repository->shouldReceive('classKey')->with(3)->andReturn('class-one')->once();
@@ -174,9 +192,6 @@ class CreateInstanceTest extends TestCase
     /** @test */
     public function createInstanceWithoutRelationsSuccessfully(): void
     {
-        $instance = Mockery::mock(Instance::class);
-        $repository = Mockery::mock(InstanceRepositoryInterface::class);
-
         $command = new CreateInstanceCommand([
             'classKey' => 'test',
             'key' => 'test',
@@ -185,6 +200,7 @@ class CreateInstanceTest extends TestCase
             'attributes' => [],
         ]);
 
+        $instance = Mockery::mock(Instance::class);
         $instance->shouldReceive('fill')
             ->with([
                 'metadata' => $command->metadata(),
@@ -193,14 +209,10 @@ class CreateInstanceTest extends TestCase
             ])
             ->andReturn(null)
             ->once();
-        $repository->shouldReceive('build')
-            ->with($command->classKey())
-            ->andReturn($instance)
-            ->once();
-        $repository->shouldReceive('save')
-            ->with($instance)
-            ->andReturn(null)
-            ->once();
+        $repository = Mockery::mock(InstanceRepositoryInterface::class);
+        $repository->shouldReceive('exists')->with('test')->andReturn(false)->once();
+        $repository->shouldReceive('build')->with($command->classKey())->andReturn($instance) ->once();
+        $repository->shouldReceive('save')->with($instance)->andReturn(null)->once();
 
         (new CreateInstanceCommandHandler($repository))->__invoke($command);
     }
