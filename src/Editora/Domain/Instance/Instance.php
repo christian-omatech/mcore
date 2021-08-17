@@ -20,7 +20,7 @@ abstract class Instance
         $this->instanceRelationCollection = new InstanceRelationCollection();
     }
 
-    public function fill(array $instance): void
+    public function fill(array $instance): self
     {
         assert(isset($instance['metadata']));
         assert(isset($instance['attributes']));
@@ -29,6 +29,7 @@ abstract class Instance
         $this->attributesCollection->fill($instance['attributes']);
         $this->instanceRelationCollection->fill($instance['relations']);
         $this->validate();
+        return $this;
     }
 
     private function validate(): void

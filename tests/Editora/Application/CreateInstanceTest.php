@@ -131,7 +131,7 @@ class CreateInstanceTest extends TestCase
                     ],
                 ],
             ])
-            ->andReturn(null)
+            ->andReturn($instance)
             ->once();
         $repository->shouldReceive('build')->with($command->classKey())->andReturn($instance)->once();
         $repository->shouldReceive('save')->with($instance)->andReturn(null)->once();
@@ -207,7 +207,7 @@ class CreateInstanceTest extends TestCase
                 'attributes' => $command->attributes(),
                 'relations' => $command->relations(),
             ])
-            ->andReturn(null)
+            ->andReturn($instance)
             ->once();
         $repository = Mockery::mock(InstanceRepositoryInterface::class);
         $repository->shouldReceive('exists')->with('test')->andReturn(false)->once();

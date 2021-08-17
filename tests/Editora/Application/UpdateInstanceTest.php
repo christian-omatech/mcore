@@ -124,7 +124,7 @@ class UpdateInstanceTest extends TestCase
                     ],
                 ],
             ])
-            ->andReturn(null)
+            ->andReturn($instance)
             ->once();
         $repository->shouldReceive('find')
             ->with($command->id())
