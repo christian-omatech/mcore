@@ -22,7 +22,7 @@ final class ValueCollection
         each(function (mixed $value): void {
             search(static function (BaseValue $fillableValue) use ($value): bool {
                 return $fillableValue->language() === $value['language'];
-            }, $this->values)?->fill($value['value'], $value['id']);
+            }, $this->values)?->fill($value['value']);
         }, $values);
     }
 

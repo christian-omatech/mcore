@@ -27,10 +27,9 @@ abstract class BaseValue
         );
     }
 
-    public function fill(mixed $value, ?int $id): void
+    public function fill(mixed $value): void
     {
         $this->value = $value;
-        $this->metadata->fill($id);
     }
 
     public function language(): string
@@ -41,7 +40,6 @@ abstract class BaseValue
     public function toArray(): array
     {
         return [
-            'id' => $this->metadata->id(),
             'language' => $this->metadata->language(),
             'rules' => $this->ruleCollection->get(),
             'configuration' => $this->configuration->get(),

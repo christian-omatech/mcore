@@ -55,6 +55,11 @@ abstract class Instance
         return $this->attributesCollection->get();
     }
 
+    public function relations(): array
+    {
+        return $this->instanceRelationCollection->get();
+    }
+
     public function toArray(): array
     {
         return [

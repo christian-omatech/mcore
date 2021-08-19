@@ -263,11 +263,9 @@ class InstanceTest extends TestCase
                 'default-attribute' => [
                     'values' => [
                         [
-                            'id' => 1,
                             'language' => 'es',
                             'value' => 'hola',
                         ], [
-                            'id' => 2,
                             'language' => 'en',
                             'value' => 'adios',
                         ],
@@ -276,15 +274,12 @@ class InstanceTest extends TestCase
                         'sub-attribute' => [
                             'values' => [
                                 [
-                                    'id' => 3,
                                     'language' => 'es',
                                     'value' => 'hola',
                                 ], [
-                                    'id' => 4,
                                     'language' => 'en',
                                     'value' => 'adios',
                                 ], [
-                                    'id' => null,
                                     'language' => 'non-existent-language',
                                     'value' => 'value',
                                 ],
@@ -295,11 +290,9 @@ class InstanceTest extends TestCase
                 'global-attribute' => [
                     'values' => [
                         [
-                            'id' => 5,
                             'language' => 'es',
                             'value' => 'hola',
                         ], [
-                            'id' => 6,
                             'language' => 'en',
                             'value' => 'adios',
                         ],
@@ -308,15 +301,12 @@ class InstanceTest extends TestCase
                 'specific-attribute' => [
                     'values' => [
                         [
-                            'id' => 7,
                             'language' => '+',
                             'value' => 'default',
                         ], [
-                            'id' => 8,
                             'language' => 'es',
                             'value' => 'hola',
                         ], [
-                            'id' => 9,
                             'language' => 'en',
                             'value' => 'adios',
                         ],
@@ -325,7 +315,6 @@ class InstanceTest extends TestCase
                 'all-languages-attribute' => [
                     'values' => [
                         [
-                            'id' => 10,
                             'language' => '*',
                             'value' => 'key1',
                         ],
@@ -363,6 +352,29 @@ class InstanceTest extends TestCase
             'endPublishingDate' => new DateTime('2021-07-27 14:30:00'),
         ], $instance->data());
         $this->assertIsArray($instance->attributes());
+        $this->assertEquals([
+            [
+                'key' => 'relation-key1',
+                'instances' => [
+                    1 => 'class-two',
+                    2 => 'class-two',
+                    3 => 'class-two',
+                    4 => 'class-three',
+                    5 => 'class-three',
+                    6 => 'class-three',
+                ]
+            ], [
+                'key' => 'relation-key2',
+                'instances' => [
+                    7 => 'class-four',
+                    8 => 'class-four',
+                    9 => 'class-four',
+                    10 => 'class-five',
+                    11 => 'class-five',
+                    12 => 'class-five',
+                ]
+            ]
+        ], $instance->relations());
     }
 
     /** @test  */
@@ -448,7 +460,6 @@ class InstanceTest extends TestCase
                 'default-attribute' => [
                     'values' => [
                         [
-                            'id' => null,
                             'language' => 'es',
                             'value' => 'hola',
                         ],
@@ -478,13 +489,11 @@ class InstanceTest extends TestCase
                     'type' => 'string',
                     'values' => [
                         [
-                            'id' => null,
                             'language' => 'es',
                             'rules' => [],
                             'configuration' => [],
                             'value' => 'hola',
                         ], [
-                            'id' => null,
                             'language' => 'en',
                             'rules' => [],
                             'configuration' => [],
@@ -503,7 +512,6 @@ class InstanceTest extends TestCase
                 'default-attribute' => [
                     'values' => [
                         [
-                            'id' => 1,
                             'language' => 'es',
                             'value' => 'adios',
                         ],
@@ -533,13 +541,11 @@ class InstanceTest extends TestCase
                     'type' => 'string',
                     'values' => [
                         [
-                            'id' => 1,
                             'language' => 'es',
                             'rules' => [],
                             'configuration' => [],
                             'value' => 'adios',
                         ], [
-                            'id' => null,
                             'language' => 'en',
                             'rules' => [],
                             'configuration' => [],

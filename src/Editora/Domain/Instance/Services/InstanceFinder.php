@@ -35,9 +35,9 @@ final class InstanceFinder
     {
         return map(function (array $relationKey): array {
             return reduce(function (?array $acc, int $id): array {
-                $classKey = $this->repository->classKey($id) ??
+                $acc[$id] = $this->repository->classKey($id) ??
                     throw new InstanceDoesNotExistsException();
-                return ($acc ?? []) + [$id => $classKey];
+                return $acc;
             }, $relationKey);
         }, $relations);
     }

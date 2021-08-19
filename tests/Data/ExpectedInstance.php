@@ -34,13 +34,11 @@ return [
             'type' => 'string',
             'values' => [
                 [
-                    'id' => null,
                     'language' => 'es',
                     'rules' => [],
                     'configuration' => [],
                     'value' => null,
                 ], [
-                    'id' => null,
                     'language' => 'en',
                     'rules' => [],
                     'configuration' => [],
@@ -53,13 +51,11 @@ return [
                     'type' => 'string',
                     'values' => [
                         [
-                            'id' => null,
                             'language' => 'es',
                             'rules' => [],
                             'configuration' => [],
                             'value' => null,
                         ], [
-                            'id' => null,
                             'language' => 'en',
                             'rules' => [],
                             'configuration' => [],
@@ -74,7 +70,6 @@ return [
             'type' => 'textarea',
             'values' => [
                 [
-                    'id' => null,
                     'language' => 'es',
                     'rules' => [
                         'required' => true,
@@ -85,7 +80,6 @@ return [
                     ],
                     'value' => null,
                 ], [
-                    'id' => null,
                     'language' => 'en',
                     'rules' => [
                         'required' => true,
@@ -103,7 +97,6 @@ return [
             'type' => 'string',
             'values' => [
                 [
-                    'id' => null,
                     'language' => 'es',
                     'rules' => [
                         'required' => true,
@@ -114,7 +107,6 @@ return [
                     ],
                     'value' => null,
                 ], [
-                    'id' => null,
                     'language' => 'en',
                     'rules' => [
                         'required' => false,
@@ -125,7 +117,6 @@ return [
                     ],
                     'value' => null,
                 ], [
-                    'id' => null,
                     'language' => '+',
                     'rules' => [
                         'required' => true,
@@ -143,7 +134,6 @@ return [
             'type' => 'lookup',
             'values' => [
                 [
-                    'id' => null,
                     'language' => '*',
                     'rules' => [
                         'required' => false,
