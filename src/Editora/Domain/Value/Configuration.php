@@ -15,7 +15,7 @@ final class Configuration
 
     public function exists(mixed $value, array $path): bool
     {
-        return in_array($value, get_in($path, $this->configuration, []));
+        return in_array($value, get_in($path, $this->configuration, []), true);
     }
 
     public function get(): array

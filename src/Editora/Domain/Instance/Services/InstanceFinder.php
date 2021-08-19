@@ -38,7 +38,7 @@ final class InstanceFinder
                 $acc[$id] = $this->repository->classKey($id) ??
                     throw new InstanceDoesNotExistsException();
                 return $acc;
-            }, $relationKey);
+            }, $relationKey, []);
         }, $relations);
     }
 }
