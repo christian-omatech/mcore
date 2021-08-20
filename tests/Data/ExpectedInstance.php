@@ -73,6 +73,7 @@ return [
                     'language' => 'es',
                     'rules' => [
                         'required' => true,
+                        'unique' => null
                     ],
                     'configuration' => [
                         'cols' => 10,
@@ -83,6 +84,7 @@ return [
                     'language' => 'en',
                     'rules' => [
                         'required' => true,
+                        'unique' => null
                     ],
                     'configuration' => [
                         'cols' => 10,

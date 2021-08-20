@@ -2,31 +2,32 @@
 
 namespace Omatech\Mcore\Editora\Domain\Value;
 
-use Omatech\Mcore\Editora\Domain\Value\Contracts\RulesListInterface;
 use Omatech\Mcore\Editora\Domain\Value\Exceptions\InvalidRuleException;
 use Omatech\Mcore\Editora\Domain\Value\Rules\Rule;
 use function Lambdish\Phunctional\each;
+use function Lambdish\Phunctional\filter;
+use function Lambdish\Phunctional\first;
 use function Lambdish\Phunctional\map;
 
 final class RuleCollection
 {
-    private array $rulesList;
-
     /** @var array<Rule> $rules */
     private array $rules;
 
-    public function __construct(RulesListInterface $rulesList, array $rules)
+    public function __construct(array $rules)
     {
-        $this->rulesList = $rulesList->get();
         $this->rules = map(function (mixed $condition, string $rule): Rule {
-            return $this->find($rule, $condition);
+            return $this->instanceRule($rule, $condition);
         }, $rules);
     }
 
-    private function find(string $rule, mixed $condition): Rule
+    private function instanceRule(string $rule, mixed $condition): Rule
     {
-        $ruleClass = $this->rulesList[$rule] ?? InvalidRuleException::withRule($rule);
-        return new $ruleClass($condition);
+        $class = first(filter(static fn ($class) => class_exists($class), [
+            'Omatech\\Mcore\\Editora\\Domain\\Value\\Rules\\' . ucfirst($rule),
+            $rule,
+        ])) ?? InvalidRuleException::withRule($rule);
+        return new $class($condition);
     }
 
     public function validate(string $key, string $language, mixed $value): void

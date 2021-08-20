@@ -8,16 +8,19 @@ ClassOne:
       - ClassFive
   attributes:
     DefaultAttribute:
+      values:
+        type: Value
       attributes:
         SubAttribute:
           values:
-            type: StringValue
+            type: Tests\Data\Value
     GlobalAttribute:
       type: textarea
       values:
         type: JsonValue
         rules:
           required: true
+          unique:
         configuration:
           cols: 10
           rows: 10

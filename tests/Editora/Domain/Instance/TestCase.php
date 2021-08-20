@@ -11,7 +11,7 @@ class TestCase extends PHPUnitTestCase
 {
     use MockeryPHPUnitIntegration;
 
-    protected function mockNeverCalledInstanceCache()
+    protected function mockNeverCalledInstanceCache(): InstanceCacheInterface
     {
         $instanceCache = Mockery::mock(InstanceCacheInterface::class);
         $instanceCache->shouldReceive('get')->andReturn(null)->never();
@@ -19,7 +19,7 @@ class TestCase extends PHPUnitTestCase
         return $instanceCache;
     }
 
-    protected function mockGetCalledInstanceCache()
+    protected function mockGetCalledInstanceCache(): InstanceCacheInterface
     {
         $instanceCache = Mockery::mock(InstanceCacheInterface::class);
         $instanceCache->shouldReceive('get')->andReturn(null)->once();
@@ -27,7 +27,7 @@ class TestCase extends PHPUnitTestCase
         return $instanceCache;
     }
 
-    protected function mockInstanceCache()
+    protected function mockInstanceCache(): InstanceCacheInterface
     {
         $instanceCache = Mockery::mock(InstanceCacheInterface::class);
         $instanceCache->shouldReceive('get')->andReturn(null)->once();

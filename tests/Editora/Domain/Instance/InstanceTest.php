@@ -3,10 +3,13 @@
 namespace Tests\Editora\Domain\Instance;
 
 use DateTime;
+use Mockery;
+use Mockery\Mock;
 use Omatech\Mcore\Editora\Domain\Clazz\Exceptions\InvalidRelationClassException;
 use Omatech\Mcore\Editora\Domain\Clazz\Exceptions\InvalidRelationException;
 use Omatech\Mcore\Editora\Domain\Instance\InstanceBuilder;
 use Omatech\Mcore\Editora\Domain\Instance\PublicationStatus;
+use Omatech\Mcore\Editora\Domain\Value\Contracts\RulesListInterface;
 use Omatech\Mcore\Editora\Domain\Value\Exceptions\Rules\InvalidEndDatePublishingException;
 use Omatech\Mcore\Editora\Domain\Value\Exceptions\Rules\LookupValueOptionException;
 use Omatech\Mcore\Editora\Domain\Value\Exceptions\Rules\RequiredValueException;

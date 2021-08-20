@@ -5,7 +5,7 @@ namespace Omatech\Mcore\Editora\Domain\Value\Rules;
 use Omatech\Mcore\Editora\Domain\Value\Exceptions\Rules\RequiredValueException;
 use Omatech\Mcore\Shared\Utils\Utils;
 
-final class RequiredRule extends Rule
+final class Required extends Rule
 {
     public function validate(string $key, string $language, mixed $value): void
     {

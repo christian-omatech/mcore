@@ -3,12 +3,13 @@
 namespace Omatech\Mcore\Editora\Domain\Value;
 
 use Omatech\Mcore\Editora\Domain\Instance\Exceptions\InvalidValueTypeException;
+use function Lambdish\Phunctional\filter;
+use function Lambdish\Phunctional\first;
 use function Lambdish\Phunctional\flat_map;
 use function Lambdish\Phunctional\map;
 
 final class ValueBuilder
 {
-    private const NAMESPACE = 'Omatech\\Mcore\\Editora\\Domain\\Value\\Types\\';
     private array $languages;
     private string $key;
 
@@ -53,13 +54,11 @@ final class ValueBuilder
     private function instanceValues(): array
     {
         return flat_map(function ($properties, $language): BaseValue {
-            if (! class_exists($properties['type'])) {
-                $properties['type'] = self::NAMESPACE . $properties['type'];
-                if (! class_exists($properties['type'])) {
-                    InvalidValueTypeException::withType($properties['type']);
-                }
-            }
-            return new $properties['type']($this->key, $language, $properties);
+            $class = first(filter(static fn ($class) => class_exists($class), [
+                'Omatech\\Mcore\\Editora\\Domain\\Value\\Types\\' . $properties['type'],
+                $properties['type'],
+            ])) ?? InvalidValueTypeException::withType($properties['type']);
+            return new $class($this->key, $language, $properties);
         }, $this->values);
     }
 

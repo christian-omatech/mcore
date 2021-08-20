@@ -13,7 +13,7 @@ abstract class BaseValue
     {
         $this->metadata = new Metadata($attributeKey, $language);
         $this->configuration = new Configuration($properties['configuration']);
-        $this->ruleCollection = new RuleCollection(new Rules(), $properties['rules']);
+        $this->ruleCollection = new RuleCollection($properties['rules']);
     }
 
     abstract public function value(): mixed;
