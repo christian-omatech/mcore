@@ -20,7 +20,6 @@ ClassOne:
         type: JsonValue
         rules:
           required: true
-          unique:
         configuration:
           cols: 10
           rows: 10

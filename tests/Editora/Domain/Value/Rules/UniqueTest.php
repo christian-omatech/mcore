@@ -6,7 +6,8 @@ use Mockery;
 use Omatech\Mcore\Editora\Domain\Value\Exceptions\Rules\UniqueValueException;
 use Omatech\Mcore\Editora\Domain\Value\Rules\Contracts\UniqueValueInterface;
 use Omatech\Mcore\Editora\Domain\Value\Rules\Unique;
-use PHPUnit\Framework\TestCase;
+use Tests\Data\UniqueValueRepository;
+use Tests\Editora\Domain\Instance\TestCase;
 
 class UniqueTest extends TestCase
 {
@@ -14,10 +15,11 @@ class UniqueTest extends TestCase
     public function validateUniqueRule(): void
     {
         $this->expectException(UniqueValueException::class);
-        $mock = Mockery::mock(UniqueValueInterface::class);
-        $mock->shouldReceive('unique')->andReturn(true)->once();
-
-        $rule = new Unique(null, $mock);
-        $rule->validate('attribute', 'es', 'value');
+        $unique = new Unique([
+            'class' => UniqueValueRepository::class,
+            'somecondition' => ''
+        ]);
+        $this->assertEquals(['somecondition' => ''], $unique->condition());
+        $unique->validate('attr', 'es', 'hola');
     }
 }

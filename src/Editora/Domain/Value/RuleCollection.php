@@ -16,18 +16,13 @@ final class RuleCollection
 
     public function __construct(array $rules)
     {
-        $this->rules = map(function (mixed $condition, string $rule): Rule {
-            return $this->instanceRule($rule, $condition);
+        $this->rules = map(static function (mixed $condition, string $rule): Rule {
+            $class = first(filter(static fn ($class) => class_exists($class), [
+                'Omatech\\Mcore\\Editora\\Domain\\Value\\Rules\\' . ucfirst($rule),
+                $rule,
+            ])) ?? InvalidRuleException::withRule($rule);
+            return new $class($condition);
         }, $rules);
-    }
-
-    private function instanceRule(string $rule, mixed $condition): Rule
-    {
-        $class = first(filter(static fn ($class) => class_exists($class), [
-            'Omatech\\Mcore\\Editora\\Domain\\Value\\Rules\\' . ucfirst($rule),
-            $rule,
-        ])) ?? InvalidRuleException::withRule($rule);
-        return new $class($condition);
     }
 
     public function validate(string $key, string $language, mixed $value): void
