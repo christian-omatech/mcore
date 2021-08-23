@@ -18,7 +18,7 @@ final class InstanceRelation
         return $this->key;
     }
 
-    public function classes(): array
+    public function instances(): array
     {
         return $this->instances;
     }

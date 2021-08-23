@@ -6,8 +6,5 @@ use Omatech\Mcore\Editora\Domain\Value\BaseValue;
 
 final class Value extends BaseValue
 {
-    public function value(): mixed
-    {
-        return $this->value;
-    }
+
 }

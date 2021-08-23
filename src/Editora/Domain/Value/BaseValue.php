@@ -16,7 +16,15 @@ abstract class BaseValue
         $this->configuration = new Configuration($properties['configuration']);
     }
 
-    abstract public function value(): mixed;
+    public function value(): mixed
+    {
+        return $this->value;
+    }
+
+    public function extraData(): array
+    {
+        return $this->extraData;
+    }
 
     public function fill(array $value): void
     {

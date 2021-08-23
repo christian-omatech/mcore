@@ -54,14 +54,14 @@ abstract class Instance
         ] + $this->metadata->data();
     }
 
-    public function attributes(): array
+    public function attributes(): AttributeCollection
     {
-        return $this->attributesCollection->get();
+        return $this->attributesCollection;
     }
 
-    public function relations(): array
+    public function relations(): InstanceRelationCollection
     {
-        return $this->instanceRelationCollection->toArray();
+        return $this->instanceRelationCollection;
     }
 
     public function toArray(): array

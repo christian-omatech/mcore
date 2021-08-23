@@ -46,7 +46,7 @@ final class Validator
             if (is_null($relation)) {
                 InvalidRelationException::withRelation($instanceRelation->key());
             }
-            $relation->validate($instanceRelation->classes());
+            $relation->validate($instanceRelation->instances());
         }, $instanceRelations);
     }
 }

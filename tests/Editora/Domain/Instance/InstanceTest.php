@@ -385,7 +385,7 @@ class InstanceTest extends TestCase
             'startPublishingDate' => new DateTime('1989-03-08 09:00:00'),
             'endPublishingDate' => new DateTime('2021-07-27 14:30:00'),
         ], $instance->data());
-        $this->assertIsArray($instance->attributes());
+        $this->assertIsArray($instance->attributes()->toArray());
         $this->assertEquals([
             [
                 'key' => 'relation-key1',
@@ -408,7 +408,7 @@ class InstanceTest extends TestCase
                     12 => 'class-five',
                 ],
             ],
-        ], $instance->relations());
+        ], $instance->relations()->toArray());
     }
 
     /** @test  */
@@ -759,7 +759,7 @@ class InstanceTest extends TestCase
     }
 
     /** @test */
-    public function eeuniqueRuleInInstance(): void
+    public function uniqueRuleInInstance(): void
     {
         $instance = (new InstanceBuilder($this->mockInstanceCache()))
             ->setLanguages($this->languages)
