@@ -6,5 +6,4 @@ use Omatech\Mcore\Editora\Domain\Value\BaseValue;
 
 final class Value extends BaseValue
 {
-
 }
