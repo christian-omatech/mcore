@@ -38,11 +38,15 @@ return [
                     'rules' => [],
                     'configuration' => [],
                     'value' => null,
+                    'extraData' => [],
+                    'id' => null,
                 ], [
                     'language' => 'en',
                     'rules' => [],
                     'configuration' => [],
                     'value' => null,
+                    'extraData' => [],
+                    'id' => null,
                 ],
             ],
             'attributes' => [
@@ -55,11 +59,15 @@ return [
                             'rules' => [],
                             'configuration' => [],
                             'value' => null,
+                            'extraData' => [],
+                            'id' => null,
                         ], [
                             'language' => 'en',
                             'rules' => [],
                             'configuration' => [],
                             'value' => null,
+                            'extraData' => [],
+                            'id' => null,
                         ],
                     ],
                     'attributes' => [],
@@ -79,6 +87,8 @@ return [
                         'rows' => 10,
                     ],
                     'value' => null,
+                    'extraData' => [],
+                    'id' => null,
                 ], [
                     'language' => 'en',
                     'rules' => [
@@ -89,6 +99,8 @@ return [
                         'rows' => 10,
                     ],
                     'value' => null,
+                    'extraData' => [],
+                    'id' => null,
                 ],
             ],
             'attributes' => [],
@@ -106,6 +118,8 @@ return [
                         'rows' => 10,
                     ],
                     'value' => null,
+                    'extraData' => [],
+                    'id' => null,
                 ], [
                     'language' => 'en',
                     'rules' => [
@@ -116,6 +130,8 @@ return [
                         'rows' => 20,
                     ],
                     'value' => null,
+                    'extraData' => [],
+                    'id' => null,
                 ], [
                     'language' => '+',
                     'rules' => [
@@ -126,6 +142,8 @@ return [
                         'rows' => 30,
                     ],
                     'value' => null,
+                    'extraData' => [],
+                    'id' => null,
                 ],
             ],
             'attributes' => [],
@@ -145,6 +163,8 @@ return [
                         ],
                     ],
                     'value' => null,
+                    'extraData' => [],
+                    'id' => null,
                 ],
             ],
             'attributes' => [],

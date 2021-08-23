@@ -6,10 +6,13 @@ final class Metadata
 {
     private string $attributeKey;
     private string $language;
-    public function __construct(string $attributeKey, string $language)
+    private array $rules;
+
+    public function __construct(string $attributeKey, string $language, array $rules)
     {
         $this->attributeKey = $attributeKey;
         $this->language = $language;
+        $this->rules = $rules;
     }
 
     public function attributeKey(): string
@@ -20,5 +23,10 @@ final class Metadata
     public function language(): string
     {
         return $this->language;
+    }
+
+    public function rules(): array
+    {
+        return $this->rules;
     }
 }

@@ -25,10 +25,14 @@ final class Attribute
         $this->attributeCollection->fill($values['attributes'] ?? []);
     }
 
-    public function validate(): void
+    public function attributes(): AttributeCollection
     {
-        $this->valueCollection->validate();
-        $this->attributeCollection->validate();
+        return $this->attributeCollection;
+    }
+
+    public function values(): ValueCollection
+    {
+        return $this->valueCollection;
     }
 
     public function key(): string
@@ -41,8 +45,8 @@ final class Attribute
         return [
             'key' => $this->key,
             'type' => $this->type,
-            'values' => $this->valueCollection->get(),
-            'attributes' => $this->attributeCollection->get(),
+            'values' => $this->valueCollection->toArray(),
+            'attributes' => $this->attributeCollection->toArray(),
         ];
     }
 }

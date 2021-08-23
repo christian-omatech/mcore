@@ -2,22 +2,22 @@
 
 namespace Omatech\Mcore\Editora\Domain\Value\Types;
 
-use Omatech\Mcore\Editora\Domain\Value\Exceptions\Rules\LookupValueOptionException;
+use Omatech\Mcore\Editora\Domain\Value\Exceptions\LookupValueOptionException;
 use Omatech\Mcore\Shared\Utils\Utils;
 
 final class LookupValue extends StringValue
 {
-    public function validate(): void
+    public function fill(array $value): void
     {
-        parent::validate();
-        $this->ensureLookupIsValid();
+        $this->ensureLookupIsValid($value['value']);
+        parent::fill($value);
     }
 
-    private function ensureLookupIsValid(): void
+    private function ensureLookupIsValid(mixed $value): void
     {
-        if (! Utils::getInstance()->isEmpty($this->value) &&
-            ! $this->configuration->exists($this->value, ['options'])) {
-            LookupValueOptionException::withAttributeLanguage($this->metadata);
+        if (! Utils::getInstance()->isEmpty($value) &&
+            ! $this->configuration->exists($value, ['options'])) {
+            LookupValueOptionException::withValue($this);
         }
     }
 }

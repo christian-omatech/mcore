@@ -4,32 +4,25 @@ namespace Omatech\Mcore\Editora\Domain\Value;
 
 abstract class BaseValue
 {
-    protected Metadata $metadata;
+    protected ?int $id = null;
     protected mixed $value = null;
+    protected array $extraData = [];
     protected Configuration $configuration;
-    private RuleCollection $ruleCollection;
+    private Metadata $metadata;
 
     public function __construct(string $attributeKey, string $language, array $properties)
     {
-        $this->metadata = new Metadata($attributeKey, $language);
+        $this->metadata = new Metadata($attributeKey, $language, $properties['rules']);
         $this->configuration = new Configuration($properties['configuration']);
-        $this->ruleCollection = new RuleCollection($properties['rules']);
     }
 
     abstract public function value(): mixed;
 
-    public function validate(): void
+    public function fill(array $value): void
     {
-        $this->ruleCollection->validate(
-            $this->metadata->attributeKey(),
-            $this->metadata->language(),
-            $this->value
-        );
-    }
-
-    public function fill(mixed $value): void
-    {
-        $this->value = $value;
+        $this->value = $value['value'];
+        $this->extraData = $value['extraData'] ?? $this->extraData;
+        $this->id = $value['id'] ?? $this->id;
     }
 
     public function language(): string
@@ -37,13 +30,30 @@ abstract class BaseValue
         return $this->metadata->language();
     }
 
+    public function rules(): array
+    {
+        return $this->metadata->rules();
+    }
+
+    public function id(): ?int
+    {
+        return $this->id;
+    }
+
+    public function key(): string
+    {
+        return $this->metadata->attributeKey();
+    }
+
     public function toArray(): array
     {
         return [
+            'id' => $this->id,
             'language' => $this->metadata->language(),
-            'rules' => $this->ruleCollection->get(),
+            'rules' => $this->metadata->rules(),
             'configuration' => $this->configuration->get(),
-            'value' => $this->value(),
+            'value' => $this->value,
+            'extraData' => $this->extraData,
         ];
     }
 }

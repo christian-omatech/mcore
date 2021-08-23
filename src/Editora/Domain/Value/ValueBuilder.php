@@ -2,7 +2,7 @@
 
 namespace Omatech\Mcore\Editora\Domain\Value;
 
-use Omatech\Mcore\Editora\Domain\Instance\Exceptions\InvalidValueTypeException;
+use Omatech\Mcore\Editora\Domain\Value\Exceptions\InvalidValueTypeException;
 use function Lambdish\Phunctional\filter;
 use function Lambdish\Phunctional\first;
 use function Lambdish\Phunctional\flat_map;
@@ -12,6 +12,7 @@ final class ValueBuilder
 {
     private array $languages;
     private string $key;
+    private array $values;
 
     public function build(): array
     {

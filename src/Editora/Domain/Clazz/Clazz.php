@@ -13,9 +13,9 @@ final class Clazz
         $this->relationCollection = new RelationCollection($class['relations']);
     }
 
-    public function validateRelations(array $instanceRelations): void
+    public function relations(): RelationCollection
     {
-        $this->relationCollection->validate($instanceRelations);
+        return $this->relationCollection;
     }
 
     public function key(): string

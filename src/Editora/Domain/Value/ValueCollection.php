@@ -22,16 +22,16 @@ final class ValueCollection
         each(function (mixed $value): void {
             search(static function (BaseValue $fillableValue) use ($value): bool {
                 return $fillableValue->language() === $value['language'];
-            }, $this->values)?->fill($value['value']);
+            }, $this->values)?->fill($value);
         }, $values);
     }
 
-    public function validate(): void
+    public function get(): array
     {
-        each(static fn (BaseValue $value) => $value->validate(), $this->values);
+        return map(static fn (BaseValue $value) => $value, $this->values);
     }
 
-    public function get(): array
+    public function toArray(): array
     {
         return map(static fn (BaseValue $value) => $value->toArray(), $this->values);
     }

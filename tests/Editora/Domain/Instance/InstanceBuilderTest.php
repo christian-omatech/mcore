@@ -5,9 +5,8 @@ namespace Tests\Editora\Domain\Instance;
 use Omatech\Mcore\Editora\Domain\Instance\Exceptions\InvalidClassNameException;
 use Omatech\Mcore\Editora\Domain\Instance\Exceptions\InvalidLanguagesException;
 use Omatech\Mcore\Editora\Domain\Instance\Exceptions\InvalidStructureException;
-use Omatech\Mcore\Editora\Domain\Instance\Exceptions\InvalidValueTypeException;
 use Omatech\Mcore\Editora\Domain\Instance\InstanceBuilder;
-use Omatech\Mcore\Editora\Domain\Value\Exceptions\InvalidRuleException;
+use Omatech\Mcore\Editora\Domain\Value\Exceptions\InvalidValueTypeException;
 use Symfony\Component\Yaml\Yaml;
 
 class InstanceBuilderTest extends TestCase
@@ -54,28 +53,6 @@ class InstanceBuilderTest extends TestCase
         (new InstanceBuilder($this->mockNeverCalledInstanceCache()))
             ->setLanguages($this->languages)
             ->setStructure($this->structure[$this->className])
-            ->build();
-    }
-
-    /** @test */
-    public function invalidRuleWhenCreateInstance(): void
-    {
-        $this->expectException(InvalidRuleException::class);
-
-        (new InstanceBuilder($this->mockGetCalledInstanceCache()))
-            ->setLanguages($this->languages)
-            ->setStructure([
-                'attributes' => [
-                    'Invalid' => [
-                        'values' => [
-                            'rules' => [
-                                'noRule' => true,
-                            ],
-                        ],
-                    ],
-                ],
-            ])
-            ->setClassName($this->className)
             ->build();
     }
 

@@ -4,6 +4,7 @@ namespace Omatech\Mcore\Editora\Domain\Instance;
 
 use Omatech\Mcore\Editora\Domain\Attribute\AttributeCollection;
 use Omatech\Mcore\Editora\Domain\Clazz\Clazz;
+use Omatech\Mcore\Editora\Domain\Instance\Validator\Validator;
 
 abstract class Instance
 {
@@ -34,8 +35,11 @@ abstract class Instance
 
     private function validate(): void
     {
-        $this->attributesCollection->validate();
-        $this->clazz->validateRelations($this->instanceRelationCollection->instanceRelations());
+        (new Validator())->validateAttributes($this->attributesCollection);
+        (new Validator())->validateRelations(
+            $this->clazz->relations()->get(),
+            $this->instanceRelationCollection->get()
+        );
     }
 
     public function id(): ?int
@@ -57,7 +61,7 @@ abstract class Instance
 
     public function relations(): array
     {
-        return $this->instanceRelationCollection->get();
+        return $this->instanceRelationCollection->toArray();
     }
 
     public function toArray(): array
@@ -65,8 +69,8 @@ abstract class Instance
         return [
             'class' => $this->clazz->toArray(),
             'metadata' => $this->metadata->toArray(),
-            'attributes' => $this->attributesCollection->get(),
-            'relations' => $this->instanceRelationCollection->get(),
+            'attributes' => $this->attributesCollection->toArray(),
+            'relations' => $this->instanceRelationCollection->toArray(),
         ];
     }
 }

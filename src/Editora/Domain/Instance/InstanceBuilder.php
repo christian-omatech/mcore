@@ -53,6 +53,7 @@ final class InstanceBuilder
                 ->setAttributes($this->structure['attributes'])
                 ->build(),
         ];
+
         $instance = new class($instance) extends Instance {
         };
         $this->instanceCache?->put($this->className, $instance);

@@ -2,12 +2,8 @@
 
 namespace Omatech\Mcore\Editora\Domain\Clazz;
 
-use Omatech\Mcore\Editora\Domain\Clazz\Exceptions\InvalidRelationException;
-use Omatech\Mcore\Editora\Domain\Instance\InstanceRelation;
-use function Lambdish\Phunctional\each;
 use function Lambdish\Phunctional\flat_map;
 use function Lambdish\Phunctional\map;
-use function Lambdish\Phunctional\search;
 
 final class RelationCollection
 {
@@ -21,17 +17,10 @@ final class RelationCollection
         }, $relations);
     }
 
-    public function validate(array $instanceRelations): void
+    /** @return array<Relation> */
+    public function get(): array
     {
-        each(function (InstanceRelation $instanceRelation): void {
-            $relation = search(static function (Relation $relation) use ($instanceRelation): bool {
-                return $relation->key() === $instanceRelation->key();
-            }, $this->relations);
-            if (is_null($relation)) {
-                InvalidRelationException::withRelation($instanceRelation->key());
-            }
-            $relation->validate($instanceRelation->classes());
-        }, $instanceRelations);
+        return map(static fn (Relation $relation) => $relation, $this->relations);
     }
 
     public function toArray(): array

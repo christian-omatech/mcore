@@ -7,7 +7,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Omatech\Mcore\Editora\Domain\Instance\Contracts\InstanceCacheInterface;
 use PHPUnit\Framework\TestCase as PHPUnitTestCase;
 
-class TestCase extends PHPUnitTestCase
+abstract class TestCase extends PHPUnitTestCase
 {
     use MockeryPHPUnitIntegration;
 

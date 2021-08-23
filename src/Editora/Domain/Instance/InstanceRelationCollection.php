@@ -21,12 +21,12 @@ final class InstanceRelationCollection
     }
 
     /** @return array<InstanceRelation> */
-    public function instanceRelations(): array
+    public function get(): array
     {
         return $this->instanceRelations;
     }
 
-    public function get(): array
+    public function toArray(): array
     {
         return map(static function (InstanceRelation $relation): array {
             return $relation->toArray();

@@ -3,7 +3,7 @@
 namespace Omatech\Mcore\Editora\Domain\Instance;
 
 use DateTime;
-use Omatech\Mcore\Editora\Domain\Value\Exceptions\Rules\InvalidEndDatePublishingException;
+use Omatech\Mcore\Editora\Domain\Instance\Exceptions\InvalidEndDatePublishingException;
 
 final class Publication
 {

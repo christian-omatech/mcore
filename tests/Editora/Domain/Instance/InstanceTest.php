@@ -3,17 +3,17 @@
 namespace Tests\Editora\Domain\Instance;
 
 use DateTime;
-use Mockery;
-use Mockery\Mock;
 use Omatech\Mcore\Editora\Domain\Clazz\Exceptions\InvalidRelationClassException;
 use Omatech\Mcore\Editora\Domain\Clazz\Exceptions\InvalidRelationException;
+use Omatech\Mcore\Editora\Domain\Instance\Exceptions\InvalidEndDatePublishingException;
 use Omatech\Mcore\Editora\Domain\Instance\InstanceBuilder;
 use Omatech\Mcore\Editora\Domain\Instance\PublicationStatus;
-use Omatech\Mcore\Editora\Domain\Value\Contracts\RulesListInterface;
-use Omatech\Mcore\Editora\Domain\Value\Exceptions\Rules\InvalidEndDatePublishingException;
-use Omatech\Mcore\Editora\Domain\Value\Exceptions\Rules\LookupValueOptionException;
-use Omatech\Mcore\Editora\Domain\Value\Exceptions\Rules\RequiredValueException;
+use Omatech\Mcore\Editora\Domain\Instance\Validator\Exceptions\InvalidRuleException;
+use Omatech\Mcore\Editora\Domain\Instance\Validator\Exceptions\RequiredValueException;
+use Omatech\Mcore\Editora\Domain\Instance\Validator\Exceptions\UniqueValueException;
+use Omatech\Mcore\Editora\Domain\Value\Exceptions\LookupValueOptionException;
 use Symfony\Component\Yaml\Yaml;
+use Tests\Data\UniqueValueRepository;
 
 class InstanceTest extends TestCase
 {
@@ -125,7 +125,34 @@ class InstanceTest extends TestCase
                                         'required' => true,
                                     ],
                                 ],
+                            ],
+                        ],
+                    ],
+                ],
+            ])
+            ->setClassName($this->className)
+            ->build();
 
+        $instance->fill([
+            'metadata' => $this->fillMetadataInstance(),
+            'attributes' => [],
+            'relations' => [],
+        ]);
+    }
+
+    /** @test */
+    public function invalidRuleWhenCreateInstance(): void
+    {
+        $this->expectException(InvalidRuleException::class);
+
+        $instance = (new InstanceBuilder($this->mockInstanceCache()))
+            ->setLanguages($this->languages)
+            ->setStructure([
+                'attributes' => [
+                    'Invalid' => [
+                        'values' => [
+                            'rules' => [
+                                'noRule' => true,
                             ],
                         ],
                     ],
@@ -266,8 +293,12 @@ class InstanceTest extends TestCase
                 'default-attribute' => [
                     'values' => [
                         [
+                            'id' => 1,
                             'language' => 'es',
                             'value' => 'hola',
+                            'extraData' => [
+                                'ext' => 'png',
+                            ],
                         ], [
                             'language' => 'en',
                             'value' => 'adios',
@@ -365,7 +396,7 @@ class InstanceTest extends TestCase
                     4 => 'class-three',
                     5 => 'class-three',
                     6 => 'class-three',
-                ]
+                ],
             ], [
                 'key' => 'relation-key2',
                 'instances' => [
@@ -375,8 +406,8 @@ class InstanceTest extends TestCase
                     10 => 'class-five',
                     11 => 'class-five',
                     12 => 'class-five',
-                ]
-            ]
+                ],
+            ],
         ], $instance->relations());
     }
 
@@ -463,8 +494,19 @@ class InstanceTest extends TestCase
                 'default-attribute' => [
                     'values' => [
                         [
+                            'id' => 1,
                             'language' => 'es',
                             'value' => 'hola',
+                            'extraData' => [
+                                'ext' => 'png',
+                            ],
+                        ], [
+                            'id' => null,
+                            'language' => 'en',
+                            'value' => 'hola',
+                            'extraData' => [
+                                'ext' => 'jpeg',
+                            ],
                         ],
                     ],
                 ],
@@ -496,11 +538,19 @@ class InstanceTest extends TestCase
                             'rules' => [],
                             'configuration' => [],
                             'value' => 'hola',
+                            'extraData' => [
+                                'ext' => 'png',
+                            ],
+                            'id' => 1,
                         ], [
                             'language' => 'en',
                             'rules' => [],
                             'configuration' => [],
-                            'value' => null,
+                            'value' => 'hola',
+                            'extraData' => [
+                                'ext' => 'jpeg',
+                            ],
+                            'id' => null,
                         ],
                     ],
                     'attributes' => [],
@@ -517,6 +567,9 @@ class InstanceTest extends TestCase
                         [
                             'language' => 'es',
                             'value' => 'adios',
+                        ], [
+                            'language' => 'en',
+                            'value' => 'hola',
                         ],
                     ],
                 ],
@@ -548,11 +601,19 @@ class InstanceTest extends TestCase
                             'rules' => [],
                             'configuration' => [],
                             'value' => 'adios',
+                            'extraData' => [
+                                'ext' => 'png',
+                            ],
+                            'id' => 1,
                         ], [
                             'language' => 'en',
                             'rules' => [],
                             'configuration' => [],
-                            'value' => null,
+                            'value' => 'hola',
+                            'extraData' => [
+                                'ext' => 'jpeg',
+                            ],
+                            'id' => null,
                         ],
                     ],
                     'attributes' => [],
@@ -560,6 +621,235 @@ class InstanceTest extends TestCase
             ],
             'relations' => [],
         ], $instance->toArray());
+    }
+
+    /** @test */
+    public function exceptionOnUniqueRuleInInstance(): void
+    {
+        $this->expectException(UniqueValueException::class);
+
+        $instance = (new InstanceBuilder($this->mockInstanceCache()))
+            ->setLanguages($this->languages)
+            ->setStructure([
+                'attributes' => [
+                    'DefaultAttribute' => [
+                        'values' => [
+                            'rules' => [
+                                'unique' => [
+                                    'class' => UniqueValueRepository::class,
+                                ],
+                            ],
+                        ],
+                        'attributes' => [
+                            'DefaultAttribute' => [],
+                        ],
+                    ],
+                    'DefaultAttribute2' => [
+                        'values' => [
+                            'rules' => [
+                                'unique' => [
+                                    'class' => UniqueValueRepository::class,
+                                ],
+                            ],
+                        ],
+                        'attributes' => [
+                            'DefaultAttribute2' => [
+                                'attributes' => [
+                                    'DefaultAttribute3' => [],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ])
+            ->setClassName($this->className)
+            ->build();
+
+        $instance->fill([
+            'metadata' => $this->fillMetadataInstance(),
+            'attributes' => [
+                'default-attribute' => [
+                    'values' => [
+                        [
+                            'language' => 'es',
+                            'value' => 'hola',
+                        ],
+                    ],
+                    'attributes' => [
+                        'default-attribute' => [
+                            'values' => [
+                                [
+                                    'language' => 'es',
+                                    'value' => 'hola',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+                'default-attribute2' => [
+                    'values' => [
+                        [
+                            'language' => 'es',
+                            'value' => 'hello',
+                        ],
+                    ],
+                    'attributes' => [
+                        'default-attribute2' => [
+                            'values' => [
+                                [
+                                    'language' => 'es',
+                                    'value' => 'bye',
+                                ],
+                            ],
+                            'attributes' => [
+                                'default-attribute3' => [
+                                    'values' => [
+                                        [
+                                            'language' => 'es',
+                                            'value' => 'こんにちは',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            'relations' => [],
+        ]);
+    }
+
+    /** @test */
+    public function exceptionOnUniqueRuleInDB(): void
+    {
+        $this->expectException(UniqueValueException::class);
+
+        $instance = (new InstanceBuilder($this->mockInstanceCache()))
+            ->setLanguages($this->languages)
+            ->setStructure([
+                'attributes' => [
+                    'DefaultAttribute4' => [
+                        'values' => [
+                            'rules' => [
+                                'unique' => [
+                                    'class' => UniqueValueRepository::class,
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ])
+            ->setClassName($this->className)
+            ->build();
+
+        $instance->fill([
+            'metadata' => $this->fillMetadataInstance(),
+            'attributes' => [
+                'default-attribute4' => [
+                    'values' => [
+                        [
+                            'language' => 'es',
+                            'value' => 'hello',
+                        ],
+                    ],
+                ],
+            ],
+            'relations' => [],
+        ]);
+    }
+
+    /** @test */
+    public function eeuniqueRuleInInstance(): void
+    {
+        $instance = (new InstanceBuilder($this->mockInstanceCache()))
+            ->setLanguages($this->languages)
+            ->setStructure([
+                'attributes' => [
+                    'DefaultAttribute' => [
+                        'values' => [
+                            'rules' => [
+                                'unique' => [
+                                    'class' => UniqueValueRepository::class,
+                                ],
+                            ],
+                        ],
+                        'attributes' => [
+                            'DefaultAttribute' => [],
+                        ],
+                    ],
+                    'DefaultAttribute2' => [
+                        'values' => [
+                            'rules' => [
+                                'unique' => [
+                                    'class' => UniqueValueRepository::class,
+                                ],
+                            ],
+                        ],
+                        'attributes' => [
+                            'DefaultAttribute2' => [
+                                'attributes' => [
+                                    'DefaultAttribute3' => [],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ])
+            ->setClassName($this->className)
+            ->build();
+
+        $instance->fill([
+            'metadata' => $this->fillMetadataInstance(),
+            'attributes' => [
+                'default-attribute' => [
+                    'values' => [
+                        [
+                            'language' => 'es',
+                            'value' => 'hello',
+                        ],
+                    ],
+                    'attributes' => [
+                        'default-attribute' => [
+                            'values' => [
+                                [
+                                    'language' => 'es',
+                                    'value' => 'bye',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+                'default-attribute2' => [
+                    'values' => [
+                        [
+                            'language' => 'es',
+                            'value' => 'hello',
+                        ],
+                    ],
+                    'attributes' => [
+                        'default-attribute2' => [
+                            'values' => [
+                                [
+                                    'language' => 'es',
+                                    'value' => 'bye',
+                                ],
+                            ],
+                            'attributes' => [
+                                'default-attribute3' => [
+                                    'values' => [
+                                        [
+                                            'language' => 'es',
+                                            'value' => 'こんにちは',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            'relations' => [],
+        ]);
     }
 
     private function fillMetadataInstance()
