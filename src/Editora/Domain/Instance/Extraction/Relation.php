@@ -42,4 +42,9 @@ final class Relation
     {
         return $this->relations;
     }
+
+    public function params(): array
+    {
+        return $this->params;
+    }
 }

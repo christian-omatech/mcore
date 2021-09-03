@@ -6,7 +6,11 @@ use Omatech\Mcore\Editora\Domain\Instance\Contracts\InstanceRepositoryInterface;
 use Omatech\Mcore\Editora\Domain\Instance\Extraction\Extractor;
 use Omatech\Mcore\Editora\Domain\Instance\Extraction\Query;
 use Omatech\Mcore\Editora\Domain\Instance\Extraction\QueryParser;
+use Omatech\Mcore\Editora\Domain\Instance\Extraction\Relation;
+use Omatech\Mcore\Editora\Domain\Instance\Instance;
 use Omatech\Mcore\Editora\Domain\Instance\Services\InstanceFinder;
+
+use function Lambdish\Phunctional\reduce;
 
 final class ExtractInstanceCommandHandler
 {
@@ -23,7 +27,22 @@ final class ExtractInstanceCommandHandler
     {
         $query = (new QueryParser())->parse($command->query());
         $instance = $this->instanceRepository->findByKey($query->key());
-        $extractor = new Extractor($query, $instance, []);
+        $relations = $this->prepareRelations($query, $instance);
+        $query->addRelations($relations);
+        $extractor = new Extractor($query, $instance, $relations);
         return $extractor->extract();
+    }
+
+    private function prepareRelations(Query $query, Instance $instance)
+    {
+        return reduce(function (array $acc, Relation $relation) use ($instance) {
+            $acc[$relation->key()]['instances'] = $this->instanceRepository->findChildrenInstances(
+                $instance->id(),
+                $relation->key(),
+                $relation->params()
+            );
+            $acc[$relation->key()]['relations'] = [];
+            return $acc;
+        }, $query->relations(), []);
     }
 }
