@@ -47,6 +47,11 @@ abstract class Instance
         return $this->metadata->id();
     }
 
+    public function key(): string
+    {
+        return $this->metadata->key();
+    }
+
     public function data(): array
     {
         return [
