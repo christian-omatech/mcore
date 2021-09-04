@@ -3,12 +3,102 @@
 namespace Tests\Editora\Domain\Instance;
 
 use Omatech\Mcore\Editora\Domain\Instance\Extraction\Extractor;
+use Omatech\Mcore\Editora\Domain\Instance\Extraction\Query;
 use Omatech\Mcore\Editora\Domain\Instance\Extraction\QueryParser;
 use Omatech\Mcore\Editora\Domain\Instance\Instance;
 use Omatech\Mcore\Editora\Domain\Instance\InstanceBuilder;
+use function Lambdish\Phunctional\map;
 
 class InstanceExtractionTest extends TestCase
 {
+    /** @test */
+    public function extractMultipleInstancesWithSingleQuery(): void
+    {
+        $query = '{
+            InstanceKey(preview: false, language: es) {
+                AttributeOne
+            }
+            InstanceKey(preview: true, language: en) {
+                AttributeTwo
+            }
+        }';
+
+        $queries = (new QueryParser())->parse($query);
+        $instance1 = $this->instance(
+            'instance-key1',
+            [
+                'attributes' => [
+                    'AttributeOne' => [],
+                ],
+            ],
+            [
+                'attribute-one' => [
+                    'values' => [
+                        [
+                            'id' => 1,
+                            'language' => 'es',
+                            'value' => 'value-one',
+                            'attributes' => [],
+                        ],
+                    ],
+                ],
+            ],
+            []
+        );
+        $instance2 = $this->instance(
+            'instance-key2',
+            [
+                'attributes' => [
+                    'AttributeTwo' => [],
+                ],
+            ],
+            [
+                'attribute-two' => [
+                    'values' => [
+                        [
+                            'id' => 2,
+                            'language' => 'en',
+                            'value' => 'value-two',
+                            'attributes' => [],
+                        ],
+                    ],
+                ],
+            ],
+            []
+        );
+        $instances = [$instance1, $instance2];
+        $instances = map(static function (Query $query, int $index) use ($instances) {
+            return (new Extractor($query, $instances[$index], []))->extract()->toArray();
+        }, $queries, []);
+
+        $this->assertEquals([
+            [
+                'key' => 'instance-key1',
+                'attributes' => [
+                    [
+                        'id' => 1,
+                        'key' => 'attribute-one',
+                        'value' => 'value-one',
+                        'attributes' => [],
+                    ],
+                ],
+                'relations' => [],
+            ],
+            [
+                'key' => 'instance-key2',
+                'attributes' => [
+                    [
+                        'id' => 2,
+                        'key' => 'attribute-two',
+                        'value' => 'value-two',
+                        'attributes' => [],
+                    ],
+                ],
+                'relations' => [],
+            ],
+        ], $instances);
+    }
+
     /** @test */
     public function extractInstanceWithQueryExtraction(): void
     {
@@ -29,7 +119,7 @@ class InstanceExtractionTest extends TestCase
                 }
             }
         }';
-        $query = (new QueryParser())->parse($query);
+        $query = (new QueryParser())->parse($query)[0];
         $instance = $this->instance('instance-key', [
             'attributes' => [
                 'DefaultAttribute' => [

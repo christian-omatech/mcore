@@ -9,6 +9,7 @@ use Omatech\Mcore\Editora\Domain\Instance\Extraction\Query;
 use Omatech\Mcore\Editora\Domain\Instance\Extraction\QueryParser;
 use Omatech\Mcore\Editora\Domain\Instance\Instance;
 use Omatech\Mcore\Editora\Domain\Instance\Services\InstanceFinder;
+use function Lambdish\Phunctional\first;
 use function Lambdish\Phunctional\reduce;
 
 final class ExtractInstanceCommandHandler
@@ -22,13 +23,19 @@ final class ExtractInstanceCommandHandler
         $this->instanceFinder = new InstanceFinder($instanceRepository);
     }
 
-    public function __invoke(ExtractInstanceCommand $command): ExtractionInstance
+    public function __invoke(ExtractInstanceCommand $command): ExtractionInstance | array
     {
-        $query = (new QueryParser())->parse($command->query());
-        $instance = $this->instanceRepository->findByKey($query->key());
-        $relations = $this->prepareRelations($query->relations(), $instance);
-        $extractor = new Extractor($query, $instance, $relations);
-        return $extractor->extract();
+        $queries = (new QueryParser())->parse($command->query());
+        $instances = reduce(function (array $acc, Query $query) {
+            $instance = $this->instanceRepository->findByKey($query->key());
+            $relations = $this->prepareRelations($query->relations(), $instance);
+            $acc[] = (new Extractor($query, $instance, $relations))->extract();
+            return $acc;
+        }, $queries, []);
+        if (count($queries) === 1) {
+            return first($instances);
+        }
+        return $instances;
     }
 
     private function prepareRelations(array $relations, Instance $instance)

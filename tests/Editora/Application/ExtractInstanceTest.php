@@ -7,12 +7,125 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Omatech\Mcore\Editora\Application\ExtractInstance\ExtractInstanceCommand;
 use Omatech\Mcore\Editora\Application\ExtractInstance\ExtractInstanceCommandHandler;
 use Omatech\Mcore\Editora\Domain\Instance\Contracts\InstanceRepositoryInterface;
+use Omatech\Mcore\Editora\Domain\Instance\Extraction\Instance;
 use Omatech\Mcore\Editora\Domain\Instance\InstanceBuilder;
 use PHPUnit\Framework\TestCase;
+use function Lambdish\Phunctional\map;
 
 class ExtractInstanceTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+
+    /** @test */
+    public function extractMultiInstancesSuccessfully(): void
+    {
+        $command = new ExtractInstanceCommand('{
+            InstanceKey(preview: false, language: es)
+            InstanceKey(preview: false, language: en)
+        }');
+
+        $instance = (new InstanceBuilder())
+            ->setLanguages(['es', 'en'])
+            ->setStructure([
+                'attributes' => [
+                    'AttributeOne' => [],
+                ],
+            ])
+            ->setClassName('ClassOne')
+            ->build();
+
+        $instance->fill([
+            'metadata' => [
+                'id' => 1,
+                'key' => 'instance-key',
+                'publication' => [
+                    'startPublishingDate' => '1989-03-08 09:00:00',
+                ],
+            ],
+            'attributes' => [
+                'attribute-one' => [
+                    'values' => [
+                        [
+                            'language' => 'es',
+                            'value' => 'value-one',
+                        ],
+                    ],
+                    'attributes' => [],
+                ],
+            ],
+            'relations' => [],
+        ]);
+
+        $instance2 = (new InstanceBuilder())
+            ->setLanguages(['es', 'en'])
+            ->setStructure([
+                'attributes' => [
+                    'AttributeTwo' => [],
+                ],
+            ])
+            ->setClassName('ClassOne')
+            ->build();
+
+        $instance2->fill([
+            'metadata' => [
+                'id' => 2,
+                'key' => 'instance-key',
+                'publication' => [
+                    'startPublishingDate' => '1989-03-08 09:00:00',
+                ],
+            ],
+            'attributes' => [
+                'attribute-two' => [
+                    'values' => [
+                        [
+                            'language' => 'en',
+                            'value' => 'value-two',
+                        ],
+                    ],
+                    'attributes' => [],
+                ],
+            ],
+            'relations' => [],
+        ]);
+
+        $repository = Mockery::mock(InstanceRepositoryInterface::class);
+        $repository->shouldReceive('findByKey')
+            ->with('instance-key')
+            ->andReturn($instance)
+            ->once();
+        $repository->shouldReceive('findByKey')
+            ->with('instance-key')
+            ->andReturn($instance2)
+            ->once();
+
+        $extractions = (new ExtractInstanceCommandHandler($repository))->__invoke($command);
+        $extractions = map(static fn (Instance $instance) => $instance->toArray(), $extractions);
+        $this->assertEquals([
+            [
+                'key' => 'instance-key',
+                'attributes' => [
+                    [
+                        'id' => null,
+                        'key' => 'attribute-one',
+                        'value' => 'value-one',
+                        'attributes' => [],
+                    ],
+                ],
+                'relations' => [],
+            ], [
+                'key' => 'instance-key',
+                'attributes' => [
+                    [
+                        'id' => null,
+                        'key' => 'attribute-two',
+                        'value' => 'value-two',
+                        'attributes' => [],
+                    ],
+                ],
+                'relations' => [],
+            ],
+        ], $extractions);
+    }
 
     /** @test */
     public function extractInstanceSuccessfully(): void
@@ -26,7 +139,6 @@ class ExtractInstanceTest extends TestCase
             }
         }');
 
-        $repository = Mockery::mock(InstanceRepositoryInterface::class);
         $instance = (new InstanceBuilder())
             ->setLanguages(['es', 'en'])
             ->setStructure([
@@ -141,6 +253,7 @@ class ExtractInstanceTest extends TestCase
             'relations' => [],
         ]);
 
+        $repository = Mockery::mock(InstanceRepositoryInterface::class);
         $repository->shouldReceive('findByKey')
             ->with('instance-key')
             ->andReturn($instance)
