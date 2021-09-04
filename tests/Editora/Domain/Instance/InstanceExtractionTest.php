@@ -178,6 +178,11 @@ class InstanceExtractionTest extends TestCase
             'relation-key2' => [
                 'instances' => [
                     $this->instance('instance-key3', [
+                        'relations' => [
+                            'RelationKey3' => [
+                                'ClassOne'
+                            ]
+                        ],
                         'attributes' => [
                             'OneAttribute' => []
                         ]
@@ -194,7 +199,11 @@ class InstanceExtractionTest extends TestCase
                             ],
                             'attributes' => []
                         ]
-                    ], [])
+                    ], [
+                        'relation-key3' => [
+                            1 => 'class-one',
+                        ],
+                    ])
                 ],
                 'relations' => [
                     'relation-key3' => [

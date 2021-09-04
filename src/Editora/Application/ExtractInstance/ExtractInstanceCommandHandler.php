@@ -9,7 +9,6 @@ use Omatech\Mcore\Editora\Domain\Instance\Extraction\QueryParser;
 use Omatech\Mcore\Editora\Domain\Instance\Extraction\Relation;
 use Omatech\Mcore\Editora\Domain\Instance\Instance;
 use Omatech\Mcore\Editora\Domain\Instance\Services\InstanceFinder;
-
 use function Lambdish\Phunctional\reduce;
 
 final class ExtractInstanceCommandHandler
@@ -27,22 +26,34 @@ final class ExtractInstanceCommandHandler
     {
         $query = (new QueryParser())->parse($command->query());
         $instance = $this->instanceRepository->findByKey($query->key());
-        $relations = $this->prepareRelations($query, $instance);
+        $relations = $this->prepareRelations($query->relations(), $instance);
+
         $query->addRelations($relations);
         $extractor = new Extractor($query, $instance, $relations);
         return $extractor->extract();
     }
 
-    private function prepareRelations(Query $query, Instance $instance)
+    private function prepareRelations(array $relations, Instance $instance)
     {
         return reduce(function (array $acc, Relation $relation) use ($instance) {
-            $acc[$relation->key()]['instances'] = $this->instanceRepository->findChildrenInstances(
+            $instances = $this->instanceRepository->findChildrenInstances(
                 $instance->id(),
                 $relation->key(),
                 $relation->params()
             );
-            $acc[$relation->key()]['relations'] = [];
+            $acc[$relation->key()]['instances'] = $instances;
+            $acc[$relation->key()]['relations'] = $this->fillRelations($instances, $relation);
             return $acc;
-        }, $query->relations(), []);
+        }, $relations, []);
+    }
+
+    private function fillRelations(array $instances, Relation $relation)
+    {
+        return reduce(function (array $acc, Instance $instance) use ($relation) {
+            if ($instance->relations()->count()) {
+                $acc = $this->prepareRelations($relation->relations(), $instance);
+            }
+            return $acc;
+        }, $instances, []);
     }
 }

@@ -26,6 +26,11 @@ final class InstanceRelationCollection
         return $this->instanceRelations;
     }
 
+    public function count(): int
+    {
+        return count($this->instanceRelations);
+    }
+
     public function toArray(): array
     {
         return map(static function (InstanceRelation $relation): array {

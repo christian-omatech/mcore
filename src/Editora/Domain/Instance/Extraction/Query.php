@@ -2,6 +2,7 @@
 
 namespace Omatech\Mcore\Editora\Domain\Instance\Extraction;
 
+use Omatech\Mcore\Editora\Domain\Instance\Instance;
 use function DeepCopy\deep_copy;
 use function Lambdish\Phunctional\map;
 use function Lambdish\Phunctional\reduce;
@@ -40,23 +41,35 @@ final class Query
     private function addToQueryRelations(array $relations, string $key, array $queryRelations)
     {
         $relation = search(static fn ($relation) => $relation->key() === $key, $queryRelations);
-        $instances = reduce(function ($acc, $instance) use ($relations, $relation): array {
-            $acc[] = new Query([
-                'key' => $instance->key(),
-                'attributes' => map(
-                    static fn (Attribute $attribute) => deep_copy($attribute),
-                    $relation->attributes()
-                ),
-                'params' => $this->params,
-                'relations' => $this->matchRelationsInstances(
+        $instances = reduce(function (
+            array $acc,
+            Instance $instance
+        ) use ($relations, $relation): array {
+            if ($instance->relations()->count()) {
+                $relations = $this->matchRelationsInstances(
                     $relations['relations'],
                     $relation->relations()
-                ) ?? [],
-            ]);
+                );
+            } else {
+                $relations = [];
+            }
+            $acc[] = $this->newQuery($instance, $relation, $relations);
             return $acc;
         }, $relations['instances'], []);
         $relation->setInstances($instances);
         return $relation;
+    }
+
+    private function newQuery(Instance $instance, Relation $relation, array $relations): Query
+    {
+        return new Query([
+            'key' => $instance->key(),
+            'attributes' => map(static function (Attribute $attribute) {
+                return deep_copy($attribute);
+            }, $relation->attributes()),
+            'params' => $this->params,
+            'relations' => $relations,
+        ]);
     }
 
     public function key(): string
