@@ -5,9 +5,12 @@ namespace Omatech\Mcore\Editora\Domain\Instance\Extraction;
 use Omatech\Mcore\Editora\Domain\Attribute\Attribute;
 use Omatech\Mcore\Editora\Domain\Attribute\AttributeCollection;
 use Omatech\Mcore\Editora\Domain\Instance\Extraction\Attribute as QueryAttribute;
+use Omatech\Mcore\Editora\Domain\Instance\Extraction\Instance as ExtractionInstance;
 use Omatech\Mcore\Editora\Domain\Instance\Instance;
 use Omatech\Mcore\Editora\Domain\Value\BaseValue;
-use function Lambdish\Phunctional\map;
+use function DeepCopy\deep_copy;
+use function Lambdish\Phunctional\filter;
+use function Lambdish\Phunctional\first;
 use function Lambdish\Phunctional\reduce;
 use function Lambdish\Phunctional\search;
 
@@ -15,7 +18,7 @@ final class Extractor
 {
     private Query $query;
     private Instance $instance;
-    /** @var array<Relation> $relations */
+    /** @var array<Query> $relations */
     private array $relations;
 
     public function __construct(Query $query, Instance $instance, array $relations = [])
@@ -25,16 +28,21 @@ final class Extractor
         $this->relations = $relations;
     }
 
-    public function extract(): Query
+    public function extract(): ExtractionInstance
     {
         return $this->parse($this->query, $this->instance, $this->relations);
     }
 
-    private function parse(Query $query, Instance $instance, array $instanceRelations = []): Query
-    {
-        $query->setAttributes($this->getAttributes($query->attributes(), $instance->attributes()));
-        $query->setRelations($this->getRelations($query->relations(), $instanceRelations));
-        return $query;
+    private function parse(
+        Query $query,
+        Instance $instance,
+        array $instanceRelations = []
+    ): ExtractionInstance {
+        return new ExtractionInstance([
+            'key' => $instance->key(),
+            'attributes' => $this->getAttributes($query->attributes(), $instance->attributes()),
+            'relations' => $this->matchRelations($query->relations(), $instanceRelations),
+        ]);
     }
 
     private function getAttributes(array $queryAttributes, AttributeCollection $attributes): array
@@ -69,39 +77,49 @@ final class Extractor
         QueryAttribute $queryAttribute
     ): QueryAttribute {
         $values = reduce(static function (array $acc, BaseValue $value): array {
-            $acc[$value->language()] = $value->value();
+            $acc[$value->language()]['id'] = $value->id();
+            $acc[$value->language()]['value'] = $value->value();
             return $acc;
         }, $attribute->values()->get(), []);
-        $value = $values[$this->query->language()] ?? null;
-        $value = $values['*'] ?? $value;
-        $value = $value ?? $values['+'] ?? null;
-        $queryAttribute->setValue($value);
-        return $queryAttribute;
+        $value = first(filter(static function ($value) {
+            return isset($value['value']);
+        }, [
+            $values[$this->query->param('language')] ?? null,
+            $values['*'] ?? null,
+            $values['+'] ?? null,
+        ]));
+        $queryAttribute->setValue($value['id'] ?? null, $value['value'] ?? null);
+        return deep_copy($queryAttribute);
     }
 
-    private function getRelations(array $queryRelations, array $instanceRelations): array
+    private function matchRelations(array $queryRelations, array $instancesRelations): array
     {
-        return map(function (array $relation) use ($queryRelations): array {
-            return $this->fillQueryRelation($queryRelations, $relation);
-        }, $instanceRelations);
-    }
-
-    private function fillQueryRelation(array $queryRelations, array $relation): array
-    {
-        return reduce(function (array $acc, Relation $queryRelation) use ($relation): array {
-            $queryInstance = reduce(function ($acc, Query $query) use ($relation): array {
-                $instance = search(static function ($instance) use ($query): bool {
-                    return $instance->key() === $query->key();
-                }, $relation['instances']);
-                if ($instance) {
-                    $acc[] = $this->parse($query, $instance, $relation['relations']);
-                }
-                return $acc;
-            }, $queryRelation->instances(), []);
-            if (count($queryInstance)) {
-                $acc = $queryInstance;
+        return reduce(function (
+            array $acc,
+            array $instancesRelation,
+            string $key
+        ) use ($queryRelations): array {
+            $queryRelation = search(static fn ($query) => $query->key() === $key, $queryRelations);
+            if ($queryRelation) {
+                $acc[$key] = $this->addInstancesRelation($queryRelation, $instancesRelation);
             }
             return $acc;
-        }, $queryRelations, []);
+        }, $instancesRelations, []);
+    }
+
+    private function addInstancesRelation(Query $queryRelation, array $instancesRelation): array
+    {
+        return reduce(function (
+            array $acc,
+            Instance $instance
+        ) use ($queryRelation, $instancesRelation): array {
+            $acc[] = $this->parse($queryRelation, $instance, $instancesRelation['relations']);
+            return $acc;
+        }, $instancesRelation['instances'], []);
+    }
+
+    public function query(): Query
+    {
+        return $this->query;
     }
 }

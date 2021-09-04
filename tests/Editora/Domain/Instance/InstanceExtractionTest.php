@@ -10,7 +10,7 @@ use Omatech\Mcore\Editora\Domain\Instance\InstanceBuilder;
 class InstanceExtractionTest extends TestCase
 {
     /** @test */
-    public function extractInstanceWithQueryExtraction()
+    public function extractInstanceWithQueryExtraction(): void
     {
         $query = '{
             InstanceKey(preview: false, language: es) {
@@ -29,56 +29,56 @@ class InstanceExtractionTest extends TestCase
                 }
             }
         }';
-        $query = (new QueryParser)->parse($query);
-
-        $instance = $this->instance('instance-key1', [
+        $query = (new QueryParser())->parse($query);
+        $instance = $this->instance('instance-key', [
             'attributes' => [
                 'DefaultAttribute' => [
                     'attributes' => [
-                        'SubDefaultAttribute' => []
-                    ]
+                        'SubDefaultAttribute' => [],
+                    ],
                 ],
                 'AnotherAttribute' => [
                     'values' => [
                         'languages' => [
-                            '+' => []
-                        ]
-                    ]
+                            '+' => [],
+                        ],
+                    ],
                 ],
                 'AnotherOtherAttribute' => [
                     'values' => [
                         'languages' => [
-                            '+' => []
-                        ]
-                    ]
+                            '+' => [],
+                        ],
+                    ],
                 ],
                 'MultiAttribute' => [
                     'values' => [
                         'languages' => [
-                            '*' => []
-                        ]
-                    ]
+                            '*' => [],
+                        ],
+                    ],
                 ],
                 'AnotherMultiAttribute' => [
                     'values' => [
                         'languages' => [
-                            '*' => []
-                        ]
-                    ]
+                            '*' => [],
+                        ],
+                    ],
                 ],
-                'NonQueryAttribute' => []
-            ]
+                'NonQueryAttribute' => [],
+            ],
         ], [
             'default-attribute' => [
                 'values' => [
                     [
+                        'id' => 1,
                         'language' => 'es',
                         'value' => 'hola',
                     ], [
                         'language' => 'en',
                         'value' => 'hello',
                     ],
-                ]
+                ],
             ],
             'another-attribute' => [
                 'values' => [
@@ -90,9 +90,9 @@ class InstanceExtractionTest extends TestCase
                         'value' => null,
                     ], [
                         'language' => '+',
-                        'value' => 'por defecto'
-                    ]
-                ]
+                        'value' => 'por defecto',
+                    ],
+                ],
             ],
             'another-other-attribute' => [
                 'values' => [
@@ -104,26 +104,26 @@ class InstanceExtractionTest extends TestCase
                         'value' => null,
                     ], [
                         'language' => '+',
-                        'value' => 'por defecto'
-                    ]
-                ]
+                        'value' => 'por defecto',
+                    ],
+                ],
             ],
             'multi-attribute' => [
                 'values' => [
                     [
                         'language' => '*',
-                        'value' => 'multi-value'
-                    ]
-                ]
+                        'value' => 'multi-value',
+                    ],
+                ],
             ],
             'another-multi-attribute' => [
                 'values' => [
                     [
                         'language' => '*',
-                        'value' => null
-                    ]
-                ]
-            ]
+                        'value' => null,
+                    ],
+                ],
+            ],
         ], []);
         $relations = [
             'relation-key1' => [
@@ -132,230 +132,291 @@ class InstanceExtractionTest extends TestCase
                         'attributes' => [
                             'OneAttribute' => [
                                 'attributes' => [
-                                    'SubOneAttribute' => []
-                                ]
-                            ]
-                        ]
+                                    'SubOneAttribute' => [],
+                                ],
+                            ],
+                        ],
                     ], [
                         'one-attribute' => [
                             'values' => [
                                 [
                                     'language' => 'es',
-                                    'value' => 'hola'
+                                    'value' => 'hola',
                                 ], [
                                     'language' => 'en',
-                                    'value' => 'hello'
-                                ]
+                                    'value' => 'hello',
+                                ],
                             ],
-                            'attributes' => []
-                        ]
+                            'attributes' => [],
+                        ],
                     ], []),
                     $this->instance('instance-key2', [
                         'attributes' => [
                             'OneAttribute' => [
                                 'attributes' => [
-                                    'SubOneAttribute' => []
-                                ]
-                            ]
-                        ]
+                                    'SubOneAttribute' => [],
+                                ],
+                            ],
+                        ],
                     ], [
                         'one-attribute' => [
                             'values' => [
                                 [
                                     'language' => 'es',
-                                    'value' => 'hola'
+                                    'value' => 'hola',
                                 ], [
                                     'language' => 'en',
-                                    'value' => 'hello'
-                                ]
+                                    'value' => 'hello',
+                                ],
                             ],
-                            'attributes' => []
-                        ]
-                    ], [])
+                            'attributes' => [],
+                        ],
+                    ], []),
                 ],
-                'relations' => []
+                'relations' => [],
             ],
             'relation-key2' => [
                 'instances' => [
                     $this->instance('instance-key3', [
                         'relations' => [
                             'RelationKey3' => [
-                                'ClassOne'
-                            ]
+                                'ClassOne',
+                            ],
                         ],
                         'attributes' => [
-                            'OneAttribute' => []
-                        ]
+                            'OneAttribute' => [],
+                        ],
                     ], [
                         'one-attribute' => [
                             'values' => [
                                 [
                                     'language' => 'es',
-                                    'value' => 'hola'
+                                    'value' => 'hola',
                                 ], [
                                     'language' => 'en',
-                                    'value' => 'hello'
-                                ]
+                                    'value' => 'hello',
+                                ],
                             ],
-                            'attributes' => []
-                        ]
+                            'attributes' => [],
+                        ],
                     ], [
                         'relation-key3' => [
                             1 => 'class-one',
                         ],
-                    ])
+                    ]),
                 ],
                 'relations' => [
                     'relation-key3' => [
                         'instances' => [
                             $this->instance('instance-key4', [
                                 'attributes' => [
-                                    'OneAttribute' => []
-                                ]
+                                    'OneAttribute' => [],
+                                ],
                             ], [
                                 'one-attribute' => [
                                     'values' => [
                                         [
                                             'language' => 'es',
-                                            'value' => 'adios'
+                                            'value' => 'adios',
                                         ], [
                                             'language' => 'en',
-                                            'value' => 'bye'
-                                        ]
+                                            'value' => 'bye',
+                                        ],
                                     ],
-                                    'attributes' => []
-                                ]
-                            ], [])
+                                    'attributes' => [],
+                                ],
+                            ], []),
                         ],
-                        'relations' => []
-                    ]
-                ]
-            ]
+                        'relations' => [],
+                    ],
+                ],
+            ],
         ];
-        $query->addRelations($relations);
-        $extractor = new Extractor($query, $instance, $relations);
-        $extraction = $extractor->extract();
 
+        $this->assertNull($query->param('non-existent-param'));
         $this->assertEquals([
             'key' => 'instance-key',
             'language' => 'es',
             'attributes' => [
                 [
                     'key' => 'default-attribute',
-                    'value' => 'hola',
-                    'attributes' => [
-                        [
-                            'key' => 'sub-default-attribute',
-                            'value' => null,
-                            'attributes' => []
-                        ]
-                    ]
+                    'attributes' => [],
                 ], [
                     'key' => 'another-attribute',
-                    'value' => 'por defecto',
-                    'attributes' => []
+                    'attributes' => [],
                 ], [
                     'key' => 'another-other-attribute',
-                    'value' => 'sin defecto',
-                    'attributes' => []
+                    'attributes' => [],
                 ], [
                     'key' => 'multi-attribute',
-                    'value' => 'multi-value',
-                    'attributes' => []
+                    'attributes' => [],
                 ], [
                     'key' => 'another-multi-attribute',
-                    'value' => null,
-                    'attributes' => []
-                ]
+                    'attributes' => [],
+                ],
             ],
             'params' => [
                 'preview' => false,
-                'language' => 'es'
+                'language' => 'es',
+            ],
+            'relations' => [
+                [
+                    'key' => 'relation-key1',
+                    'language' => 'es',
+                    'attributes' => [
+                        [
+                            'key' => 'one-attribute',
+                            'attributes' => [
+                                [
+                                    'key' => 'sub-one-attribute',
+                                    'attributes' => [],
+                                ],
+                            ],
+                        ],
+                    ],
+                    'params' => [
+                        'limit' => '1',
+                        'language' => 'es',
+                        'preview' => false,
+                    ],
+                    'relations' => [],
+                ], [
+                    'key' => 'relation-key2',
+                    'language' => 'es',
+                    'attributes' => [],
+                    'params' => [
+                        'limit' => '1',
+                        'language' => 'es',
+                        'preview' => false,
+                    ],
+                    'relations' => [
+                        [
+                            'key' => 'relation-key3',
+                            'language' => 'es',
+                            'attributes' => [],
+                            'params' => [
+                                'limit' => '1',
+                                'language' => 'es',
+                                'preview' => false,
+                            ],
+                            'relations' => [],
+                        ],
+                    ],
+                ],
+            ],
+        ], $query->toArray());
+
+        $extractor = new Extractor($query, $instance, $relations);
+        $extraction = $extractor->extract();
+        $this->assertEquals($query->toArray(), $extractor->query()->toArray());
+
+        $this->assertEquals([
+            'key' => 'instance-key',
+            'attributes' => [
+                [
+                    'id' => 1,
+                    'key' => 'default-attribute',
+                    'value' => 'hola',
+                    'attributes' => [
+                        [
+                            'id' => null,
+                            'key' => 'sub-default-attribute',
+                            'value' => null,
+                            'attributes' => [],
+                        ],
+                    ],
+                ], [
+                    'id' => null,
+                    'key' => 'another-attribute',
+                    'value' => 'por defecto',
+                    'attributes' => [],
+                ], [
+                    'id' => null,
+                    'key' => 'another-other-attribute',
+                    'value' => 'sin defecto',
+                    'attributes' => [],
+                ], [
+                    'id' => null,
+                    'key' => 'multi-attribute',
+                    'value' => 'multi-value',
+                    'attributes' => [],
+                ], [
+                    'id' => null,
+                    'key' => 'another-multi-attribute',
+                    'value' => null,
+                    'attributes' => [],
+                ],
             ],
             'relations' => [
                 'relation-key1' => [
                     [
                         'key' => 'instance-key2',
-                        'language' => 'es',
-                        'params' => [
-                            'preview' => false,
-                            'language' => 'es'
-                        ],
                         'attributes' => [
                             [
+                                'id' => null,
                                 'key' => 'one-attribute',
                                 'value' => 'hola',
                                 'attributes' => [
                                     [
+                                        'id' => null,
                                         'key' => 'sub-one-attribute',
                                         'value' => null,
-                                        'attributes' => []
-                                    ]
-                                ]
-                            ]
+                                        'attributes' => [],
+                                    ],
+                                ],
+                            ],
                         ],
-                        'relations' => []
+                        'relations' => [],
                     ], [
                         'key' => 'instance-key2',
-                        'language' => 'es',
-                        'params' => [
-                            'preview' => false,
-                            'language' => 'es'
-                        ],
                         'attributes' => [
                             [
+                                'id' => null,
                                 'key' => 'one-attribute',
                                 'value' => 'hola',
                                 'attributes' => [
                                     [
+                                        'id' => null,
                                         'key' => 'sub-one-attribute',
                                         'value' => null,
-                                        'attributes' => []
-                                    ]
-                                ]
-                            ]
+                                        'attributes' => [],
+                                    ],
+                                ],
+                            ],
                         ],
-                        'relations' => []
-                    ]
+                        'relations' => [],
+                    ],
                 ],
                 'relation-key2' => [
                     [
                         'key' => 'instance-key3',
-                        'language' => 'es',
-                        'params' => [
-                            'preview' => false,
-                            'language' => 'es'
-                        ],
                         'attributes' => [
                             [
+                                'id' => null,
                                 'key' => 'one-attribute',
                                 'value' => 'hola',
-                                'attributes' => []
-                            ]
+                                'attributes' => [],
+                            ],
                         ],
                         'relations' => [
                             'relation-key3' => [
                                 [
                                     'key' => 'instance-key4',
-                                    'language' => 'es',
-                                    'params' => [
-                                        'preview' => false,
-                                        'language' => 'es'
-                                    ],
                                     'attributes' => [
                                         [
+                                            'id' => null,
                                             'key' => 'one-attribute',
                                             'value' => 'adios',
-                                            'attributes' => []
-                                        ]
+                                            'attributes' => [],
+                                        ],
                                     ],
-                                    'relations' => []
-                                ]
-                            ]
-                        ]
-                    ]
-                ]
-            ]
+                                    'relations' => [],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
         ], $extraction->toArray());
     }
 

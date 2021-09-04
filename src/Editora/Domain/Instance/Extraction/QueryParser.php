@@ -18,14 +18,19 @@ final class QueryParser
 
     private function parseNode(FieldNode $node): Query
     {
+        $params = reduce(static function (array $acc, $argument) {
+            $acc[$argument->name->value] = $argument->value->value;
+            return $acc;
+        }, $node->arguments, []);
+
         return new Query([
             'key' => Utils::getInstance()->slug($node->name->value),
             'attributes' => $this->parseAttributes($node),
-            'params' => reduce(static function (array $acc, $argument) {
-                $acc[$argument->name->value] = $argument->value->value;
-                return $acc;
-            }, $node->arguments, []),
-            'relations' => $this->parseRelations($node),
+            'params' => $params,
+            'relations' => $this->parseRelations($node, [
+                'language' => $params['language'],
+                'preview' => $params['preview'],
+            ]),
         ]);
     }
 
@@ -42,19 +47,19 @@ final class QueryParser
         }, $node->selectionSet->selections ?? [], []);
     }
 
-    private function parseRelations(FieldNode $node): array
+    private function parseRelations(FieldNode $node, array $params = []): array
     {
-        return reduce(function (array $acc, FieldNode $node) {
+        return reduce(function (array $acc, FieldNode $node) use ($params) {
             if (count($node->arguments)) {
-                $acc[] = new Relation(
-                    Utils::getInstance()->slug($node->name->value),
-                    reduce(static function (array $acc, $argument) {
+                $acc[] = new Query([
+                    'key' => Utils::getInstance()->slug($node->name->value),
+                    'attributes' => $this->parseAttributes($node),
+                    'params' => reduce(static function (array $acc, $argument) {
                         $acc[$argument->name->value] = $argument->value->value;
                         return $acc;
-                    }, $node->arguments, []),
-                    $this->parseAttributes($node),
-                    $this->parseRelations($node)
-                );
+                    }, $node->arguments, []) + $params,
+                    'relations' => $this->parseRelations($node, $params),
+                ]);
             }
             return $acc;
         }, $node->selectionSet->selections ?? [], []);

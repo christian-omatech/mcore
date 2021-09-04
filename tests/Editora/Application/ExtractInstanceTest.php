@@ -7,7 +7,6 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Omatech\Mcore\Editora\Application\ExtractInstance\ExtractInstanceCommand;
 use Omatech\Mcore\Editora\Application\ExtractInstance\ExtractInstanceCommandHandler;
 use Omatech\Mcore\Editora\Domain\Instance\Contracts\InstanceRepositoryInterface;
-use Omatech\Mcore\Editora\Domain\Instance\Instance;
 use Omatech\Mcore\Editora\Domain\Instance\InstanceBuilder;
 use PHPUnit\Framework\TestCase;
 
@@ -33,12 +32,12 @@ class ExtractInstanceTest extends TestCase
             ->setStructure([
                 'relations' => [
                     'RelationKey1' => [
-                        'ClassTwo'
-                    ]
+                        'ClassTwo',
+                    ],
                 ],
                 'attributes' => [
-                    'DefaultAttribute' => []
-                ]
+                    'DefaultAttribute' => [],
+                ],
             ])
             ->setClassName('ClassOne')
             ->build();
@@ -57,10 +56,10 @@ class ExtractInstanceTest extends TestCase
                         [
                             'language' => 'es',
                             'value' => 'hola',
-                        ]
+                        ],
                     ],
-                    'attributes' => []
-                ]
+                    'attributes' => [],
+                ],
             ],
             'relations' => [
                 'relation-key1' => [
@@ -74,12 +73,12 @@ class ExtractInstanceTest extends TestCase
             ->setStructure([
                 'relations' => [
                     'RelationKey2' => [
-                        'ClassThree'
-                    ]
+                        'ClassThree',
+                    ],
                 ],
                 'attributes' => [
-                    'DefaultAttribute' => []
-                ]
+                    'DefaultAttribute' => [],
+                ],
             ])
             ->setClassName('ClassTwo')
             ->build();
@@ -98,10 +97,10 @@ class ExtractInstanceTest extends TestCase
                         [
                             'language' => 'es',
                             'value' => 'hola',
-                        ]
+                        ],
                     ],
-                    'attributes' => []
-                ]
+                    'attributes' => [],
+                ],
             ],
             'relations' => [
                 'relation-key2' => [
@@ -114,8 +113,8 @@ class ExtractInstanceTest extends TestCase
             ->setLanguages(['es', 'en'])
             ->setStructure([
                 'attributes' => [
-                    'DefaultAttribute' => []
-                ]
+                    'DefaultAttribute' => [],
+                ],
             ])
             ->setClassName('ClassThree')
             ->build();
@@ -134,12 +133,12 @@ class ExtractInstanceTest extends TestCase
                         [
                             'language' => 'es',
                             'value' => 'hola',
-                        ]
+                        ],
                     ],
-                    'attributes' => []
-                ]
+                    'attributes' => [],
+                ],
             ],
-            'relations' => []
+            'relations' => [],
         ]);
 
         $repository->shouldReceive('findByKey')
@@ -148,75 +147,67 @@ class ExtractInstanceTest extends TestCase
             ->once();
         $repository->shouldReceive('findChildrenInstances')
             ->with(1, 'relation-key1', [
-                'limit' => 1
+                'limit' => 1,
+                'language' => 'es',
+                'preview' => false,
             ])
             ->andReturn([
-                $instance2
+                $instance2,
             ])->once();
 
         $repository->shouldReceive('findChildrenInstances')
             ->with(2, 'relation-key2', [
-                'limit' => 1
+                'limit' => 1,
+                'language' => 'es',
+                'preview' => false,
             ])
             ->andReturn([
-                $instance3
+                $instance3,
             ])->once();
 
         $extraction = (new ExtractInstanceCommandHandler($repository))->__invoke($command);
 
         $this->assertEquals([
             'key' => 'instance-key',
-            'language' => 'es',
             'attributes' => [
                 [
+                    'id' => null,
                     'key' => 'default-attribute',
                     'value' => 'hola',
-                    'attributes' => []
-                ]
-            ],
-            'params' => [
-                'preview' => false,
-                'language' => 'es'
+                    'attributes' => [],
+                ],
             ],
             'relations' => [
                 'relation-key1' => [
                     [
                         'key' => 'instance-key2',
-                        'language' => 'es',
                         'attributes' => [
                             [
+                                'id' => null,
                                 'key' => 'default-attribute',
                                 'value' => 'hola',
-                                'attributes' => []
-                            ]
-                        ],
-                        'params' => [
-                            'preview' => false,
-                            'language' => 'es'
+                                'attributes' => [],
+                            ],
                         ],
                         'relations' => [
                             'relation-key2' => [
                                 [
                                     'key' => 'instance-key3',
-                                    'language' => 'es',
                                     'attributes' => [
                                         [
+                                            'id' => null,
                                             'key' => 'default-attribute',
                                             'value' => 'hola',
-                                            'attributes' => []
-                                        ]
+                                            'attributes' => [],
+                                        ],
                                     ],
-                                    'params' => [
-                                        'preview' => false,
-                                        'language' => 'es'
-                                    ],
-                                    'relations' => []
-                                ]
-                            ]
-                        ]
-                    ]
-                ]
-            ]
+                                    'relations' => [],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
         ], $extraction->toArray());
     }
 }
