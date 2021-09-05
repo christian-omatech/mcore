@@ -3,13 +3,12 @@
 namespace Omatech\Mcore\Editora\Application\ExtractInstance;
 
 use Omatech\Mcore\Editora\Domain\Instance\Contracts\InstanceRepositoryInterface;
+use Omatech\Mcore\Editora\Domain\Instance\Extraction\Extraction;
 use Omatech\Mcore\Editora\Domain\Instance\Extraction\Extractor;
-use Omatech\Mcore\Editora\Domain\Instance\Extraction\Instance as ExtractionInstance;
 use Omatech\Mcore\Editora\Domain\Instance\Extraction\Query;
 use Omatech\Mcore\Editora\Domain\Instance\Extraction\QueryParser;
 use Omatech\Mcore\Editora\Domain\Instance\Instance;
 use Omatech\Mcore\Editora\Domain\Instance\Services\InstanceFinder;
-use function Lambdish\Phunctional\first;
 use function Lambdish\Phunctional\reduce;
 
 final class ExtractInstanceCommandHandler
@@ -23,7 +22,7 @@ final class ExtractInstanceCommandHandler
         $this->instanceFinder = new InstanceFinder($instanceRepository);
     }
 
-    public function __invoke(ExtractInstanceCommand $command): ExtractionInstance | array
+    public function __invoke(ExtractInstanceCommand $command): Extraction
     {
         $queries = (new QueryParser())->parse($command->query());
         $instances = reduce(function (array $acc, Query $query) {
@@ -32,10 +31,7 @@ final class ExtractInstanceCommandHandler
             $acc[] = (new Extractor($query, $instance, $relations))->extract();
             return $acc;
         }, $queries, []);
-        if (count($queries) === 1) {
-            return first($instances);
-        }
-        return $instances;
+        return new Extraction($queries, $instances);
     }
 
     private function prepareRelations(array $relations, Instance $instance)

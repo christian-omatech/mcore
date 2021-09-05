@@ -99,7 +99,8 @@ class ExtractInstanceTest extends TestCase
             ->once();
 
         $extractions = (new ExtractInstanceCommandHandler($repository))->__invoke($command);
-        $extractions = map(static fn (Instance $instance) => $instance->toArray(), $extractions);
+        $this->assertIsArray($extractions->instances());
+        $this->assertIsArray($extractions->queries());
         $this->assertEquals([
             [
                 'key' => 'instance-key',
@@ -124,7 +125,7 @@ class ExtractInstanceTest extends TestCase
                 ],
                 'relations' => [],
             ],
-        ], $extractions);
+        ], $extractions->toArray());
     }
 
     /** @test */
