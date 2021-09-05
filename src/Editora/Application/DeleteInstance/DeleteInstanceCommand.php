@@ -2,7 +2,9 @@
 
 namespace Omatech\Mcore\Editora\Application\DeleteInstance;
 
-final class DeleteInstanceCommand
+use Omatech\Mcore\Shared\Application\Command;
+
+final class DeleteInstanceCommand extends Command
 {
     private int $id;
 

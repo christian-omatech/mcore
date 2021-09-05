@@ -2,7 +2,9 @@
 
 namespace Omatech\Mcore\Editora\Application\UpdateInstance;
 
-final class UpdateInstanceCommand
+use Omatech\Mcore\Shared\Application\Command;
+
+final class UpdateInstanceCommand extends Command
 {
     private int $id;
     private array $metadata;

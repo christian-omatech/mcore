@@ -2,7 +2,9 @@
 
 namespace Omatech\Mcore\Editora\Application\ReadInstance;
 
-final class ReadInstanceCommand
+use Omatech\Mcore\Shared\Application\Command;
+
+final class ReadInstanceCommand extends Command
 {
     private int $id;
 

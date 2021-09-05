@@ -2,7 +2,9 @@
 
 namespace Omatech\Mcore\Editora\Application\ExtractInstance;
 
-final class ExtractInstanceCommand
+use Omatech\Mcore\Shared\Application\Command;
+
+final class ExtractInstanceCommand extends Command
 {
     private string $query;
 

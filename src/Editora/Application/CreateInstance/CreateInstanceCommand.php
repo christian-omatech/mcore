@@ -2,7 +2,9 @@
 
 namespace Omatech\Mcore\Editora\Application\CreateInstance;
 
-final class CreateInstanceCommand
+use Omatech\Mcore\Shared\Application\Command;
+
+final class CreateInstanceCommand extends Command
 {
     private string $classKey;
     private array $metadata;
