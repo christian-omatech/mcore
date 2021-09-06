@@ -10,7 +10,7 @@
     "require-dev": {
         "roave/security-advisories": "dev-latest",
         "phpunit/phpunit": "^9.0",
-        "infection/infection": "^0.24.0",
+        "infection/infection": "^0.25.0",
         "nunomaduro/phpinsights": "^2.0",
         "symfony/var-dumper": "^5.3",
         "mockery/mockery": "^1.4"
