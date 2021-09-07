@@ -8,9 +8,11 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Omatech\Mcore\Editora\Application\CreateInstance\CreateInstanceCommand;
 use Omatech\Mcore\Editora\Application\CreateInstance\CreateInstanceCommandHandler;
 use Omatech\Mcore\Editora\Domain\Instance\Contracts\InstanceRepositoryInterface;
+use Omatech\Mcore\Editora\Domain\Instance\Events\InstanceHasBeenCreated;
 use Omatech\Mcore\Editora\Domain\Instance\Exceptions\InstanceDoesNotExistsException;
 use Omatech\Mcore\Editora\Domain\Instance\Exceptions\InstanceExistsException;
 use Omatech\Mcore\Editora\Domain\Instance\Instance;
+use Omatech\Mcore\Shared\Domain\Event\Contracts\EventPublisherInterface;
 use PHPUnit\Framework\TestCase;
 
 class CreateInstanceTest extends TestCase
@@ -133,10 +135,17 @@ class CreateInstanceTest extends TestCase
             ])
             ->andReturn($instance)
             ->once();
+
+        $eventPublisher = Mockery::mock(EventPublisherInterface::class);
+        $eventPublisher->shouldReceive('publish')
+            ->with([new InstanceHasBeenCreated($instance)])
+            ->andReturn(null)
+            ->once();
+
         $repository->shouldReceive('build')->with($command->classKey())->andReturn($instance)->once();
         $repository->shouldReceive('save')->with($instance)->andReturn(null)->once();
 
-        (new CreateInstanceCommandHandler($repository))->__invoke($command);
+        (new CreateInstanceCommandHandler($eventPublisher, $repository))->__invoke($command);
     }
 
     /** @test */
@@ -153,10 +162,15 @@ class CreateInstanceTest extends TestCase
             'relations' => [],
         ]);
 
+        $eventPublisher = Mockery::mock(EventPublisherInterface::class);
+        $eventPublisher->shouldReceive('publish')
+            ->andReturn(null)
+            ->never();
+
         $repository = Mockery::mock(InstanceRepositoryInterface::class);
         $repository->shouldReceive('exists')->with('test')->andReturn(true)->once();
 
-        (new CreateInstanceCommandHandler($repository))->__invoke($command);
+        (new CreateInstanceCommandHandler($eventPublisher, $repository))->__invoke($command);
     }
 
     /** @test */
@@ -177,6 +191,11 @@ class CreateInstanceTest extends TestCase
             ],
         ]);
 
+        $eventPublisher = Mockery::mock(EventPublisherInterface::class);
+        $eventPublisher->shouldReceive('publish')
+            ->andReturn(null)
+            ->never();
+
         $repository = Mockery::mock(InstanceRepositoryInterface::class);
         $repository->shouldReceive('exists')->with('test')->andReturn(false)->once();
         $repository->shouldReceive('classKey')->with(1)->andReturn('class-one')->once();
@@ -186,7 +205,7 @@ class CreateInstanceTest extends TestCase
         $repository->shouldReceive('classKey')->with(5)->andReturn('class-two')->once();
         $repository->shouldReceive('classKey')->with(6)->andReturn(null)->once();
 
-        (new CreateInstanceCommandHandler($repository))->__invoke($command);
+        (new CreateInstanceCommandHandler($eventPublisher, $repository))->__invoke($command);
     }
 
     /** @test */
@@ -209,11 +228,21 @@ class CreateInstanceTest extends TestCase
             ])
             ->andReturn($instance)
             ->once();
+
+        $event = new InstanceHasBeenCreated($instance);
+        $eventPublisher = Mockery::mock(EventPublisherInterface::class);
+        $eventPublisher->shouldReceive('publish')
+            ->with([$event])
+            ->andReturn(null)
+            ->once();
+
+        $this->assertSame($event->instance(), $instance);
+
         $repository = Mockery::mock(InstanceRepositoryInterface::class);
         $repository->shouldReceive('exists')->with('test')->andReturn(false)->once();
         $repository->shouldReceive('build')->with($command->classKey())->andReturn($instance)->once();
         $repository->shouldReceive('save')->with($instance)->andReturn(null)->once();
 
-        (new CreateInstanceCommandHandler($repository))->__invoke($command);
+        (new CreateInstanceCommandHandler($eventPublisher, $repository))->__invoke($command);
     }
 }

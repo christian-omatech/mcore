@@ -7,8 +7,10 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Omatech\Mcore\Editora\Application\DeleteInstance\DeleteInstanceCommand;
 use Omatech\Mcore\Editora\Application\DeleteInstance\DeleteInstanceCommandHandler;
 use Omatech\Mcore\Editora\Domain\Instance\Contracts\InstanceRepositoryInterface;
+use Omatech\Mcore\Editora\Domain\Instance\Events\InstanceHasBeenDeleted;
 use Omatech\Mcore\Editora\Domain\Instance\Exceptions\InstanceDoesNotExistsException;
 use Omatech\Mcore\Editora\Domain\Instance\Instance;
+use Omatech\Mcore\Shared\Domain\Event\Contracts\EventPublisherInterface;
 use PHPUnit\Framework\TestCase;
 
 class DeleteInstanceTest extends TestCase
@@ -20,8 +22,14 @@ class DeleteInstanceTest extends TestCase
     {
         $command = new DeleteInstanceCommand(1);
 
-        $repository = Mockery::mock(InstanceRepositoryInterface::class);
         $instance = Mockery::mock(Instance::class);
+        $event = new InstanceHasBeenDeleted($instance);
+        $eventPublisher = Mockery::mock(EventPublisherInterface::class);
+        $eventPublisher->shouldReceive('publish')
+            ->with([$event])
+            ->andReturn(null)
+            ->once();
+        $repository = Mockery::mock(InstanceRepositoryInterface::class);
         $repository->shouldReceive('find')
             ->with($command->id())
             ->andReturn($instance)
@@ -31,7 +39,9 @@ class DeleteInstanceTest extends TestCase
             ->andReturn(null)
             ->once();
 
-        (new DeleteInstanceCommandHandler($repository))->__invoke($command);
+        $this->assertEquals($event->instance(), $instance);
+        
+        (new DeleteInstanceCommandHandler($eventPublisher, $repository))->__invoke($command);
     }
 
     /** @test */
@@ -41,12 +51,17 @@ class DeleteInstanceTest extends TestCase
 
         $command = new DeleteInstanceCommand(1);
 
+        $event = Mockery::mock(EventPublisherInterface::class);
+        $event->shouldReceive('publish')
+            ->andReturn(null)
+            ->never();
+
         $repository = Mockery::mock(InstanceRepositoryInterface::class);
         $repository->shouldReceive('find')
             ->with($command->id())
             ->andReturn(null)
             ->once();
 
-        (new DeleteInstanceCommandHandler($repository))->__invoke($command);
+        (new DeleteInstanceCommandHandler($event, $repository))->__invoke($command);
     }
 }

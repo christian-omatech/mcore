@@ -7,6 +7,7 @@ use Omatech\Mcore\Editora\Domain\Instance\Instance;
 interface InstanceRepositoryInterface
 {
     public function build(string $classKey): Instance;
+    public function clone(Instance $instance): Instance;
     public function find(int $id): ?Instance;
     public function findByKey(string $key): ?Instance;
     public function findChildrenInstances(int $instanceId, string $key, array $params): array;

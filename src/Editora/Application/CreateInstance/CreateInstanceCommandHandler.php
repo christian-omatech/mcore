@@ -3,15 +3,21 @@
 namespace Omatech\Mcore\Editora\Application\CreateInstance;
 
 use Omatech\Mcore\Editora\Domain\Instance\Contracts\InstanceRepositoryInterface;
+use Omatech\Mcore\Editora\Domain\Instance\Events\InstanceHasBeenCreated;
 use Omatech\Mcore\Editora\Domain\Instance\Services\InstanceFinder;
+use Omatech\Mcore\Shared\Domain\Event\Contracts\EventPublisherInterface;
 
 final class CreateInstanceCommandHandler
 {
+    private EventPublisherInterface $eventPublisher;
     private InstanceRepositoryInterface $instanceRepository;
     private InstanceFinder $instanceFinder;
 
-    public function __construct(InstanceRepositoryInterface $instanceRepository)
-    {
+    public function __construct(
+        EventPublisherInterface $eventPublisher,
+        InstanceRepositoryInterface $instanceRepository,
+    ) {
+        $this->eventPublisher = $eventPublisher;
         $this->instanceRepository = $instanceRepository;
         $this->instanceFinder = new InstanceFinder($instanceRepository);
     }
@@ -27,5 +33,6 @@ final class CreateInstanceCommandHandler
             'relations' => $relations,
         ]);
         $this->instanceRepository->save($instance);
+        $this->eventPublisher->publish([new InstanceHasBeenCreated($instance)]);
     }
 }

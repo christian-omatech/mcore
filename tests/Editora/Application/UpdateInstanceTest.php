@@ -7,8 +7,11 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Omatech\Mcore\Editora\Application\UpdateInstance\UpdateInstanceCommand;
 use Omatech\Mcore\Editora\Application\UpdateInstance\UpdateInstanceCommandHandler;
 use Omatech\Mcore\Editora\Domain\Instance\Contracts\InstanceRepositoryInterface;
+use Omatech\Mcore\Editora\Domain\Instance\Events\InstanceHasBeenUpdated;
 use Omatech\Mcore\Editora\Domain\Instance\Exceptions\InstanceDoesNotExistsException;
 use Omatech\Mcore\Editora\Domain\Instance\Instance;
+use Omatech\Mcore\Editora\Domain\Instance\InstanceBuilder;
+use Omatech\Mcore\Shared\Domain\Event\Contracts\EventPublisherInterface;
 use PHPUnit\Framework\TestCase;
 
 class UpdateInstanceTest extends TestCase
@@ -109,6 +112,7 @@ class UpdateInstanceTest extends TestCase
         $repository->shouldReceive('classKey')->with(6)->andReturn('class-two')->once();
 
         $instance = Mockery::mock(Instance::class);
+        $instance2 = Mockery::mock(Instance::class);
         $instance->shouldReceive('fill')
             ->with([
                 'metadata' => $command->metadata(),
@@ -126,6 +130,7 @@ class UpdateInstanceTest extends TestCase
             ])
             ->andReturn($instance)
             ->once();
+
         $repository->shouldReceive('find')
             ->with($command->id())
             ->andReturn($instance)
@@ -135,7 +140,21 @@ class UpdateInstanceTest extends TestCase
             ->andReturn(null)
             ->once();
 
-        (new UpdateInstanceCommandHandler($repository))->__invoke($command);
+        $repository->shouldReceive('clone')
+            ->with($instance)
+            ->andReturn($instance2)
+            ->once();
+
+        $event = new InstanceHasBeenUpdated($instance2, $instance);
+        $eventPublisher = Mockery::mock(EventPublisherInterface::class);
+        $eventPublisher->shouldReceive('publish')
+            ->with([$event])
+            ->andReturn(null)
+            ->once();
+
+        $this->assertNotSame($event->old(), $event->new());
+
+        (new UpdateInstanceCommandHandler($eventPublisher, $repository))->__invoke($command);
     }
 
     /** @test */
@@ -156,6 +175,11 @@ class UpdateInstanceTest extends TestCase
             ],
         ]);
 
+        $event = Mockery::mock(EventPublisherInterface::class);
+        $event->shouldReceive('publish')
+            ->andReturn(null)
+            ->never();
+
         $repository = Mockery::mock(InstanceRepositoryInterface::class);
         $repository->shouldReceive('classKey')->with(1)->andReturn('class-one')->once();
         $repository->shouldReceive('classKey')->with(2)->andReturn('class-one')->once();
@@ -164,7 +188,7 @@ class UpdateInstanceTest extends TestCase
         $repository->shouldReceive('classKey')->with(5)->andReturn('class-two')->never();
         $repository->shouldReceive('classKey')->with(6)->andReturn('class-two')->never();
 
-        (new UpdateInstanceCommandHandler($repository))->__invoke($command);
+        (new UpdateInstanceCommandHandler($event, $repository))->__invoke($command);
     }
 
     /** @test */
@@ -180,12 +204,17 @@ class UpdateInstanceTest extends TestCase
             'relations' => [],
         ]);
 
+        $event = Mockery::mock(EventPublisherInterface::class);
+        $event->shouldReceive('publish')
+            ->andReturn(null)
+            ->never();
+
         $repository = Mockery::mock(InstanceRepositoryInterface::class);
         $repository->shouldReceive('find')
             ->with($command->id())
             ->andReturn(null)
             ->once();
 
-        (new UpdateInstanceCommandHandler($repository))->__invoke($command);
+        (new UpdateInstanceCommandHandler($event, $repository))->__invoke($command);
     }
 }
