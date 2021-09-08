@@ -2,35 +2,64 @@
 
 namespace Omatech\Mcore\Editora\Domain\Instance\Extraction;
 
+use DateTime;
 use function Lambdish\Phunctional\first;
 use function Lambdish\Phunctional\map;
+use function Lambdish\Phunctional\reduce;
 
 final class Extraction
 {
+    private string $query;
+    private string $hash;
+    private DateTime $date;
     /** @var array<Query> $queries */
     private array $queries;
-    /** @var array<Instance> $instances */
-    private array $instances;
 
-    public function __construct(array $queries, array $instances)
+    public function __construct(string $query)
     {
-        $this->queries = $queries;
-        $this->instances = $instances;
+        $this->query = $query;
+        $this->hash = md5(trim($query));
+        $this->date = new DateTime();
     }
 
+    public function query(): string
+    {
+        return $this->query;
+    }
+
+    public function hash(): string
+    {
+        return $this->hash;
+    }
+
+    public function date(): DateTime
+    {
+        return $this->date;
+    }
+
+    /** @return array<Query> $queries */
     public function queries(): array
     {
         return $this->queries;
     }
 
-    public function instances(): array
+    /** @param array<Query> $queries */
+    public function setQueries(array $queries): self
     {
-        return $this->instances;
+        $this->queries = $queries;
+        return $this;
     }
 
-    public function toArray(): ?array
+    public function toArray(): array
     {
-        $instances = map(static fn (Instance $instance) => $instance->toArray(), $this->instances);
-        return count($instances) < 2 ? first($instances) : $instances;
+        $results = reduce(static function (array $acc, Query $query) {
+            $instances = map(
+                static fn (Instance $instance) => $instance->toArray(),
+                $query->results()
+            );
+            $acc[] = count($instances) < 2 ? first($instances) : $instances;
+            return $acc;
+        }, $this->queries, []);
+        return count($results) < 2 ? first($results) : $results;
     }
 }

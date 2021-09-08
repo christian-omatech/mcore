@@ -7,14 +7,21 @@ use function Lambdish\Phunctional\reduce;
 
 final class Query
 {
+    private string $function;
     private string $key;
+    /** @var array<Attribute> $attributes */
     private array $attributes;
     private array $params;
+    /** @var array<Query> $relations */
     private array $relations;
+    private array $pagination = [];
+    /** @var array<Instance> $results */
+    private array $results;
 
     public function __construct(array $query)
     {
-        $this->key = $query['key'];
+        $this->function = $query['function'] ?? '';
+        $this->key = $query['key'] ?? '';
         $this->attributes = $query['attributes'];
         $this->params = $query['params'];
         $this->relations = $query['relations'];
@@ -25,11 +32,18 @@ final class Query
         return $this->key;
     }
 
+    public function function(): string
+    {
+        return $this->function;
+    }
+
+    /** @return array<Attribute> */
     public function attributes(): array
     {
         return $this->attributes;
     }
 
+    /** @return array<Query> */
     public function relations(): array
     {
         return $this->relations;
@@ -45,9 +59,29 @@ final class Query
         return $this->params;
     }
 
+    /** @return array<Instance> */
+    public function results(): array
+    {
+        return $this->results;
+    }
+
+    /** @param array<Instance> $results */
+    public function setResults(array $results): self
+    {
+        $this->results = $results;
+        return $this;
+    }
+
+    public function setPagination(array $pagination): self
+    {
+        $this->pagination = $pagination;
+        return $this;
+    }
+
     public function toArray(): array
     {
         return [
+            'function' => $this->function,
             'key' => $this->key,
             'language' => $this->param('language'),
             'attributes' => map(

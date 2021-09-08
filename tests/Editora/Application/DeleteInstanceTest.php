@@ -40,7 +40,7 @@ class DeleteInstanceTest extends TestCase
             ->once();
 
         $this->assertEquals($event->instance(), $instance);
-        
+
         (new DeleteInstanceCommandHandler($eventPublisher, $repository))->__invoke($command);
     }
 

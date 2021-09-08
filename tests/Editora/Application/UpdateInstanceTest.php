@@ -10,7 +10,6 @@ use Omatech\Mcore\Editora\Domain\Instance\Contracts\InstanceRepositoryInterface;
 use Omatech\Mcore\Editora\Domain\Instance\Events\InstanceHasBeenUpdated;
 use Omatech\Mcore\Editora\Domain\Instance\Exceptions\InstanceDoesNotExistsException;
 use Omatech\Mcore\Editora\Domain\Instance\Instance;
-use Omatech\Mcore\Editora\Domain\Instance\InstanceBuilder;
 use Omatech\Mcore\Shared\Domain\Event\Contracts\EventPublisherInterface;
 use PHPUnit\Framework\TestCase;
 

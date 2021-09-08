@@ -2,42 +2,47 @@
 
 namespace Omatech\Mcore\Editora\Application\ExtractInstance;
 
-use Omatech\Mcore\Editora\Domain\Instance\Contracts\InstanceRepositoryInterface;
+use Omatech\Mcore\Editora\Domain\Instance\Contracts\ExtractionRepositoryInterface;
 use Omatech\Mcore\Editora\Domain\Instance\Extraction\Extraction;
 use Omatech\Mcore\Editora\Domain\Instance\Extraction\Extractor;
 use Omatech\Mcore\Editora\Domain\Instance\Extraction\Query;
 use Omatech\Mcore\Editora\Domain\Instance\Extraction\QueryParser;
 use Omatech\Mcore\Editora\Domain\Instance\Instance;
-use Omatech\Mcore\Editora\Domain\Instance\Services\InstanceFinder;
+use function Lambdish\Phunctional\map;
 use function Lambdish\Phunctional\reduce;
 
 final class ExtractInstanceCommandHandler
 {
-    private InstanceRepositoryInterface $instanceRepository;
-    private InstanceFinder $instanceFinder;
+    private ExtractionRepositoryInterface $extractionRepository;
 
-    public function __construct(InstanceRepositoryInterface $instanceRepository)
+    public function __construct(ExtractionRepositoryInterface $extractionRepository)
     {
-        $this->instanceRepository = $instanceRepository;
-        $this->instanceFinder = new InstanceFinder($instanceRepository);
+        $this->extractionRepository = $extractionRepository;
     }
 
     public function __invoke(ExtractInstanceCommand $command): Extraction
     {
-        $queries = (new QueryParser())->parse($command->query());
-        $instances = reduce(function (array $acc, Query $query) {
-            $instance = $this->instanceRepository->findByKey($query->key());
+        $extraction = new Extraction($command->query());
+        $queries = map(function (Query $query) {
+            $instances = $this->extractionRepository->{$query->function()}($query->params());
+            $results = $this->extractResults($query, $instances);
+            return $query->setPagination($instances['pagination'] ?? [])->setResults($results);
+        }, (new QueryParser())->parse($command->query()));
+        return $extraction->setQueries($queries);
+    }
+
+    private function extractResults(Query $query, array $instances): array
+    {
+        return map(function (Instance $instance) use ($query) {
             $relations = $this->prepareRelations($query->relations(), $instance);
-            $acc[] = (new Extractor($query, $instance, $relations))->extract();
-            return $acc;
-        }, $queries, []);
-        return new Extraction($queries, $instances);
+            return (new Extractor($query, $instance, $relations))->extract();
+        }, $instances['instances'] ?? $instances);
     }
 
     private function prepareRelations(array $relations, Instance $instance)
     {
         return reduce(function (array $acc, Query $query) use ($instance) {
-            $instances = $this->instanceRepository->findChildrenInstances(
+            $instances = $this->extractionRepository->findChildrenInstances(
                 $instance->id(),
                 $query->key(),
                 $query->params()

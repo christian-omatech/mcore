@@ -103,7 +103,7 @@ class InstanceExtractionTest extends TestCase
     public function extractInstanceWithQueryExtraction(): void
     {
         $query = '{
-            InstanceKey(preview: false, language: es) {
+            InstanceByKey(filter: InstanceKey, preview: false, language: es) {
                 DefaultAttribute
                 AnotherAttribute
                 AnotherOtherAttribute
@@ -120,6 +120,7 @@ class InstanceExtractionTest extends TestCase
             }
         }';
         $query = (new QueryParser())->parse($query)[0];
+
         $instance = $this->instance('instance-key', [
             'attributes' => [
                 'DefaultAttribute' => [
@@ -325,7 +326,8 @@ class InstanceExtractionTest extends TestCase
 
         $this->assertNull($query->param('non-existent-param'));
         $this->assertEquals([
-            'key' => 'instance-key',
+            'function' => 'instanceByKey',
+            'key' => '',
             'language' => 'es',
             'attributes' => [
                 [
@@ -346,11 +348,13 @@ class InstanceExtractionTest extends TestCase
                 ],
             ],
             'params' => [
+                'filter' => 'InstanceKey',
                 'preview' => false,
                 'language' => 'es',
             ],
             'relations' => [
                 [
+                    'function' => '',
                     'key' => 'relation-key1',
                     'language' => 'es',
                     'attributes' => [
@@ -371,6 +375,7 @@ class InstanceExtractionTest extends TestCase
                     ],
                     'relations' => [],
                 ], [
+                    'function' => '',
                     'key' => 'relation-key2',
                     'language' => 'es',
                     'attributes' => [],
@@ -381,6 +386,7 @@ class InstanceExtractionTest extends TestCase
                     ],
                     'relations' => [
                         [
+                            'function' => '',
                             'key' => 'relation-key3',
                             'language' => 'es',
                             'attributes' => [],

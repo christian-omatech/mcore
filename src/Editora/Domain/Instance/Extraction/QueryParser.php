@@ -9,7 +9,7 @@ use function Lambdish\Phunctional\reduce;
 
 final class QueryParser
 {
-    public function parse(string $query): Query|array
+    public function parse(string $query): array
     {
         $graphQuery = Parser::parse($query);
         return reduce(function (array $acc, FieldNode $node) {
@@ -25,7 +25,7 @@ final class QueryParser
             return $acc;
         }, $node->arguments, []);
         return new Query([
-            'key' => Utils::getInstance()->slug($node->name->value),
+            'function' => lcfirst($node->name->value),
             'attributes' => $this->parseAttributes($node),
             'params' => $params,
             'relations' => $this->parseRelations($node, [
