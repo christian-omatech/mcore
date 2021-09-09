@@ -25,8 +25,9 @@ final class ExtractInstanceCommandHandler
         $extraction = new Extraction($command->query());
         $queries = map(function (Query $query) {
             $instances = $this->extractionRepository->{$query->function()}($query->params());
-            $results = $this->extractResults($query, $instances);
-            return $query->setPagination($instances['pagination'] ?? [])->setResults($results);
+            return $query
+                ->setPagination($instances['pagination'])
+                ->setResults($this->extractResults($query, $instances));
         }, (new QueryParser())->parse($command->query()));
         return $extraction->setQueries($queries);
     }
@@ -36,7 +37,7 @@ final class ExtractInstanceCommandHandler
         return map(function (Instance $instance) use ($query) {
             $relations = $this->prepareRelations($query->relations(), $instance);
             return (new Extractor($query, $instance, $relations))->extract();
-        }, $instances['instances'] ?? $instances);
+        }, $instances['instances']);
     }
 
     private function prepareRelations(array $relations, Instance $instance)

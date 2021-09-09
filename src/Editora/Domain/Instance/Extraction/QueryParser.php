@@ -2,6 +2,7 @@
 
 namespace Omatech\Mcore\Editora\Domain\Instance\Extraction;
 
+use GraphQL\Language\AST\ArgumentNode;
 use GraphQL\Language\AST\FieldNode;
 use GraphQL\Language\Parser;
 use Omatech\Mcore\Shared\Utils\Utils;
@@ -20,10 +21,7 @@ final class QueryParser
 
     private function parseNode(FieldNode $node): Query
     {
-        $params = reduce(static function (array $acc, $argument) {
-            $acc[$argument->name->value] = $argument->value->value;
-            return $acc;
-        }, $node->arguments, []);
+        $params = $this->parseParams($node);
         return new Query([
             'function' => lcfirst($node->name->value),
             'attributes' => $this->parseAttributes($node),
@@ -33,6 +31,18 @@ final class QueryParser
                 'preview' => $params['preview'],
             ]),
         ]);
+    }
+
+    private function parseParams(FieldNode $node): array
+    {
+        $params = reduce(static function (array $acc, ArgumentNode $argument) {
+            $acc[$argument->name->value] = $argument->value->value;
+            return $acc;
+        }, $node->arguments, []);
+        $params['preview'] = (bool) ($params['preview'] ?? false);
+        $params['limit'] = (int) ($params['limit'] ?? 0);
+        $params['page'] = (int) ($params['page'] ?? 1);
+        return $params;
     }
 
     private function parseAttributes(FieldNode $node): array

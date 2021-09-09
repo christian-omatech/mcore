@@ -60,6 +60,6 @@ final class Extraction
             $acc[] = count($instances) < 2 ? first($instances) : $instances;
             return $acc;
         }, $this->queries, []);
-        return count($results) < 2 ? first($results) : $results;
+        return count($results) < 2 ? first($results) ?? [] : $results;
     }
 }

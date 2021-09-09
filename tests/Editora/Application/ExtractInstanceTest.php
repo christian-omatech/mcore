@@ -229,10 +229,15 @@ class ExtractInstanceTest extends TestCase
                 'class' => 'ClassOne',
                 'preview' => false,
                 'language' => 'es',
+                'limit' => 0,
+                'page' => 1
             ])
             ->andReturn([
-                $instance,
-                $instance,
+                'pagination' => [],
+                'instances' => [
+                    $instance,
+                    $instance,
+                ]
             ])
             ->once();
         $repository->shouldReceive('instancesByClass')
@@ -240,10 +245,15 @@ class ExtractInstanceTest extends TestCase
                 'class' => 'ClassTwo',
                 'preview' => false,
                 'language' => 'en',
+                'limit' => 0,
+                'page' => 1
             ])
             ->andReturn([
-                $instance2,
-                $instance2,
+                'pagination' => [],
+                'instances' => [
+                    $instance2,
+                    $instance2,
+                ]
             ])
             ->once();
 
@@ -326,8 +336,8 @@ class ExtractInstanceTest extends TestCase
     public function extractMultiInstancesSuccessfully(): void
     {
         $command = new ExtractInstanceCommand('{
-            InstanceByKey(filter: InstanceKey, preview: false, language: es)
-            InstanceByKey(filter: InstanceKey, preview: false, language: en)
+            InstanceByKey(key: InstanceKey, preview: false, language: es)
+            InstanceByKey(key: InstanceKey, preview: false, language: en)
         }');
 
         $instance = (new InstanceBuilder())
@@ -397,19 +407,29 @@ class ExtractInstanceTest extends TestCase
         $repository = Mockery::mock(ExtractionRepositoryInterface::class);
         $repository->shouldReceive('InstanceByKey')
             ->with([
-                'filter' => 'InstanceKey',
+                'key' => 'InstanceKey',
                 'preview' => false,
                 'language' => 'es',
+                'limit' => 0,
+                'page' => 1
             ])
-            ->andReturn([$instance])
+            ->andReturn([
+                'pagination' => [],
+                'instances' => [$instance]
+            ])
             ->once();
         $repository->shouldReceive('InstanceByKey')
             ->with([
-                'filter' => 'InstanceKey',
+                'key' => 'InstanceKey',
                 'preview' => false,
                 'language' => 'en',
+                'limit' => 0,
+                'page' => 1
             ])
-            ->andReturn([$instance2])
+            ->andReturn([
+                'pagination' => [],
+                'instances' => [$instance2]
+            ])
             ->once();
 
         $extractions = (new ExtractInstanceCommandHandler($repository))->__invoke($command);
@@ -445,7 +465,7 @@ class ExtractInstanceTest extends TestCase
     public function extractInstanceSuccessfully(): void
     {
         $command = new ExtractInstanceCommand('{
-            InstanceByKey(filter: InstanceKey, preview: false, language: es) {
+            InstanceByKey(key: InstanceKey, preview: false, language: es) {
                 DefaultAttribute
                 RelationKey1(limit:1) {
                     RelationKey2(limit:1)
@@ -571,16 +591,21 @@ class ExtractInstanceTest extends TestCase
         $repository->shouldReceive('instanceByKey')
             ->with([
                 'preview' => false,
-                'filter' => 'InstanceKey',
+                'key' => 'InstanceKey',
                 'language' => 'es',
+                'limit' => 0,
+                'page' => 1
             ])
-            ->andReturn([$instance])
+            ->andReturn([
+                'pagination' => [],
+                'instances' => [$instance]
+            ])
             ->once();
         $repository->shouldReceive('findChildrenInstances')
             ->with(1, 'relation-key1', [
                 'limit' => 1,
                 'language' => 'es',
-                'preview' => false,
+                'preview' => false
             ])
             ->andReturn([
                 $instance2,
@@ -590,7 +615,7 @@ class ExtractInstanceTest extends TestCase
             ->with(2, 'relation-key2', [
                 'limit' => 1,
                 'language' => 'es',
-                'preview' => false,
+                'preview' => false
             ])
             ->andReturn([
                 $instance3,

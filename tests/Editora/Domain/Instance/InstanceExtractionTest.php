@@ -351,6 +351,8 @@ class InstanceExtractionTest extends TestCase
                 'filter' => 'InstanceKey',
                 'preview' => false,
                 'language' => 'es',
+                'limit' => 0,
+                'page' => 1,
             ],
             'relations' => [
                 [
