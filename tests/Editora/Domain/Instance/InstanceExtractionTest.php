@@ -15,10 +15,10 @@ class InstanceExtractionTest extends TestCase
     public function extractMultipleInstancesWithSingleQuery(): void
     {
         $query = '{
-            InstanceKey(preview: false, language: es) {
+            class(key: InstanceKey, preview: false, language: es) {
                 AttributeOne
             }
-            InstanceKey(preview: true, language: en) {
+            class(key: InstanceKey, preview: true, language: en) {
                 AttributeTwo
             }
         }';
@@ -103,7 +103,7 @@ class InstanceExtractionTest extends TestCase
     public function extractInstanceWithQueryExtraction(): void
     {
         $query = '{
-            InstanceByKey(filter: InstanceKey, preview: false, language: es) {
+            class(key: InstanceKey, preview: false, language: es) {
                 DefaultAttribute
                 AnotherAttribute
                 AnotherOtherAttribute
@@ -326,8 +326,6 @@ class InstanceExtractionTest extends TestCase
 
         $this->assertNull($query->param('non-existent-param'));
         $this->assertEquals([
-            'function' => 'instanceByKey',
-            'key' => '',
             'language' => 'es',
             'attributes' => [
                 [
@@ -348,7 +346,8 @@ class InstanceExtractionTest extends TestCase
                 ],
             ],
             'params' => [
-                'filter' => 'InstanceKey',
+                'key' => 'instance-key',
+                'class' => null,
                 'preview' => false,
                 'language' => 'es',
                 'limit' => 0,
@@ -356,8 +355,6 @@ class InstanceExtractionTest extends TestCase
             ],
             'relations' => [
                 [
-                    'function' => '',
-                    'key' => 'relation-key1',
                     'language' => 'es',
                     'attributes' => [
                         [
@@ -371,29 +368,34 @@ class InstanceExtractionTest extends TestCase
                         ],
                     ],
                     'params' => [
-                        'limit' => '1',
+                        'class' => 'relation-key1',
+                        'key' => null,
+                        'limit' => 1,
+                        'page' => 1,
                         'language' => 'es',
                         'preview' => false,
                     ],
                     'relations' => [],
                 ], [
-                    'function' => '',
-                    'key' => 'relation-key2',
                     'language' => 'es',
                     'attributes' => [],
                     'params' => [
-                        'limit' => '1',
+                        'key' => null,
+                        'class' => 'relation-key2',
+                        'limit' => 1,
+                        'page' => 1,
                         'language' => 'es',
                         'preview' => false,
                     ],
                     'relations' => [
                         [
-                            'function' => '',
-                            'key' => 'relation-key3',
                             'language' => 'es',
                             'attributes' => [],
                             'params' => [
-                                'limit' => '1',
+                                'key' => null,
+                                'class' => 'relation-key3',
+                                'limit' => 1,
+                                'page' => 1,
                                 'language' => 'es',
                                 'preview' => false,
                             ],

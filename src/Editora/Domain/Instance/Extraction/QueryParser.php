@@ -23,7 +23,6 @@ final class QueryParser
     {
         $params = $this->parseParams($node);
         return new Query([
-            'function' => lcfirst($node->name->value),
             'attributes' => $this->parseAttributes($node),
             'params' => $params,
             'relations' => $this->parseRelations($node, [
@@ -39,6 +38,11 @@ final class QueryParser
             $acc[$argument->name->value] = $argument->value->value;
             return $acc;
         }, $node->arguments, []);
+
+        $root = Utils::getInstance()->slug($node->name->value);
+        $params['class'] = ($root === 'class') ? null : $root;
+
+        $params['key'] = ($params['class'] === null) ? Utils::getInstance()->slug($params['key'] ?? '') ?? $root : null;
         $params['preview'] = (bool) ($params['preview'] ?? false);
         $params['limit'] = (int) ($params['limit'] ?? 0);
         $params['page'] = (int) ($params['page'] ?? 1);
@@ -63,12 +67,8 @@ final class QueryParser
         return reduce(function (array $acc, FieldNode $node) use ($params) {
             if (count($node->arguments)) {
                 $acc[] = new Query([
-                    'key' => Utils::getInstance()->slug($node->name->value),
                     'attributes' => $this->parseAttributes($node),
-                    'params' => reduce(static function (array $acc, $argument) {
-                        $acc[$argument->name->value] = $argument->value->value;
-                        return $acc;
-                    }, $node->arguments, []) + $params,
+                    'params' => $this->parseParams($node) + $params,
                     'relations' => $this->parseRelations($node, $params),
                 ]);
             }

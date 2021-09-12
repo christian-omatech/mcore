@@ -24,7 +24,7 @@ final class ExtractInstanceCommandHandler
     {
         $extraction = new Extraction($command->query());
         $queries = map(function (Query $query) {
-            $instances = $this->extractionRepository->{$query->function()}($query->params());
+            $instances = $this->extractionRepository->instancesBy($query->params());
             return $query
                 ->setPagination($instances['pagination'])
                 ->setResults($this->extractResults($query, $instances));
@@ -45,11 +45,10 @@ final class ExtractInstanceCommandHandler
         return reduce(function (array $acc, Query $query) use ($instance) {
             $instances = $this->extractionRepository->findChildrenInstances(
                 $instance->id(),
-                $query->key(),
                 $query->params()
             );
-            $acc[$query->key()]['instances'] = $instances;
-            $acc[$query->key()]['relations'] = $this->fillRelations($instances, $query);
+            $acc[$query->param('class')]['instances'] = $instances;
+            $acc[$query->param('class')]['relations'] = $this->fillRelations($instances, $query);
             return $acc;
         }, $relations, []);
     }

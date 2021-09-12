@@ -99,7 +99,7 @@ final class Extractor
             array $instancesRelation,
             string $key
         ) use ($queryRelations): array {
-            $queryRelation = search(static fn ($query) => $query->key() === $key, $queryRelations);
+            $queryRelation = search(static fn ($query) => $query->param('class') === $key, $queryRelations);
             if ($queryRelation) {
                 $acc[$key] = $this->addInstancesRelation($queryRelation, $instancesRelation);
             }

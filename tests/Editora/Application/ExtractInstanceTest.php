@@ -18,7 +18,7 @@ class ExtractInstanceTest extends TestCase
     public function extractPaginatedInstancesByClassSuccessfully(): void
     {
         $command = new ExtractInstanceCommand('{
-            InstancesByClass(class: ClassOne, preview: false, language: es, limit: 10, page: 1)
+            ClassOne(preview: false, language: es, limit: 10, page: 1)
         }');
 
         $instance = (new InstanceBuilder())
@@ -69,9 +69,10 @@ class ExtractInstanceTest extends TestCase
         $limit = 10;
         $currentPage = 1;
 
-        $repository->shouldReceive('instancesByClass')
+        $repository->shouldReceive('instancesBy')
             ->with([
-                'class' => 'ClassOne',
+                'key' => null,
+                'class' => 'class-one',
                 'preview' => false,
                 'language' => 'es',
                 'limit' => 10,
@@ -135,8 +136,8 @@ class ExtractInstanceTest extends TestCase
     public function extractInstancesByClassSuccessfully(): void
     {
         $command = new ExtractInstanceCommand('{
-            InstancesByClass(class: ClassOne, preview: false, language: es)
-            InstancesByClass(class: ClassTwo, preview: false, language: en)
+            ClassOne(preview: false, language: es)
+            ClassTwo(preview: false, language: en)
         }');
 
         $instance = (new InstanceBuilder())
@@ -224,9 +225,10 @@ class ExtractInstanceTest extends TestCase
         ]);
 
         $repository = Mockery::mock(ExtractionRepositoryInterface::class);
-        $repository->shouldReceive('instancesByClass')
+        $repository->shouldReceive('instancesBy')
             ->with([
-                'class' => 'ClassOne',
+                'key' => null,
+                'class' => 'class-one',
                 'preview' => false,
                 'language' => 'es',
                 'limit' => 0,
@@ -240,9 +242,10 @@ class ExtractInstanceTest extends TestCase
                 ]
             ])
             ->once();
-        $repository->shouldReceive('instancesByClass')
+        $repository->shouldReceive('instancesBy')
             ->with([
-                'class' => 'ClassTwo',
+                'key' => null,
+                'class' => 'class-two',
                 'preview' => false,
                 'language' => 'en',
                 'limit' => 0,
@@ -336,8 +339,8 @@ class ExtractInstanceTest extends TestCase
     public function extractMultiInstancesSuccessfully(): void
     {
         $command = new ExtractInstanceCommand('{
-            InstanceByKey(key: InstanceKey, preview: false, language: es)
-            InstanceByKey(key: InstanceKey, preview: false, language: en)
+            class(key: InstanceKey, preview: false, language: es)
+            class(key: InstanceKey, preview: false, language: en)
         }');
 
         $instance = (new InstanceBuilder())
@@ -405,9 +408,10 @@ class ExtractInstanceTest extends TestCase
         ]);
 
         $repository = Mockery::mock(ExtractionRepositoryInterface::class);
-        $repository->shouldReceive('InstanceByKey')
+        $repository->shouldReceive('instancesBy')
             ->with([
-                'key' => 'InstanceKey',
+                'class' => null,
+                'key' => 'instance-key',
                 'preview' => false,
                 'language' => 'es',
                 'limit' => 0,
@@ -418,9 +422,10 @@ class ExtractInstanceTest extends TestCase
                 'instances' => [$instance]
             ])
             ->once();
-        $repository->shouldReceive('InstanceByKey')
+        $repository->shouldReceive('instancesBy')
             ->with([
-                'key' => 'InstanceKey',
+                'class' => null,
+                'key' => 'instance-key',
                 'preview' => false,
                 'language' => 'en',
                 'limit' => 0,
@@ -465,7 +470,7 @@ class ExtractInstanceTest extends TestCase
     public function extractInstanceSuccessfully(): void
     {
         $command = new ExtractInstanceCommand('{
-            InstanceByKey(key: InstanceKey, preview: false, language: es) {
+            class(key: InstanceKey, preview: false, language: es) {
                 DefaultAttribute
                 RelationKey1(limit:1) {
                     RelationKey2(limit:1)
@@ -588,10 +593,11 @@ class ExtractInstanceTest extends TestCase
         ]);
 
         $repository = Mockery::mock(ExtractionRepositoryInterface::class);
-        $repository->shouldReceive('instanceByKey')
+        $repository->shouldReceive('instancesBy')
             ->with([
+                'class' => null,
                 'preview' => false,
-                'key' => 'InstanceKey',
+                'key' => 'instance-key',
                 'language' => 'es',
                 'limit' => 0,
                 'page' => 1
@@ -602,20 +608,26 @@ class ExtractInstanceTest extends TestCase
             ])
             ->once();
         $repository->shouldReceive('findChildrenInstances')
-            ->with(1, 'relation-key1', [
+            ->with(1, [
+                'class' => 'relation-key1',
+                'key' => null,
                 'limit' => 1,
                 'language' => 'es',
-                'preview' => false
+                'preview' => false,
+                'page' => 1
             ])
             ->andReturn([
                 $instance2,
             ])->once();
 
         $repository->shouldReceive('findChildrenInstances')
-            ->with(2, 'relation-key2', [
+            ->with(2, [
+                'class' => 'relation-key2',
+                'key' => null,
                 'limit' => 1,
                 'language' => 'es',
-                'preview' => false
+                'preview' => false,
+                'page' => 1
             ])
             ->andReturn([
                 $instance3,

@@ -7,11 +7,9 @@ use function Lambdish\Phunctional\reduce;
 
 final class Query
 {
-    private string $function;
-    private string $key;
+    private array $params;
     /** @var array<Attribute> $attributes */
     private array $attributes;
-    private array $params;
     /** @var array<Query> $relations */
     private array $relations;
     private array $pagination = [];
@@ -20,21 +18,9 @@ final class Query
 
     public function __construct(array $query)
     {
-        $this->function = $query['function'] ?? '';
-        $this->key = $query['key'] ?? '';
         $this->attributes = $query['attributes'];
         $this->params = $query['params'];
         $this->relations = $query['relations'];
-    }
-
-    public function key(): string
-    {
-        return $this->key;
-    }
-
-    public function function(): string
-    {
-        return $this->function;
     }
 
     /** @return array<Attribute> */
@@ -81,8 +67,6 @@ final class Query
     public function toArray(): array
     {
         return [
-            'function' => $this->function,
-            'key' => $this->key,
             'language' => $this->param('language'),
             'attributes' => map(
                 static fn (Attribute $attribute) => $attribute->toQuery(),
