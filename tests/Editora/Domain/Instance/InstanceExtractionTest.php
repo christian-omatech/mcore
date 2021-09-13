@@ -5,6 +5,7 @@ namespace Tests\Editora\Domain\Instance;
 use Omatech\Mcore\Editora\Domain\Instance\Extraction\Extractor;
 use Omatech\Mcore\Editora\Domain\Instance\Extraction\Query;
 use Omatech\Mcore\Editora\Domain\Instance\Extraction\QueryParser;
+use Omatech\Mcore\Editora\Domain\Instance\Extraction\Results;
 use Omatech\Mcore\Editora\Domain\Instance\Instance;
 use Omatech\Mcore\Editora\Domain\Instance\InstanceBuilder;
 use function Lambdish\Phunctional\map;
@@ -218,7 +219,7 @@ class InstanceExtractionTest extends TestCase
         ], []);
         $relations = [
             'relation-key1' => [
-                'instances' => [
+                'instances' => new Results([
                     $this->instance('instance-key2', [
                         'attributes' => [
                             'OneAttribute' => [
@@ -263,11 +264,11 @@ class InstanceExtractionTest extends TestCase
                             'attributes' => [],
                         ],
                     ], []),
-                ],
+                ], null),
                 'relations' => [],
             ],
             'relation-key2' => [
-                'instances' => [
+                'instances' => new Results([
                     $this->instance('instance-key3', [
                         'relations' => [
                             'RelationKey3' => [
@@ -295,10 +296,10 @@ class InstanceExtractionTest extends TestCase
                             1 => 'class-one',
                         ],
                     ]),
-                ],
+                ], null),
                 'relations' => [
                     'relation-key3' => [
-                        'instances' => [
+                        'instances' => new Results([
                             $this->instance('instance-key4', [
                                 'attributes' => [
                                     'OneAttribute' => [],
@@ -317,7 +318,7 @@ class InstanceExtractionTest extends TestCase
                                     'attributes' => [],
                                 ],
                             ], []),
-                        ],
+                        ], null),
                         'relations' => [],
                     ],
                 ],

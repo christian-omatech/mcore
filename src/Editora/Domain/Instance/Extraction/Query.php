@@ -12,7 +12,7 @@ final class Query
     private array $attributes;
     /** @var array<Query> $relations */
     private array $relations;
-    private array $pagination = [];
+    private Pagination $pagination;
     /** @var array<Instance> $results */
     private array $results;
 
@@ -58,7 +58,7 @@ final class Query
         return $this;
     }
 
-    public function setPagination(array $pagination): self
+    public function setPagination(Pagination $pagination): self
     {
         $this->pagination = $pagination;
         return $this;

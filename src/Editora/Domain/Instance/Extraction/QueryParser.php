@@ -40,9 +40,12 @@ final class QueryParser
         }, $node->arguments, []);
 
         $root = Utils::getInstance()->slug($node->name->value);
-        $params['class'] = ($root === 'class') ? null : $root;
-
-        $params['key'] = ($params['class'] === null) ? Utils::getInstance()->slug($params['key'] ?? '') ?? $root : null;
+        $params['class'] = $root === 'class' ? null : $root;
+        if ($params['class'] === null) {
+            $params['key'] = Utils::getInstance()->slug($params['key'] ?? '');
+        } else {
+            $params['key'] = null;
+        }
         $params['preview'] = (bool) ($params['preview'] ?? false);
         $params['limit'] = (int) ($params['limit'] ?? 0);
         $params['page'] = (int) ($params['page'] ?? 1);

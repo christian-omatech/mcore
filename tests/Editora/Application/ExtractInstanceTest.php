@@ -7,6 +7,8 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Omatech\Mcore\Editora\Application\ExtractInstance\ExtractInstanceCommand;
 use Omatech\Mcore\Editora\Application\ExtractInstance\ExtractInstanceCommandHandler;
 use Omatech\Mcore\Editora\Domain\Instance\Contracts\ExtractionRepositoryInterface;
+use Omatech\Mcore\Editora\Domain\Instance\Extraction\Pagination;
+use Omatech\Mcore\Editora\Domain\Instance\Extraction\Results;
 use Omatech\Mcore\Editora\Domain\Instance\InstanceBuilder;
 use PHPUnit\Framework\TestCase;
 
@@ -65,10 +67,6 @@ class ExtractInstanceTest extends TestCase
 
         $repository = Mockery::mock(ExtractionRepositoryInterface::class);
 
-        $total = 2;
-        $limit = 10;
-        $currentPage = 1;
-
         $repository->shouldReceive('instancesBy')
             ->with([
                 'key' => null,
@@ -78,21 +76,18 @@ class ExtractInstanceTest extends TestCase
                 'limit' => 10,
                 'page' => 1,
             ])
-            ->andReturn([
-                'pagination' => [
-                    'total' => $total,
-                    'limit' => $limit,
-                    'current' => $currentPage,
-                    'pages' => intval(ceil($total / $limit)),
-                    'from' => $limit * $currentPage - $limit + 1,
-                    'to' => $limit * $currentPage > $total ? $total : $limit * $currentPage,
-                ],
-                'instances' => [
-                    $instance,
-                    $instance,
-                ],
-            ])
-            ->once();
+            ->andReturn(
+                new Results(
+                    [
+                        $instance,
+                        $instance,
+                    ],
+                    new Pagination([
+                        'page' => 1,
+                        'limit' => 10,
+                    ], 2)
+                )
+            )->once();
 
         $extractions = (new ExtractInstanceCommandHandler($repository))->__invoke($command);
         $this->assertEquals([
@@ -232,16 +227,20 @@ class ExtractInstanceTest extends TestCase
                 'preview' => false,
                 'language' => 'es',
                 'limit' => 0,
-                'page' => 1
+                'page' => 1,
             ])
-            ->andReturn([
-                'pagination' => [],
-                'instances' => [
-                    $instance,
-                    $instance,
-                ]
-            ])
-            ->once();
+            ->andReturn(
+                new Results(
+                    [
+                        $instance,
+                        $instance,
+                    ],
+                    new Pagination([
+                        'page' => 1,
+                        'limit' => 0,
+                    ], 2)
+                )
+            )->once();
         $repository->shouldReceive('instancesBy')
             ->with([
                 'key' => null,
@@ -249,16 +248,20 @@ class ExtractInstanceTest extends TestCase
                 'preview' => false,
                 'language' => 'en',
                 'limit' => 0,
-                'page' => 1
+                'page' => 1,
             ])
-            ->andReturn([
-                'pagination' => [],
-                'instances' => [
-                    $instance2,
-                    $instance2,
-                ]
-            ])
-            ->once();
+            ->andReturn(
+                new Results(
+                    [
+                        $instance2,
+                        $instance2,
+                    ],
+                    new Pagination([
+                        'page' => 1,
+                        'limit' => 0,
+                    ], 2)
+                )
+            )->once();
 
         $extractions = (new ExtractInstanceCommandHandler($repository))->__invoke($command);
 
@@ -415,13 +418,19 @@ class ExtractInstanceTest extends TestCase
                 'preview' => false,
                 'language' => 'es',
                 'limit' => 0,
-                'page' => 1
+                'page' => 1,
             ])
-            ->andReturn([
-                'pagination' => [],
-                'instances' => [$instance]
-            ])
-            ->once();
+            ->andReturn(
+                new Results(
+                    [
+                        $instance,
+                    ],
+                    new Pagination([
+                        'page' => 1,
+                        'limit' => 0,
+                    ], 1)
+                )
+            )->once();
         $repository->shouldReceive('instancesBy')
             ->with([
                 'class' => null,
@@ -429,13 +438,19 @@ class ExtractInstanceTest extends TestCase
                 'preview' => false,
                 'language' => 'en',
                 'limit' => 0,
-                'page' => 1
+                'page' => 1,
             ])
-            ->andReturn([
-                'pagination' => [],
-                'instances' => [$instance2]
-            ])
-            ->once();
+            ->andReturn(
+                new Results(
+                    [
+                        $instance2,
+                    ],
+                    new Pagination([
+                        'page' => 1,
+                        'limit' => 0,
+                    ], 1)
+                )
+            )->once();
 
         $extractions = (new ExtractInstanceCommandHandler($repository))->__invoke($command);
 
@@ -600,13 +615,19 @@ class ExtractInstanceTest extends TestCase
                 'key' => 'instance-key',
                 'language' => 'es',
                 'limit' => 0,
-                'page' => 1
+                'page' => 1,
             ])
-            ->andReturn([
-                'pagination' => [],
-                'instances' => [$instance]
-            ])
-            ->once();
+            ->andReturn(
+                new Results(
+                    [
+                        $instance,
+                    ],
+                    new Pagination([
+                        'page' => 1,
+                        'limit' => 0,
+                    ], 1)
+                )
+            )->once();
         $repository->shouldReceive('findChildrenInstances')
             ->with(1, [
                 'class' => 'relation-key1',
@@ -614,11 +635,19 @@ class ExtractInstanceTest extends TestCase
                 'limit' => 1,
                 'language' => 'es',
                 'preview' => false,
-                'page' => 1
+                'page' => 1,
             ])
-            ->andReturn([
-                $instance2,
-            ])->once();
+            ->andReturn(
+                new Results(
+                    [
+                        $instance2,
+                    ],
+                    new Pagination([
+                        'page' => 1,
+                        'limit' => 10,
+                    ], 1)
+                )
+            )->once();
 
         $repository->shouldReceive('findChildrenInstances')
             ->with(2, [
@@ -627,11 +656,19 @@ class ExtractInstanceTest extends TestCase
                 'limit' => 1,
                 'language' => 'es',
                 'preview' => false,
-                'page' => 1
+                'page' => 1,
             ])
-            ->andReturn([
-                $instance3,
-            ])->once();
+            ->andReturn(
+                new Results(
+                    [
+                        $instance3,
+                    ],
+                    new Pagination([
+                        'page' => 1,
+                        'limit' => 20,
+                    ], 1)
+                )
+            )->once();
 
         $extraction = (new ExtractInstanceCommandHandler($repository))->__invoke($command);
 

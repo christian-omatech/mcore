@@ -7,6 +7,7 @@ use Omatech\Mcore\Editora\Domain\Instance\Extraction\Extraction;
 use Omatech\Mcore\Editora\Domain\Instance\Extraction\Extractor;
 use Omatech\Mcore\Editora\Domain\Instance\Extraction\Query;
 use Omatech\Mcore\Editora\Domain\Instance\Extraction\QueryParser;
+use Omatech\Mcore\Editora\Domain\Instance\Extraction\Results;
 use Omatech\Mcore\Editora\Domain\Instance\Instance;
 use function Lambdish\Phunctional\map;
 use function Lambdish\Phunctional\reduce;
@@ -24,10 +25,10 @@ final class ExtractInstanceCommandHandler
     {
         $extraction = new Extraction($command->query());
         $queries = map(function (Query $query) {
-            $instances = $this->extractionRepository->instancesBy($query->params());
+            $results = $this->extractionRepository->instancesBy($query->params());
             return $query
-                ->setPagination($instances['pagination'])
-                ->setResults($this->extractResults($query, $instances));
+                ->setPagination($results->pagination())
+                ->setResults($this->extractResults($query, $results->instances()));
         }, (new QueryParser())->parse($command->query()));
         return $extraction->setQueries($queries);
     }
@@ -37,29 +38,30 @@ final class ExtractInstanceCommandHandler
         return map(function (Instance $instance) use ($query) {
             $relations = $this->prepareRelations($query->relations(), $instance);
             return (new Extractor($query, $instance, $relations))->extract();
-        }, $instances['instances']);
+        }, $instances);
     }
 
     private function prepareRelations(array $relations, Instance $instance)
     {
         return reduce(function (array $acc, Query $query) use ($instance) {
-            $instances = $this->extractionRepository->findChildrenInstances(
+            $results = $this->extractionRepository->findChildrenInstances(
                 $instance->id(),
                 $query->params()
             );
-            $acc[$query->param('class')]['instances'] = $instances;
-            $acc[$query->param('class')]['relations'] = $this->fillRelations($instances, $query);
+            $query->setPagination($results->pagination());
+            $acc[$query->param('class')]['instances'] = $results;
+            $acc[$query->param('class')]['relations'] = $this->fillRelations($results, $query);
             return $acc;
         }, $relations, []);
     }
 
-    private function fillRelations(array $instances, Query $query)
+    private function fillRelations(Results $results, Query $query)
     {
         return reduce(function (array $acc, Instance $instance) use ($query) {
             if ($instance->relations()->count()) {
                 $acc = $this->prepareRelations($query->relations(), $instance);
             }
             return $acc;
-        }, $instances, []);
+        }, $results->instances(), []);
     }
 }
