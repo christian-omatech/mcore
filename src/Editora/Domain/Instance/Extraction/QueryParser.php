@@ -46,9 +46,9 @@ final class QueryParser
         } else {
             $params['key'] = null;
         }
-        $params['preview'] = (bool) ($params['preview'] ?? false);
-        $params['limit'] = (int) ($params['limit'] ?? 0);
-        $params['page'] = (int) ($params['page'] ?? 1);
+        $params['preview'] = $params['preview'] ?? false;
+        $params['limit'] = $params['limit'] ?? 0;
+        $params['page'] = $params['page'] ?? 1;
         return $params;
     }
 

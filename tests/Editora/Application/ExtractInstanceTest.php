@@ -341,10 +341,11 @@ class ExtractInstanceTest extends TestCase
     /** @test */
     public function extractMultiInstancesSuccessfully(): void
     {
-        $command = new ExtractInstanceCommand('{
-            class(key: InstanceKey, preview: false, language: es)
-            class(key: InstanceKey, preview: false, language: en)
-        }');
+        $query = '{
+            class(key: InstanceKey, language: es)
+            class(key: InstanceKey, preview: true, language: en, limit: 4, page: 2)
+        }';
+        $command = new ExtractInstanceCommand($query);
 
         $instance = (new InstanceBuilder())
             ->setLanguages(['es', 'en'])
@@ -417,8 +418,8 @@ class ExtractInstanceTest extends TestCase
                 'key' => 'instance-key',
                 'preview' => false,
                 'language' => 'es',
-                'limit' => 0,
-                'page' => 1,
+                'limit' => '0',
+                'page' => '1',
             ])
             ->andReturn(
                 new Results(
@@ -426,8 +427,8 @@ class ExtractInstanceTest extends TestCase
                         $instance,
                     ],
                     new Pagination([
-                        'page' => 1,
-                        'limit' => 0,
+                        'page' => '1',
+                        'limit' => '0',
                     ], 1)
                 )
             )->once();
@@ -435,20 +436,24 @@ class ExtractInstanceTest extends TestCase
             ->with([
                 'class' => null,
                 'key' => 'instance-key',
-                'preview' => false,
+                'preview' => true,
                 'language' => 'en',
-                'limit' => 0,
-                'page' => 1,
+                'limit' => 4,
+                'page' => 2,
             ])
             ->andReturn(
                 new Results(
                     [
                         $instance2,
+                        $instance2,
+                        $instance2,
+                        $instance2,
+                        $instance2,
                     ],
                     new Pagination([
-                        'page' => 1,
-                        'limit' => 0,
-                    ], 1)
+                        'page' => 2,
+                        'limit' => 4,
+                    ], 5)
                 )
             )->once();
 
@@ -467,18 +472,87 @@ class ExtractInstanceTest extends TestCase
                 ],
                 'relations' => [],
             ], [
-                'key' => 'instance-key',
-                'attributes' => [
-                    [
-                        'id' => null,
-                        'key' => 'attribute-two',
-                        'value' => 'value-two',
-                        'attributes' => [],
+                [
+                    'key' => 'instance-key',
+                    'attributes' => [
+                        [
+                            'id' => null,
+                            'key' => 'attribute-two',
+                            'value' => 'value-two',
+                            'attributes' => [],
+                        ],
                     ],
+                    'relations' => [],
+                ], [
+                    'key' => 'instance-key',
+                    'attributes' => [
+                        [
+                            'id' => null,
+                            'key' => 'attribute-two',
+                            'value' => 'value-two',
+                            'attributes' => [],
+                        ],
+                    ],
+                    'relations' => [],
+                ], [
+                    'key' => 'instance-key',
+                    'attributes' => [
+                        [
+                            'id' => null,
+                            'key' => 'attribute-two',
+                            'value' => 'value-two',
+                            'attributes' => [],
+                        ],
+                    ],
+                    'relations' => [],
+                ], [
+                    'key' => 'instance-key',
+                    'attributes' => [
+                        [
+                            'id' => null,
+                            'key' => 'attribute-two',
+                            'value' => 'value-two',
+                            'attributes' => [],
+                        ],
+                    ],
+                    'relations' => [],
+                ], [
+                    'key' => 'instance-key',
+                    'attributes' => [
+                        [
+                            'id' => null,
+                            'key' => 'attribute-two',
+                            'value' => 'value-two',
+                            'attributes' => [],
+                        ],
+                    ],
+                    'relations' => [],
                 ],
-                'relations' => [],
             ],
         ], $extractions->toArray());
+
+        $this->assertEquals($query, $extractions->query());
+        $this->assertEquals(md5($query), $extractions->hash());
+        $this->assertInstanceOf('dateTime', $extractions->date());
+        $this->assertIsArray($extractions->queries());
+        $this->assertEquals(1, $extractions->queries()[0]->pagination()->realLimit());
+        $this->assertEquals(0, $extractions->queries()[0]->pagination()->offset());
+        $this->assertSame([
+            'total' => 1,
+            'limit' => 0,
+            'current' => 1,
+            'pages' => 1,
+        ], $extractions->queries()[0]->pagination()->toArray());
+        $this->assertFalse($extractions->queries()[0]->param('preview'));
+        $this->assertEquals(4, $extractions->queries()[1]->pagination()->realLimit());
+        $this->assertEquals(4, $extractions->queries()[1]->pagination()->offset());
+        $this->assertSame([
+            'total' => 5,
+            'limit' => 4,
+            'current' => 2,
+            'pages' => 2,
+        ], $extractions->queries()[1]->pagination()->toArray());
+        $this->assertTrue($extractions->queries()[1]->param('preview'));
     }
 
     /** @test */
@@ -714,5 +788,15 @@ class ExtractInstanceTest extends TestCase
                 ],
             ],
         ], $extraction->toArray());
+
+        $pagination = $extraction->queries()[0]->relations()[0]->pagination();
+        $this->assertEquals(10, $pagination->realLimit());
+        $this->assertEquals(0, $pagination->offset());
+        $this->assertSame([
+            'total' => 1,
+            'limit' => 10,
+            'current' => 1,
+            'pages' => 1,
+        ], $pagination->toArray());
     }
 }

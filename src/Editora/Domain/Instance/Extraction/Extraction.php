@@ -18,7 +18,7 @@ final class Extraction
     public function __construct(string $query)
     {
         $this->query = $query;
-        $this->hash = md5(trim($query));
+        $this->hash = md5($query);
         $this->date = new DateTime();
     }
 

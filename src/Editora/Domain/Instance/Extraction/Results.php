@@ -22,12 +22,4 @@ final class Results
     {
         return $this->pagination;
     }
-
-    public function toArray(): array
-    {
-        return [
-            'instances' => $this->instances,
-            'pagination' => $this->pagination->toArray(),
-        ];
-    }
 }

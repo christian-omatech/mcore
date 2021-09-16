@@ -377,6 +377,7 @@ class InstanceExtractionTest extends TestCase
                         'preview' => false,
                     ],
                     'relations' => [],
+                    'pagination' => null,
                 ], [
                     'language' => 'es',
                     'attributes' => [],
@@ -401,10 +402,13 @@ class InstanceExtractionTest extends TestCase
                                 'preview' => false,
                             ],
                             'relations' => [],
+                            'pagination' => null,
                         ],
                     ],
+                    'pagination' => null,
                 ],
             ],
+            'pagination' => null,
         ], $query->toArray());
 
         $extractor = new Extractor($query, $instance, $relations);
