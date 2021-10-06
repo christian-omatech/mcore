@@ -57,7 +57,7 @@ final class Extraction
                 static fn (Instance $instance) => $instance->toArray(),
                 $query->results()
             );
-            $acc[] = count($instances) < 2 ? first($instances) : $instances;
+            $acc[] = count($instances) < 2 ? first($instances) ?? [] : $instances;
             return $acc;
         }, $this->queries, []);
         return count($results) < 2 ? first($results) ?? [] : $results;

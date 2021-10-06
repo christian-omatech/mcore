@@ -5,7 +5,7 @@ namespace Tests\Shared\Utils;
 use Omatech\Mcore\Shared\Utils\Utils;
 use PHPUnit\Framework\TestCase;
 
-final class UtilsTest extends TestCase
+class UtilsTest extends TestCase
 {
     /** @test */
     public function isEmptyWhenEmptyString(): void

@@ -3,6 +3,7 @@
 namespace Omatech\Mcore\Shared\Utils;
 
 use Cocur\Slugify\Slugify;
+use function Lambdish\Phunctional\filter;
 
 class Utils
 {
@@ -22,8 +23,11 @@ class Utils
         return self::$instance;
     }
 
-    public function slug(string $string): string
+    public function slug(?string $string): ?string
     {
+        if ($this->isEmpty($string)) {
+            return $string;
+        }
         return $this->slugify->slugify($string, [
             'regexp' => '/(?<=[[:^upper:]])(?=[[:upper:]])/',
             'lowercase_after_regexp' => true,
@@ -32,8 +36,6 @@ class Utils
 
     public function isEmpty(mixed $value): bool
     {
-        return $value === null ||
-            $value === '' ||
-            $value === [];
+        return (bool) filter(static fn ($operator) => $value === $operator, ['', [], null]);
     }
 }

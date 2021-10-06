@@ -44,7 +44,7 @@ final class ExtractInstanceCommandHandler
     private function prepareRelations(array $relations, Instance $instance)
     {
         return reduce(function (array $acc, Query $query) use ($instance) {
-            $results = $this->extractionRepository->findChildrenInstances(
+            $results = $this->extractionRepository->findRelatedInstances(
                 $instance->id(),
                 $query->params()
             );

@@ -21,6 +21,7 @@
     <testsuites>
         <testsuite name="Test Suite">
             <directory>tests/Editora</directory>
+            <directory>tests/Shared</directory>
         </testsuite>
     </testsuites>
     <logging>

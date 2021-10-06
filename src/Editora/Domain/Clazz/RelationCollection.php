@@ -20,7 +20,7 @@ final class RelationCollection
     /** @return array<Relation> */
     public function get(): array
     {
-        return map(static fn (Relation $relation) => $relation, $this->relations);
+        return $this->relations;
     }
 
     public function toArray(): array

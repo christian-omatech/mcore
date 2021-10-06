@@ -2,6 +2,7 @@
 
 namespace Omatech\Mcore\Editora\Domain\Attribute;
 
+use Omatech\Mcore\Editora\Domain\Value\BaseValue;
 use Omatech\Mcore\Editora\Domain\Value\ValueCollection;
 
 final class Attribute
@@ -33,6 +34,11 @@ final class Attribute
     public function values(): ValueCollection
     {
         return $this->valueCollection;
+    }
+
+    public function value(string $language): ?BaseValue
+    {
+        return $this->valueCollection->language($language);
     }
 
     public function key(): string

@@ -10,20 +10,24 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: Install Task
+        uses: arduino/setup-task@v1
+
       - name: Build Container
-        run: make build
+        run: task build
 
       - name: Install Dependencies
-        run: make install
+        run: task install
 
       - name: Code Analysis
-        run: make analyse
+        run: task analyse
 
       - name: Testing
-        run: make test
+        run: task test
 
       - name: Slack Notification
         uses: rtCamp/action-slack-notify@v2
+        if: always()
         env:
           SLACK_CHANNEL: ${{ secrets.SLACK_CHANNEL }}
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}

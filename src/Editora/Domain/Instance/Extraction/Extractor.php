@@ -81,15 +81,20 @@ final class Extractor
             $acc[$value->language()]['value'] = $value->value();
             return $acc;
         }, $attribute->values()->get(), []);
-        $value = first(filter(static function ($value) {
-            return isset($value['value']);
-        }, [
+        $queryAttribute->setValue($this->getValue($values));
+        return deep_copy($queryAttribute);
+    }
+
+    private function getValue(array $values): array
+    {
+        $possibleValues = filter(static fn ($value) => ! is_null($value), [
             $values[$this->query->param('language')] ?? null,
             $values['*'] ?? null,
             $values['+'] ?? null,
-        ]));
-        $queryAttribute->setValue($value['id'] ?? null, $value['value'] ?? null);
-        return deep_copy($queryAttribute);
+        ]);
+        return first(filter(static function ($value) {
+            return isset($value['value']);
+        }, $possibleValues)) ?? first($possibleValues);
     }
 
     private function matchRelations(array $queryRelations, array $instancesRelations): array
@@ -118,10 +123,5 @@ final class Extractor
             $acc[] = $this->parse($queryRelation, $instance, $instancesRelation['relations']);
             return $acc;
         }, $instancesRelation['instances']->instances(), []);
-    }
-
-    public function query(): Query
-    {
-        return $this->query;
     }
 }

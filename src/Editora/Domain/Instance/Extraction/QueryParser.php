@@ -7,13 +7,14 @@ use GraphQL\Language\AST\FieldNode;
 use GraphQL\Language\Parser;
 use Omatech\Mcore\Shared\Utils\Utils;
 use function Lambdish\Phunctional\reduce;
+use function Lambdish\Phunctional\search;
 
 final class QueryParser
 {
     public function parse(string $query): array
     {
         $graphQuery = Parser::parse($query);
-        return reduce(function (array $acc, FieldNode $node) {
+        return reduce(function (array $acc, FieldNode $node): array {
             $acc[] = $this->parseNode($node);
             return $acc;
         }, $graphQuery->definitions[0]->selectionSet->selections, []);
@@ -34,27 +35,24 @@ final class QueryParser
 
     private function parseParams(FieldNode $node): array
     {
-        $params = reduce(static function (array $acc, ArgumentNode $argument) {
+        $params = reduce(static function (array $acc, ArgumentNode $argument): array {
             $acc[$argument->name->value] = $argument->value->value;
             return $acc;
         }, $node->arguments, []);
-
-        $root = Utils::getInstance()->slug($node->name->value);
-        $params['class'] = $root === 'class' ? null : $root;
-        if ($params['class'] === null) {
-            $params['key'] = Utils::getInstance()->slug($params['key'] ?? '');
-        } else {
-            $params['key'] = null;
+        if ($node->name->value !== 'instances') {
+            $params['class'] = $node->name->value;
         }
+        $params['class'] = Utils::getInstance()->slug($params['class'] ?? null);
+        $params['key'] = Utils::getInstance()->slug($params['key'] ?? null);
         $params['preview'] = $params['preview'] ?? false;
-        $params['limit'] = $params['limit'] ?? 0;
-        $params['page'] = $params['page'] ?? 1;
+        $params['limit'] = (int) ($params['limit'] ?? 0);
+        $params['page'] = (int) ($params['page'] ?? 1);
         return $params;
     }
 
     private function parseAttributes(FieldNode $node): array
     {
-        return reduce(function (array $acc, FieldNode $node) {
+        return reduce(function (array $acc, FieldNode $node): array {
             if (! count($node->arguments)) {
                 $acc[] = new Attribute(
                     Utils::getInstance()->slug($node->name->value),
@@ -67,15 +65,29 @@ final class QueryParser
 
     private function parseRelations(FieldNode $node, array $params = []): array
     {
-        return reduce(function (array $acc, FieldNode $node) use ($params) {
+        return reduce(function (array $acc, FieldNode $node) use ($params): array {
             if (count($node->arguments)) {
                 $acc[] = new Query([
                     'attributes' => $this->parseAttributes($node),
-                    'params' => $this->parseParams($node) + $params,
+                    'params' => $this->defaultRelationParams(array_merge(
+                        $this->parseParams($node),
+                        $params
+                    )),
                     'relations' => $this->parseRelations($node, $params),
                 ]);
             }
             return $acc;
         }, $node->selectionSet->selections ?? [], []);
+    }
+
+    private function defaultRelationParams(array $params): array
+    {
+        $params['type'] = $params['type'] ?? 'child';
+        $params['type'] = search(
+            static fn ($type) => $type === $params['type'],
+            ['parent'],
+            'child'
+        );
+        return $params;
     }
 }

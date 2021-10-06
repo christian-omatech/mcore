@@ -35,7 +35,7 @@ final class Query
         return $this->relations;
     }
 
-    public function param(?string $key): mixed
+    public function param(string $key): mixed
     {
         return $this->params[$key] ?? null;
     }

@@ -11,8 +11,8 @@ final class Pagination
     public function __construct(array $params, int $total)
     {
         $this->total = $total;
-        $this->limit = (int) $params['limit'];
-        $this->page = (int) $params['page'];
+        $this->limit = $params['limit'];
+        $this->page = $params['page'];
     }
 
     public function realLimit(): int

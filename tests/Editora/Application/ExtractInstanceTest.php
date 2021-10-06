@@ -9,221 +9,68 @@ use Omatech\Mcore\Editora\Application\ExtractInstance\ExtractInstanceCommandHand
 use Omatech\Mcore\Editora\Domain\Instance\Contracts\ExtractionRepositoryInterface;
 use Omatech\Mcore\Editora\Domain\Instance\Extraction\Pagination;
 use Omatech\Mcore\Editora\Domain\Instance\Extraction\Results;
-use Omatech\Mcore\Editora\Domain\Instance\InstanceBuilder;
 use PHPUnit\Framework\TestCase;
+use Tests\Data\Objects\ArticlesMother;
+use Tests\Data\Objects\BooksMother;
+use Tests\Data\Objects\NewsMother;
 
 class ExtractInstanceTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
     /** @test */
-    public function extractPaginatedInstancesByClassSuccessfully(): void
+    public function extractInstancesByClassSuccessfully(): void
     {
-        $command = new ExtractInstanceCommand('{
-            ClassOne(preview: false, language: es, limit: 10, page: 1)
-        }');
-
-        $instance = (new InstanceBuilder())
-            ->setLanguages(['es', 'en'])
-            ->setStructure([
-                'attributes' => [
-                    'AttributeOne' => [],
-                    'AttributeTwo' => [],
-                ],
-            ])
-            ->setClassName('ClassOne')
-            ->build();
-
-        $instance->fill([
-            'metadata' => [
-                'id' => 1,
-                'key' => 'instance-key',
-                'publication' => [
-                    'startPublishingDate' => '1989-03-08 09:00:00',
-                ],
-            ],
-            'attributes' => [
-                'attribute-one' => [
-                    'values' => [
-                        [
-                            'language' => 'es',
-                            'value' => 'value-one',
-                        ],
-                    ],
-                    'attributes' => [],
-                ],
-                'attribute-two' => [
-                    'values' => [
-                        [
-                            'language' => 'es',
-                            'value' => 'value-two',
-                        ],
-                    ],
-                    'attributes' => [],
-                ],
-            ],
-            'relations' => [],
-        ]);
+        $news = new NewsMother();
+        $instances = $news->create(20);
 
         $repository = Mockery::mock(ExtractionRepositoryInterface::class);
-
         $repository->shouldReceive('instancesBy')
             ->with([
                 'key' => null,
-                'class' => 'class-one',
+                'class' => 'news',
                 'preview' => false,
                 'language' => 'es',
-                'limit' => 10,
+                'limit' => 5,
                 'page' => 1,
             ])
             ->andReturn(
                 new Results(
-                    [
-                        $instance,
-                        $instance,
-                    ],
+                    $instances['instances'],
                     new Pagination([
                         'page' => 1,
-                        'limit' => 10,
-                    ], 2)
+                        'limit' => 5,
+                    ], count($instances['instances']))
                 )
             )->once();
 
+        $command = new ExtractInstanceCommand('{
+            News(preview: false, language: es, limit: 5, page: 1)
+        }');
         $extractions = (new ExtractInstanceCommandHandler($repository))->__invoke($command);
-        $this->assertEquals([
-            [
-                'key' => 'instance-key',
-                'attributes' => [
-                    [
-                        'id' => null,
-                        'key' => 'attribute-one',
-                        'value' => 'value-one',
-                        'attributes' => [],
-                    ], [
-                        'id' => null,
-                        'key' => 'attribute-two',
-                        'value' => 'value-two',
-                        'attributes' => [],
-                    ],
-                ],
-                'relations' => [],
-            ], [
-                'key' => 'instance-key',
-                'attributes' => [
-                    [
-                        'id' => null,
-                        'key' => 'attribute-one',
-                        'value' => 'value-one',
-                        'attributes' => [],
-                    ], [
-                        'id' => null,
-                        'key' => 'attribute-two',
-                        'value' => 'value-two',
-                        'attributes' => [],
-                    ],
-                ],
-                'relations' => [],
-            ],
-        ], $extractions->toArray());
+        $this->assertEquals($news->extraction([
+            'title',
+            'description',
+        ], 'es'), $extractions->toArray());
+        $this->assertSame([
+            'total' => 20,
+            'limit' => 5,
+            'current' => 1,
+            'pages' => 4,
+        ], $extractions->queries()[0]->pagination()->toArray());
     }
 
     /** @test */
-    public function extractInstancesByClassSuccessfully(): void
+    public function extractInstancesByMultipleClassesSuccessfully(): void
     {
-        $command = new ExtractInstanceCommand('{
-            ClassOne(preview: false, language: es)
-            ClassTwo(preview: false, language: en)
-        }');
-
-        $instance = (new InstanceBuilder())
-            ->setLanguages(['es', 'en'])
-            ->setStructure([
-                'attributes' => [
-                    'AttributeOne' => [],
-                    'AttributeTwo' => [],
-                ],
-            ])
-            ->setClassName('ClassOne')
-            ->build();
-
-        $instance->fill([
-            'metadata' => [
-                'id' => 1,
-                'key' => 'instance-key',
-                'publication' => [
-                    'startPublishingDate' => '1989-03-08 09:00:00',
-                ],
-            ],
-            'attributes' => [
-                'attribute-one' => [
-                    'values' => [
-                        [
-                            'language' => 'es',
-                            'value' => 'value-one',
-                        ],
-                    ],
-                    'attributes' => [],
-                ],
-                'attribute-two' => [
-                    'values' => [
-                        [
-                            'language' => 'es',
-                            'value' => 'value-two',
-                        ],
-                    ],
-                    'attributes' => [],
-                ],
-            ],
-            'relations' => [],
-        ]);
-
-        $instance2 = (new InstanceBuilder())
-            ->setLanguages(['es', 'en'])
-            ->setStructure([
-                'attributes' => [
-                    'AttributeThree' => [],
-                    'AttributeFour' => [],
-                ],
-            ])
-            ->setClassName('ClassTwo')
-            ->build();
-
-        $instance2->fill([
-            'metadata' => [
-                'id' => 2,
-                'key' => 'instance-key',
-                'publication' => [
-                    'startPublishingDate' => '1989-03-08 09:00:00',
-                ],
-            ],
-            'attributes' => [
-                'attribute-three' => [
-                    'values' => [
-                        [
-                            'language' => 'en',
-                            'value' => 'value-three',
-                        ],
-                    ],
-                    'attributes' => [],
-                ],
-                'attribute-four' => [
-                    'values' => [
-                        [
-                            'language' => 'en',
-                            'value' => 'value-four',
-                        ],
-                    ],
-                    'attributes' => [],
-                ],
-            ],
-            'relations' => [],
-        ]);
+        $news = new NewsMother();
+        $newsInstances = $news->create(2);
 
         $repository = Mockery::mock(ExtractionRepositoryInterface::class);
         $repository->shouldReceive('instancesBy')
             ->with([
                 'key' => null,
-                'class' => 'class-one',
+                'class' => 'news',
                 'preview' => false,
                 'language' => 'es',
                 'limit' => 0,
@@ -231,20 +78,21 @@ class ExtractInstanceTest extends TestCase
             ])
             ->andReturn(
                 new Results(
-                    [
-                        $instance,
-                        $instance,
-                    ],
+                    $newsInstances['instances'],
                     new Pagination([
                         'page' => 1,
                         'limit' => 0,
-                    ], 2)
+                    ], count($newsInstances['instances']))
                 )
             )->once();
+
+        $articles = new ArticlesMother();
+        $articlesInstances = $articles->create(1);
+
         $repository->shouldReceive('instancesBy')
             ->with([
                 'key' => null,
-                'class' => 'class-two',
+                'class' => 'articles',
                 'preview' => false,
                 'language' => 'en',
                 'limit' => 0,
@@ -252,170 +100,52 @@ class ExtractInstanceTest extends TestCase
             ])
             ->andReturn(
                 new Results(
-                    [
-                        $instance2,
-                        $instance2,
-                    ],
+                    $articlesInstances['instances'],
                     new Pagination([
                         'page' => 1,
                         'limit' => 0,
-                    ], 2)
+                    ], count($articlesInstances['instances']))
                 )
             )->once();
 
+        $command = new ExtractInstanceCommand('{
+            News(preview: false, language: es)
+            Articles(preview: false, language: en) {
+                title
+                author
+            }
+        }');
         $extractions = (new ExtractInstanceCommandHandler($repository))->__invoke($command);
 
         $this->assertEquals([
-            [
-                [
-                    'key' => 'instance-key',
-                    'attributes' => [
-                        [
-                            'id' => null,
-                            'key' => 'attribute-one',
-                            'value' => 'value-one',
-                            'attributes' => [],
-                        ], [
-                            'id' => null,
-                            'key' => 'attribute-two',
-                            'value' => 'value-two',
-                            'attributes' => [],
-                        ],
-                    ],
-                    'relations' => [],
-                ], [
-                    'key' => 'instance-key',
-                    'attributes' => [
-                        [
-                            'id' => null,
-                            'key' => 'attribute-one',
-                            'value' => 'value-one',
-                            'attributes' => [],
-                        ], [
-                            'id' => null,
-                            'key' => 'attribute-two',
-                            'value' => 'value-two',
-                            'attributes' => [],
-                        ],
-                    ],
-                    'relations' => [],
-                ],
-            ], [
-                [
-                    'key' => 'instance-key',
-                    'attributes' => [
-                        [
-                            'id' => null,
-                            'key' => 'attribute-three',
-                            'value' => 'value-three',
-                            'attributes' => [],
-                        ], [
-                            'id' => null,
-                            'key' => 'attribute-four',
-                            'value' => 'value-four',
-                            'attributes' => [],
-                        ],
-                    ],
-                    'relations' => [],
-                ], [
-                    'key' => 'instance-key',
-                    'attributes' => [
-                        [
-                            'id' => null,
-                            'key' => 'attribute-three',
-                            'value' => 'value-three',
-                            'attributes' => [],
-                        ], [
-                            'id' => null,
-                            'key' => 'attribute-four',
-                            'value' => 'value-four',
-                            'attributes' => [],
-                        ],
-                    ],
-                    'relations' => [],
-                ],
-            ],
+            $news->extraction(['title', 'description'], 'es'),
+            $articles->extraction(['title', 'author'], 'en'),
         ], $extractions->toArray());
+        $this->assertSame([
+            'total' => 2,
+            'limit' => 0,
+            'current' => 1,
+            'pages' => 1,
+        ], $extractions->queries()[0]->pagination()->toArray());
+        $this->assertSame([
+            'total' => 1,
+            'limit' => 0,
+            'current' => 1,
+            'pages' => 1,
+        ], $extractions->queries()[1]->pagination()->toArray());
     }
 
     /** @test */
-    public function extractMultiInstancesSuccessfully(): void
+    public function extractInstancesByKeySuccessfully(): void
     {
-        $query = '{
-            class(key: InstanceKey, language: es)
-            class(key: InstanceKey, preview: true, language: en, limit: 4, page: 2)
-        }';
-        $command = new ExtractInstanceCommand($query);
-
-        $instance = (new InstanceBuilder())
-            ->setLanguages(['es', 'en'])
-            ->setStructure([
-                'attributes' => [
-                    'AttributeOne' => [],
-                ],
-            ])
-            ->setClassName('ClassOne')
-            ->build();
-
-        $instance->fill([
-            'metadata' => [
-                'id' => 1,
-                'key' => 'instance-key',
-                'publication' => [
-                    'startPublishingDate' => '1989-03-08 09:00:00',
-                ],
-            ],
-            'attributes' => [
-                'attribute-one' => [
-                    'values' => [
-                        [
-                            'language' => 'es',
-                            'value' => 'value-one',
-                        ],
-                    ],
-                    'attributes' => [],
-                ],
-            ],
-            'relations' => [],
-        ]);
-
-        $instance2 = (new InstanceBuilder())
-            ->setLanguages(['es', 'en'])
-            ->setStructure([
-                'attributes' => [
-                    'AttributeTwo' => [],
-                ],
-            ])
-            ->setClassName('ClassOne')
-            ->build();
-
-        $instance2->fill([
-            'metadata' => [
-                'id' => 2,
-                'key' => 'instance-key',
-                'publication' => [
-                    'startPublishingDate' => '1989-03-08 09:00:00',
-                ],
-            ],
-            'attributes' => [
-                'attribute-two' => [
-                    'values' => [
-                        [
-                            'language' => 'en',
-                            'value' => 'value-two',
-                        ],
-                    ],
-                    'attributes' => [],
-                ],
-            ],
-            'relations' => [],
-        ]);
+        $news = new NewsMother();
+        $newsInstance = $news->asKey('i-am-a-new');
 
         $repository = Mockery::mock(ExtractionRepositoryInterface::class);
         $repository->shouldReceive('instancesBy')
             ->with([
                 'class' => null,
-                'key' => 'instance-key',
+                'key' => 'i-am-a-new',
                 'preview' => false,
                 'language' => 'es',
                 'limit' => '0',
@@ -423,120 +153,55 @@ class ExtractInstanceTest extends TestCase
             ])
             ->andReturn(
                 new Results(
-                    [
-                        $instance,
-                    ],
+                    $newsInstance,
                     new Pagination([
-                        'page' => '1',
-                        'limit' => '0',
-                    ], 1)
+                        'page' => 1,
+                        'limit' => 0,
+                    ], count($newsInstance))
                 )
             )->once();
+
+        $articles = new ArticlesMother();
+        $articleInstance = $articles->asKey('i-am-an-article');
+
         $repository->shouldReceive('instancesBy')
             ->with([
                 'class' => null,
-                'key' => 'instance-key',
+                'key' => 'i-am-an-article',
                 'preview' => true,
-                'language' => 'en',
-                'limit' => 4,
-                'page' => 2,
+                'language' => 'es',
+                'limit' => '0',
+                'page' => '1',
             ])
             ->andReturn(
                 new Results(
-                    [
-                        $instance2,
-                        $instance2,
-                        $instance2,
-                        $instance2,
-                        $instance2,
-                    ],
+                    $articleInstance,
                     new Pagination([
-                        'page' => 2,
-                        'limit' => 4,
-                    ], 5)
+                        'page' => 1,
+                        'limit' => 0,
+                    ], count($articleInstance))
                 )
             )->once();
 
+        $graphQuery = '{
+            instances(key: "i-am-a-new", language: es)
+            instances(key: "i-am-an-article", language: es, preview: true) {
+                title
+                author
+            }
+        }';
+        $command = new ExtractInstanceCommand($graphQuery);
         $extractions = (new ExtractInstanceCommandHandler($repository))->__invoke($command);
 
-        $this->assertEquals([
-            [
-                'key' => 'instance-key',
-                'attributes' => [
-                    [
-                        'id' => null,
-                        'key' => 'attribute-one',
-                        'value' => 'value-one',
-                        'attributes' => [],
-                    ],
-                ],
-                'relations' => [],
-            ], [
-                [
-                    'key' => 'instance-key',
-                    'attributes' => [
-                        [
-                            'id' => null,
-                            'key' => 'attribute-two',
-                            'value' => 'value-two',
-                            'attributes' => [],
-                        ],
-                    ],
-                    'relations' => [],
-                ], [
-                    'key' => 'instance-key',
-                    'attributes' => [
-                        [
-                            'id' => null,
-                            'key' => 'attribute-two',
-                            'value' => 'value-two',
-                            'attributes' => [],
-                        ],
-                    ],
-                    'relations' => [],
-                ], [
-                    'key' => 'instance-key',
-                    'attributes' => [
-                        [
-                            'id' => null,
-                            'key' => 'attribute-two',
-                            'value' => 'value-two',
-                            'attributes' => [],
-                        ],
-                    ],
-                    'relations' => [],
-                ], [
-                    'key' => 'instance-key',
-                    'attributes' => [
-                        [
-                            'id' => null,
-                            'key' => 'attribute-two',
-                            'value' => 'value-two',
-                            'attributes' => [],
-                        ],
-                    ],
-                    'relations' => [],
-                ], [
-                    'key' => 'instance-key',
-                    'attributes' => [
-                        [
-                            'id' => null,
-                            'key' => 'attribute-two',
-                            'value' => 'value-two',
-                            'attributes' => [],
-                        ],
-                    ],
-                    'relations' => [],
-                ],
-            ],
-        ], $extractions->toArray());
-
-        $this->assertEquals($query, $extractions->query());
-        $this->assertEquals(md5($query), $extractions->hash());
+        $this->assertEquals($graphQuery, $extractions->query());
+        $this->assertEquals(md5($graphQuery), $extractions->hash());
         $this->assertInstanceOf('dateTime', $extractions->date());
         $this->assertIsArray($extractions->queries());
-        $this->assertEquals(1, $extractions->queries()[0]->pagination()->realLimit());
-        $this->assertEquals(0, $extractions->queries()[0]->pagination()->offset());
+
+        $this->assertEquals([
+            $news->extraction(['title', 'description'], 'es'),
+            $articles->extraction(['title', 'author'], 'es'),
+        ], $extractions->toArray());
         $this->assertSame([
             'total' => 1,
             'limit' => 0,
@@ -544,259 +209,244 @@ class ExtractInstanceTest extends TestCase
             'pages' => 1,
         ], $extractions->queries()[0]->pagination()->toArray());
         $this->assertFalse($extractions->queries()[0]->param('preview'));
-        $this->assertEquals(4, $extractions->queries()[1]->pagination()->realLimit());
-        $this->assertEquals(4, $extractions->queries()[1]->pagination()->offset());
+        $this->assertEquals(1, $extractions->queries()[0]->pagination()->realLimit());
+        $this->assertEquals(0, $extractions->queries()[0]->pagination()->offset());
         $this->assertSame([
-            'total' => 5,
-            'limit' => 4,
-            'current' => 2,
-            'pages' => 2,
+            'total' => 1,
+            'limit' => 0,
+            'current' => 1,
+            'pages' => 1,
         ], $extractions->queries()[1]->pagination()->toArray());
+        $this->assertEquals(1, $extractions->queries()[1]->pagination()->realLimit());
+        $this->assertEquals(0, $extractions->queries()[1]->pagination()->offset());
         $this->assertTrue($extractions->queries()[1]->param('preview'));
     }
 
     /** @test */
-    public function extractInstanceSuccessfully(): void
+    public function extractInstancesWithRelationsSuccessfully(): void
     {
-        $command = new ExtractInstanceCommand('{
-            class(key: InstanceKey, preview: false, language: es) {
-                DefaultAttribute
-                RelationKey1(limit:1) {
-                    RelationKey2(limit:1)
-                }
-            }
-        }');
-
-        $instance = (new InstanceBuilder())
-            ->setLanguages(['es', 'en'])
-            ->setStructure([
+        $news = new NewsMother();
+        $newsInstances = $news->create(10, null, [
+            'news-photos' => [
+                'instances' => 20,
                 'relations' => [
-                    'RelationKey1' => [
-                        'ClassTwo',
+                    'photos-locations' => [
+                        'instances' => 1,
                     ],
                 ],
-                'attributes' => [
-                    'DefaultAttribute' => [],
-                ],
-            ])
-            ->setClassName('ClassOne')
-            ->build();
-
-        $instance->fill([
-            'metadata' => [
-                'id' => 1,
-                'key' => 'instance-key',
-                'publication' => [
-                    'startPublishingDate' => '1989-03-08 09:00:00',
-                ],
             ],
-            'attributes' => [
-                'default-attribute' => [
-                    'values' => [
-                        [
-                            'language' => 'es',
-                            'value' => 'hola',
-                        ],
-                    ],
-                    'attributes' => [],
-                ],
-            ],
-            'relations' => [
-                'relation-key1' => [
-                    2 => 'class-two',
-                ],
-            ],
-        ]);
-
-        $instance2 = (new InstanceBuilder())
-            ->setLanguages(['es', 'en'])
-            ->setStructure([
-                'relations' => [
-                    'RelationKey2' => [
-                        'ClassThree',
-                    ],
-                ],
-                'attributes' => [
-                    'DefaultAttribute' => [],
-                ],
-            ])
-            ->setClassName('ClassTwo')
-            ->build();
-
-        $instance2->fill([
-            'metadata' => [
-                'id' => 2,
-                'key' => 'instance-key2',
-                'publication' => [
-                    'startPublishingDate' => '1989-03-08 09:00:00',
-                ],
-            ],
-            'attributes' => [
-                'default-attribute' => [
-                    'values' => [
-                        [
-                            'language' => 'es',
-                            'value' => 'hola',
-                        ],
-                    ],
-                    'attributes' => [],
-                ],
-            ],
-            'relations' => [
-                'relation-key2' => [
-                    3 => 'class-three',
-                ],
-            ],
-        ]);
-
-        $instance3 = (new InstanceBuilder())
-            ->setLanguages(['es', 'en'])
-            ->setStructure([
-                'attributes' => [
-                    'DefaultAttribute' => [],
-                ],
-            ])
-            ->setClassName('ClassThree')
-            ->build();
-
-        $instance3->fill([
-            'metadata' => [
-                'id' => 3,
-                'key' => 'instance-key3',
-                'publication' => [
-                    'startPublishingDate' => '1989-03-08 09:00:00',
-                ],
-            ],
-            'attributes' => [
-                'default-attribute' => [
-                    'values' => [
-                        [
-                            'language' => 'es',
-                            'value' => 'hola',
-                        ],
-                    ],
-                    'attributes' => [],
-                ],
-            ],
-            'relations' => [],
         ]);
 
         $repository = Mockery::mock(ExtractionRepositoryInterface::class);
         $repository->shouldReceive('instancesBy')
             ->with([
-                'class' => null,
+                'class' => 'news',
+                'key' => null,
                 'preview' => false,
-                'key' => 'instance-key',
                 'language' => 'es',
-                'limit' => 0,
-                'page' => 1,
+                'limit' => '0',
+                'page' => '1',
             ])
             ->andReturn(
                 new Results(
-                    [
-                        $instance,
-                    ],
+                    $newsInstances['instances'],
                     new Pagination([
                         'page' => 1,
                         'limit' => 0,
-                    ], 1)
-                )
-            )->once();
-        $repository->shouldReceive('findChildrenInstances')
-            ->with(1, [
-                'class' => 'relation-key1',
-                'key' => null,
-                'limit' => 1,
-                'language' => 'es',
-                'preview' => false,
-                'page' => 1,
-            ])
-            ->andReturn(
-                new Results(
-                    [
-                        $instance2,
-                    ],
-                    new Pagination([
-                        'page' => 1,
-                        'limit' => 10,
-                    ], 1)
+                    ], count($newsInstances['instances']))
                 )
             )->once();
 
-        $repository->shouldReceive('findChildrenInstances')
-            ->with(2, [
-                'class' => 'relation-key2',
+        foreach ($newsInstances['instances'] as $instance) {
+            $repository->shouldReceive('findRelatedInstances')
+                ->with($instance->id(), [
+                    'limit' => 6,
+                    'class' => 'news-photos',
+                    'key' => null,
+                    'preview' => false,
+                    'page' => '2',
+                    'language' => 'es',
+                    'type' => 'child',
+                ])
+                ->andReturn(
+                    new Results(
+                        $newsInstances['relations']['news-photos'][0]['instances'],
+                        new Pagination([
+                            'page' => 2,
+                            'limit' => 6,
+                        ], count($newsInstances['relations']['news-photos'][0]['instances']))
+                    )
+                )->once();
+        }
+
+        foreach ($newsInstances['relations']['news-photos'][0]['instances'] as $instance) {
+            $repository->shouldReceive('findRelatedInstances')
+                ->with($instance->id(), [
+                    'class' => 'photos-locations',
+                    'key' => null,
+                    'limit' => 2,
+                    'language' => 'es',
+                    'preview' => false,
+                    'page' => 1,
+                    'type' => 'child',
+                ])
+                ->andReturn(
+                    new Results(
+                        $newsInstances['relations']['news-photos'][0]['relations']['photos-locations'][0]['instances'],
+                        new Pagination([
+                            'page' => 1,
+                            'limit' => 2,
+                        ], count($newsInstances['relations']['news-photos'][0]['relations']['photos-locations'][0]['instances']))
+                    )
+                )->times(10);
+        }
+
+        $command = new ExtractInstanceCommand('{
+            News(language: es) {
+                title
+                NewsPhotos(limit:6, page: 2) {
+                    PhotosLocations(limit: 2) {
+                        country
+                    }
+                }
+            }
+        }');
+        $extraction = (new ExtractInstanceCommandHandler($repository))->__invoke($command);
+        $this->assertEquals(
+            $news->extraction(['title'], 'es', [
+                'news-photos' => $newsInstances['relations']['news-photos'][0]['object']->extraction(['url'], 'es', [
+                    'photos-locations' => [$newsInstances['relations']['news-photos'][0]['relations']['photos-locations'][0]['object']->extraction(['country'], 'es')],
+                ]),
+            ]),
+            $extraction->toArray()
+        );
+        $this->assertSame([
+            'total' => 20,
+            'limit' => 6,
+            'current' => 2,
+            'pages' => 4
+        ], $extraction->queries()[0]->relations()[0]->pagination()->toArray());
+    }
+
+    /** @test */
+    public function complexInstanceQueryExtraction(): void
+    {
+        $books = new BooksMother();
+        $booksInstances = $books->create(1, null, [
+            'articles' => [
+                'instances' => 1,
+            ],
+            'photos' => [
+                'instances' => 3,
+                'relations' => [
+
+                ]
+            ],
+        ]);
+
+        $repository = Mockery::mock(ExtractionRepositoryInterface::class);
+        $repository->shouldReceive('instancesBy')
+            ->with([
+                'class' => 'books',
                 'key' => null,
-                'limit' => 1,
-                'language' => 'es',
                 'preview' => false,
-                'page' => 1,
+                'language' => 'en',
+                'limit' => '0',
+                'page' => '1',
             ])
             ->andReturn(
                 new Results(
-                    [
-                        $instance3,
-                    ],
+                    $booksInstances['instances'],
                     new Pagination([
                         'page' => 1,
-                        'limit' => 20,
-                    ], 1)
+                        'limit' => 0,
+                    ], count($booksInstances['instances']))
                 )
             )->once();
+
+        foreach ($booksInstances['instances'] as $bookInstance) {
+            $repository->shouldReceive('findRelatedInstances')
+                ->with($bookInstance->id(), [
+                    'limit' => 1,
+                    'class' => 'articles',
+                    'key' => null,
+                    'preview' => false,
+                    'page' => 1,
+                    'language' => 'en',
+                    'type' => 'child',
+                ])->andReturn(
+                    new Results(
+                        $booksInstances['relations']['articles'][0]['instances'],
+                        new Pagination([
+                            'page' => 1,
+                            'limit' => 0,
+                        ], count($booksInstances['relations']['articles'][0]['instances']))
+                    )
+                )->once();
+            $repository->shouldReceive('findRelatedInstances')
+                ->with($bookInstance->id(), [
+                    'limit' => 3,
+                    'class' => 'photos',
+                    'key' => null,
+                    'preview' => false,
+                    'page' => 1,
+                    'language' => 'en',
+                    'type' => 'child',
+                ])->andReturn(
+                    new Results(
+                        array_merge($booksInstances['relations']['photos'][0]['instances'], $booksInstances['relations']['photos'][1]['instances']),
+                        new Pagination([
+                            'page' => 1,
+                            'limit' => 3,
+                        ], count(array_merge($booksInstances['relations']['photos'][0]['instances'], $booksInstances['relations']['photos'][1]['instances'])))
+                    )
+                )->once();
+        }
+
+        $command = new ExtractInstanceCommand('{
+            Books(language: en) {
+                title
+                isbn
+                synopsis
+                picture {
+                    alt
+                }
+                price
+                Articles(limit: 1) {
+                    title
+                    author
+                    page
+                }
+                Photos(limit: 3) {
+                    Location(limit: 1)
+                }
+            }
+        }');
 
         $extraction = (new ExtractInstanceCommandHandler($repository))->__invoke($command);
-
-        $this->assertEquals([
-            'key' => 'instance-key',
-            'attributes' => [
-                [
-                    'id' => null,
-                    'key' => 'default-attribute',
-                    'value' => 'hola',
-                    'attributes' => [],
+        $this->assertEquals(
+            $books->extraction([
+                'title',
+                'isbn',
+                'synopsis',
+                'picture' => [
+                    'alt',
                 ],
-            ],
-            'relations' => [
-                'relation-key1' => [
-                    [
-                        'key' => 'instance-key2',
-                        'attributes' => [
-                            [
-                                'id' => null,
-                                'key' => 'default-attribute',
-                                'value' => 'hola',
-                                'attributes' => [],
-                            ],
-                        ],
-                        'relations' => [
-                            'relation-key2' => [
-                                [
-                                    'key' => 'instance-key3',
-                                    'attributes' => [
-                                        [
-                                            'id' => null,
-                                            'key' => 'default-attribute',
-                                            'value' => 'hola',
-                                            'attributes' => [],
-                                        ],
-                                    ],
-                                    'relations' => [],
-                                ],
-                            ],
-                        ],
-                    ],
+                'price',
+            ], 'en', [
+                'articles' => [$booksInstances['relations']['articles'][0]['object']->extraction([
+                    'title',
+                    'author',
+                    'page'
+                ], 'en'),
                 ],
-            ],
-        ], $extraction->toArray());
-
-        $pagination = $extraction->queries()[0]->relations()[0]->pagination();
-        $this->assertEquals(10, $pagination->realLimit());
-        $this->assertEquals(0, $pagination->offset());
-        $this->assertSame([
-            'total' => 1,
-            'limit' => 10,
-            'current' => 1,
-            'pages' => 1,
-        ], $pagination->toArray());
+                'photos' => array_merge($booksInstances['relations']['photos'][0]['object']->extraction([
+                    'url',
+                ], 'en'), $booksInstances['relations']['photos'][1]['object']->extraction([
+                    'url',
+                ], 'en')),
+            ]),
+            $extraction->toArray()
+        );
     }
 }

@@ -33,10 +33,10 @@ final class Attribute
         $this->attributes = $attributes;
     }
 
-    public function setValue(?int $id, mixed $value): void
+    public function setValue(array $value): void
     {
-        $this->id = $id;
-        $this->value = $value;
+        $this->id = $value['id'];
+        $this->value = $value['value'];
     }
 
     public function toQuery(): array

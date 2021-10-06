@@ -1,0 +1,36 @@
+version: '3'
+
+env:
+  UID: $(id -u)
+  GID: $(id -g)
+
+tasks:
+  build:
+    cmds:
+      - UID=$UID GID=$GID docker-compose -f .docker/docker-compose.yml -p mcore build --pull --no-cache --force-rm
+  clear:
+    cmds:
+      - UID=$UID GID=$GID docker-compose -f .docker/docker-compose.yml -p mcore down --rmi all --volumes
+  composer:
+    cmds:
+      - UID=$UID GID=$GID docker-compose -f .docker/docker-compose.yml -p mcore run php composer {{.CLI_ARGS}}
+  install:
+    cmds:
+      - task: composer
+        vars: {CLI_ARGS: 'install'}
+  update:
+    cmds:
+      - task: composer
+        vars: {CLI_ARGS: 'update'}
+  dump:
+    cmds:
+      - task: composer
+        vars: {CLI_ARGS: 'dump'}
+  test:
+    cmds:
+      - task: composer
+        vars: {CLI_ARGS: 'test'}
+  analyse:
+    cmds:
+      - task: composer
+        vars: {CLI_ARGS: 'analyse'}

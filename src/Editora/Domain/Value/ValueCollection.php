@@ -26,9 +26,17 @@ final class ValueCollection
         }, $values);
     }
 
+    public function language(string $language): ?BaseValue
+    {
+        return search(static function (BaseValue $baseValue) use ($language) {
+            return $baseValue->language() === $language;
+        }, $this->values, null);
+    }
+
+    /** @return array<BaseValue> */
     public function get(): array
     {
-        return map(static fn (BaseValue $value) => $value, $this->values);
+        return $this->values;
     }
 
     public function toArray(): array

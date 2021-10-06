@@ -7,5 +7,5 @@ use Omatech\Mcore\Editora\Domain\Instance\Extraction\Results;
 interface ExtractionRepositoryInterface
 {
     public function instancesBy(array $params): Results;
-    public function findChildrenInstances(int $instanceId, array $params): Results;
+    public function findRelatedInstances(int $instanceId, array $params): Results;
 }
