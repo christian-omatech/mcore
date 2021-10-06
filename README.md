@@ -1,21 +1,36 @@
 # MCore
+
+## Requeriments
+
+- Docker
+- Task (https://taskfile.dev/#/)
+
+---
+
 #### Build:
-`make init`
+
+`task init`
 
 #### Clear docker (destructive)
-`make clear`
+
+`task clear`
 
 #### Install dependencies
-`make install`
+
+`task install`
 
 #### Update dependencies
-`make update`
+
+`task update`
 
 #### Composer dump
-`make dump`
+
+`task dump`
 
 #### Code analysis:
-`make analyse`
+
+`task analyse`
 
 #### Tests:
-`make test`
+
+`task test`
