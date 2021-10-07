@@ -10,11 +10,12 @@ class PicturesMother extends ObjectMother
 
     public function get(int $instancesNumber = 1, ?string $key = null, ?array $relations = []): array
     {
-        for ($i = 0; $i < $instancesNumber; $i++) {
+        $this->instances = [];
+        for ($i = 1; $i <= $instancesNumber; $i++) {
             $this->instances[] = $this->build('Pictures')->fill([
                 'metadata' => [
                     'id' => $this->faker->randomNumber(),
-                    'key' => $key ?? 'photo-instance-'.$i,
+                    'key' => $key ?? 'picture-instance-'.$i,
                     'publication' => [
                         'startPublishingDate' => $this->faker->dateTime()->format('Y-m-d H:i:s'),
                     ],

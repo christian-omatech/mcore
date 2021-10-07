@@ -76,7 +76,7 @@ return [
                 ],
                 'Photos' => [
                     'Photos',
-                    'Pictures'
+                    'Pictures',
                 ],
             ],
         ],

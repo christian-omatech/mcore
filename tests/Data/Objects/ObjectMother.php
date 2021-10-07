@@ -9,7 +9,6 @@ use Omatech\Mcore\Editora\Domain\Instance\Instance;
 use Omatech\Mcore\Editora\Domain\Instance\InstanceBuilder;
 use function Lambdish\Phunctional\filter;
 use function Lambdish\Phunctional\first;
-use function Lambdish\Phunctional\flatten;
 use function Lambdish\Phunctional\reduce;
 
 abstract class ObjectMother
@@ -44,55 +43,59 @@ abstract class ObjectMother
 
     public function create(int $instancesNumber = 1, ?string $key = null, ?array $relations = [])
     {
-        $relationsInstances = reduce(function (array $acc, array $relation, string $relationKey) {
-            $acc[$relationKey] = reduce(function(array $acc, $relationClass) use ($relation) {
-                $relatedObject = new $relationClass;
-                $acc[] = array_merge($relatedObject->create(
-                    $relation['instances'],
-                    null,
-                    $relation['relations'] ?? [],
-                ), ['object' => $relatedObject]);
+        $createdInstances = [];
+        $createdRelatedInstances = [];
+        for ($i = 1; $i <= $instancesNumber; $i++) {
+            $relatedInstances = reduce(function (array $acc, array $instancesToCreate, string $relationKey) {
+                $acc[$relationKey] = reduce(static function (array $acc, string $class) use ($instancesToCreate) {
+                    $object = (new $class());
+                    return array_merge_recursive($acc, $object->create(
+                        $instancesToCreate['instances'],
+                        null,
+                        $instancesToCreate['relations'] ?? []
+                    ));
+                }, $this->availableRelations[$relationKey] ?? [], []);
                 return $acc;
-            }, $this->availableRelations[$relationKey], []);
-            return $acc;
-        }, $relations, []);
+            }, $relations, []);
+            $relatedInstances = array_filter($relatedInstances);
 
-        $relations = reduce(static function (array $acc, array $instances, string $relationKey) {
-            $current = reduce(function (array $acc, $instances) use ($relationKey) {
-                $current[$relationKey] = reduce(static fn ($acc, Instance $instance) => $acc + [
-                    $instance->id() => $instance->data()['classKey'],
-                ], $instances['instances'], []);
-                return array_merge_recursive($current, $acc);
-            }, $instances, []);
-            return array_merge($acc, $current);
-        }, $relationsInstances, []);
+            $relationsIds = reduce(static function (array $acc, array $instances, string $relationKey) {
+                $current[$relationKey] = reduce(static function (array $acc, $instance) {
+                    return $acc + [$instance->id() => $instance->data()['classKey']];
+                }, $instances['instances'], []);
+                return array_merge($acc, $current);
+            }, $relatedInstances, []);
+
+            $createdInstances = array_merge($createdInstances, $this->get(1, $key, $relationsIds));
+            $createdRelatedInstances = array_merge_recursive($createdRelatedInstances, $relatedInstances);
+        }
 
         return [
-            'instances' => $this->get($instancesNumber, $key, $relations),
-            'relations' => $relationsInstances,
+            'instances' => $createdInstances,
+            'relations' => $createdRelatedInstances,
         ];
     }
 
-    public function extraction(array $fields, string $language, array $relations = []): array
+    public static function extraction(array $instances, array $fields, string $language, array $relations = []): array
     {
-        $extraction = reduce(function (array $acc, Instance $instance) use ($fields, $language, $relations): array {
+        $extraction = reduce(static function (array $acc, Instance $instance) use ($fields, $language, $relations): array {
             $acc[] = [
                 'key' => $instance->key(),
-                'attributes' => $this->extractAttributes($instance->attributes(), $fields, $language),
+                'attributes' => self::extractAttributes($instance->attributes(), $fields, $language),
                 'relations' => $relations,
             ];
             return $acc;
-        }, $this->instances, []);
+        }, $instances, []);
         return count($extraction) < 2 ? first($extraction) ?? [] : $extraction;
     }
 
-    private function extractAttributes(AttributeCollection $attributes, array $fields, string $language)
+    private static function extractAttributes(AttributeCollection $attributes, array $fields, string $language)
     {
-        return reduce(function (array $acc, string|array $field, string|int $key) use ($attributes, $fields, $language) {
+        return reduce(static function (array $acc, string|array $field, string|int $key) use ($attributes, $fields, $language) {
             $sub = [];
             $currentField = is_array($field) ? $key : $field;
             if (is_array($field)) {
-                $sub = $this->extractAttributes($attributes->find($currentField)?->attributes(), $fields[$currentField], $language);
+                $sub = self::extractAttributes($attributes->find($currentField)?->attributes(), $fields[$currentField], $language);
             }
             $value = filter(static fn ($value) => ! is_null($value), [
                 $language => $attributes->find($currentField)?->value($language)?->value(),

@@ -8,21 +8,22 @@ class BooksMother extends ObjectMother
 {
     protected array $availableRelations = [
         'articles' => [
-            ArticlesMother::class
+            ArticlesMother::class,
         ],
         'photos' => [
             PhotosMother::class,
-            PicturesMother::class
-        ]
+            PicturesMother::class,
+        ],
     ];
 
     public function get(int $instancesNumber = 1, ?string $key = null, ?array $relations = []): array
     {
-        for ($i = 0; $i < $instancesNumber; $i++) {
+        $this->instances = [];
+        for ($i = 1; $i <= $instancesNumber; $i++) {
             $this->instances[] = $this->build('Books')->fill([
                 'metadata' => [
                     'id' => $this->faker->randomNumber(),
-                    'key' => $key ?? 'new-instance-'.$i,
+                    'key' => $key ?? 'book-instance-'.$i,
                     'publication' => [
                         'startPublishingDate' => $this->faker->dateTime()->format('Y-m-d H:i:s'),
                     ],

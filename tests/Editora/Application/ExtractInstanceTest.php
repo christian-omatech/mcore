@@ -13,6 +13,7 @@ use PHPUnit\Framework\TestCase;
 use Tests\Data\Objects\ArticlesMother;
 use Tests\Data\Objects\BooksMother;
 use Tests\Data\Objects\NewsMother;
+use Tests\Data\Objects\ObjectMother;
 
 class ExtractInstanceTest extends TestCase
 {
@@ -48,7 +49,7 @@ class ExtractInstanceTest extends TestCase
             News(preview: false, language: es, limit: 5, page: 1)
         }');
         $extractions = (new ExtractInstanceCommandHandler($repository))->__invoke($command);
-        $this->assertEquals($news->extraction([
+        $this->assertEquals(ObjectMother::extraction($instances['instances'], [
             'title',
             'description',
         ], 'es'), $extractions->toArray());
@@ -118,8 +119,8 @@ class ExtractInstanceTest extends TestCase
         $extractions = (new ExtractInstanceCommandHandler($repository))->__invoke($command);
 
         $this->assertEquals([
-            $news->extraction(['title', 'description'], 'es'),
-            $articles->extraction(['title', 'author'], 'en'),
+            ObjectMother::extraction($newsInstances['instances'], ['title', 'description'], 'es'),
+            ObjectMother::extraction($articlesInstances['instances'], ['title', 'author'], 'en'),
         ], $extractions->toArray());
         $this->assertSame([
             'total' => 2,
@@ -148,8 +149,8 @@ class ExtractInstanceTest extends TestCase
                 'key' => 'i-am-a-new',
                 'preview' => false,
                 'language' => 'es',
-                'limit' => '0',
-                'page' => '1',
+                'limit' => 0,
+                'page' => 1,
             ])
             ->andReturn(
                 new Results(
@@ -170,8 +171,8 @@ class ExtractInstanceTest extends TestCase
                 'key' => 'i-am-an-article',
                 'preview' => true,
                 'language' => 'es',
-                'limit' => '0',
-                'page' => '1',
+                'limit' => 0,
+                'page' => 1,
             ])
             ->andReturn(
                 new Results(
@@ -199,8 +200,8 @@ class ExtractInstanceTest extends TestCase
         $this->assertIsArray($extractions->queries());
 
         $this->assertEquals([
-            $news->extraction(['title', 'description'], 'es'),
-            $articles->extraction(['title', 'author'], 'es'),
+            ObjectMother::extraction($newsInstance, ['title', 'description'], 'es'),
+            ObjectMother::extraction($articleInstance, ['title', 'author'], 'es'),
         ], $extractions->toArray());
         $this->assertSame([
             'total' => 1,
@@ -226,9 +227,9 @@ class ExtractInstanceTest extends TestCase
     public function extractInstancesWithRelationsSuccessfully(): void
     {
         $news = new NewsMother();
-        $newsInstances = $news->create(10, null, [
+        $newsInstances = $news->create(1, null, [
             'news-photos' => [
-                'instances' => 20,
+                'instances' => 10,
                 'relations' => [
                     'photos-locations' => [
                         'instances' => 1,
@@ -260,7 +261,7 @@ class ExtractInstanceTest extends TestCase
         foreach ($newsInstances['instances'] as $instance) {
             $repository->shouldReceive('findRelatedInstances')
                 ->with($instance->id(), [
-                    'limit' => 6,
+                    'limit' => 7,
                     'class' => 'news-photos',
                     'key' => null,
                     'preview' => false,
@@ -270,16 +271,16 @@ class ExtractInstanceTest extends TestCase
                 ])
                 ->andReturn(
                     new Results(
-                        $newsInstances['relations']['news-photos'][0]['instances'],
+                        $newsInstances['relations']['news-photos']['instances'],
                         new Pagination([
                             'page' => 2,
-                            'limit' => 6,
-                        ], count($newsInstances['relations']['news-photos'][0]['instances']))
+                            'limit' => 7,
+                        ], count($newsInstances['relations']['news-photos']['instances']))
                     )
                 )->once();
         }
 
-        foreach ($newsInstances['relations']['news-photos'][0]['instances'] as $instance) {
+        foreach ($newsInstances['relations']['news-photos']['instances'] as $instance) {
             $repository->shouldReceive('findRelatedInstances')
                 ->with($instance->id(), [
                     'class' => 'photos-locations',
@@ -292,19 +293,19 @@ class ExtractInstanceTest extends TestCase
                 ])
                 ->andReturn(
                     new Results(
-                        $newsInstances['relations']['news-photos'][0]['relations']['photos-locations'][0]['instances'],
+                        $newsInstances['relations']['news-photos']['relations']['photos-locations']['instances'],
                         new Pagination([
                             'page' => 1,
                             'limit' => 2,
-                        ], count($newsInstances['relations']['news-photos'][0]['relations']['photos-locations'][0]['instances']))
+                        ], count($newsInstances['relations']['news-photos']['relations']['photos-locations']['instances']))
                     )
-                )->times(10);
+                )->times(1);
         }
 
         $command = new ExtractInstanceCommand('{
             News(language: es) {
                 title
-                NewsPhotos(limit:6, page: 2) {
+                NewsPhotos(limit:7, page: 2) {
                     PhotosLocations(limit: 2) {
                         country
                     }
@@ -313,18 +314,18 @@ class ExtractInstanceTest extends TestCase
         }');
         $extraction = (new ExtractInstanceCommandHandler($repository))->__invoke($command);
         $this->assertEquals(
-            $news->extraction(['title'], 'es', [
-                'news-photos' => $newsInstances['relations']['news-photos'][0]['object']->extraction(['url'], 'es', [
-                    'photos-locations' => [$newsInstances['relations']['news-photos'][0]['relations']['photos-locations'][0]['object']->extraction(['country'], 'es')],
+            ObjectMother::extraction($newsInstances['instances'], ['title'], 'es', [
+                'news-photos' => ObjectMother::extraction($newsInstances['relations']['news-photos']['instances'], ['url'], 'es', [
+                    'photos-locations' => ObjectMother::extraction($newsInstances['relations']['news-photos']['relations']['photos-locations']['instances'], ['country'], 'es'),
                 ]),
             ]),
             $extraction->toArray()
         );
         $this->assertSame([
-            'total' => 20,
-            'limit' => 6,
+            'total' => 10,
+            'limit' => 7,
             'current' => 2,
-            'pages' => 4
+            'pages' => 2,
         ], $extraction->queries()[0]->relations()[0]->pagination()->toArray());
     }
 
@@ -339,8 +340,10 @@ class ExtractInstanceTest extends TestCase
             'photos' => [
                 'instances' => 3,
                 'relations' => [
-
-                ]
+                    'photos-locations' => [
+                        'instances' => 1,
+                    ],
+                ],
             ],
         ]);
 
@@ -376,11 +379,11 @@ class ExtractInstanceTest extends TestCase
                     'type' => 'child',
                 ])->andReturn(
                     new Results(
-                        $booksInstances['relations']['articles'][0]['instances'],
+                        $booksInstances['relations']['articles']['instances'],
                         new Pagination([
                             'page' => 1,
                             'limit' => 0,
-                        ], count($booksInstances['relations']['articles'][0]['instances']))
+                        ], count($booksInstances['relations']['articles']['instances']))
                     )
                 )->once();
             $repository->shouldReceive('findRelatedInstances')
@@ -394,38 +397,57 @@ class ExtractInstanceTest extends TestCase
                     'type' => 'child',
                 ])->andReturn(
                     new Results(
-                        array_merge($booksInstances['relations']['photos'][0]['instances'], $booksInstances['relations']['photos'][1]['instances']),
+                        $booksInstances['relations']['photos']['instances'],
                         new Pagination([
                             'page' => 1,
                             'limit' => 3,
-                        ], count(array_merge($booksInstances['relations']['photos'][0]['instances'], $booksInstances['relations']['photos'][1]['instances'])))
+                        ], count($booksInstances['relations']['photos']['instances']))
                     )
                 )->once();
+
+            $photosInstances = $booksInstances['relations']['photos']['instances'];
+            foreach ($photosInstances as $photosInstance) {
+                $repository->shouldReceive('findRelatedInstances')
+                    ->with($photosInstance->id(), [
+                        'limit' => 1,
+                        'class' => 'photos-locations',
+                        'key' => null,
+                        'preview' => false,
+                        'page' => 1,
+                        'language' => 'en',
+                        'type' => 'child',
+                    ])->andReturn(
+                        new Results(
+                            $booksInstances['relations']['photos']['relations']['photos-locations']['instances'],
+                            new Pagination([
+                                'page' => 1,
+                                'limit' => 1,
+                            ], count($booksInstances['relations']['photos']['relations']['photos-locations']['instances']))
+                        )
+                    );
+            }
         }
 
         $command = new ExtractInstanceCommand('{
             Books(language: en) {
-                title
-                isbn
-                synopsis
+                title,
+                isbn,
+                synopsis,
                 picture {
                     alt
                 }
                 price
-                Articles(limit: 1) {
-                    title
-                    author
-                    page
-                }
+                Articles(limit: 1)
                 Photos(limit: 3) {
-                    Location(limit: 1)
+                    PhotosLocations(limit: 1)
                 }
             }
         }');
 
         $extraction = (new ExtractInstanceCommandHandler($repository))->__invoke($command);
+
         $this->assertEquals(
-            $books->extraction([
+            ObjectMother::extraction($booksInstances['instances'], [
                 'title',
                 'isbn',
                 'synopsis',
@@ -434,17 +456,23 @@ class ExtractInstanceTest extends TestCase
                 ],
                 'price',
             ], 'en', [
-                'articles' => [$booksInstances['relations']['articles'][0]['object']->extraction([
+                'articles' => [ObjectMother::extraction($booksInstances['relations']['articles']['instances'], [
                     'title',
                     'author',
-                    'page'
-                ], 'en'),
+                    'page',
+                ], 'en', []),
                 ],
-                'photos' => array_merge($booksInstances['relations']['photos'][0]['object']->extraction([
+                'photos' => ObjectMother::extraction($booksInstances['relations']['photos']['instances'], [
                     'url',
-                ], 'en'), $booksInstances['relations']['photos'][1]['object']->extraction([
-                    'url',
-                ], 'en')),
+                ], 'en', [
+                    'photos-locations' => ObjectMother::extraction(
+                        $booksInstances['relations']['photos']['relations']['photos-locations']['instances'],
+                        [
+                            'country',
+                        ],
+                        'en'
+                    ),
+                ]),
             ]),
             $extraction->toArray()
         );

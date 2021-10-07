@@ -12,7 +12,8 @@ class PhotosMother extends ObjectMother
 
     public function get(int $instancesNumber = 1, ?string $key = null, ?array $relations = []): array
     {
-        for ($i = 0; $i < $instancesNumber; $i++) {
+        $this->instances = [];
+        for ($i = 1; $i <= $instancesNumber; $i++) {
             $this->instances[] = $this->build('Photos')->fill([
                 'metadata' => [
                     'id' => $this->faker->randomNumber(),
