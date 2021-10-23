@@ -9,12 +9,19 @@
 
 #### Build:
 
-`task init`
+`task build`
 
-#### Clear docker (destructive)
+#### Remove containers
+
+`task down`
+
+#### Remove containers & images
 
 `task clear`
 
+#### Composer
+
+`task composer -- params`
 #### Install dependencies
 
 `task install`

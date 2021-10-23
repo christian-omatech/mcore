@@ -1,12 +1,18 @@
 version: '3.8'
 services:
   php:
-    container_name: mcore-php
+    environment:
+      - XDEBUG_MODE=coverage
     build:
       context: "."
       dockerfile: "php/Dockerfile"
       args:
         UID: ${UID}
         GID: ${GID}
+    networks:
+      - docker
     volumes:
       - ../:/app
+networks:
+  docker:
+    name: docker

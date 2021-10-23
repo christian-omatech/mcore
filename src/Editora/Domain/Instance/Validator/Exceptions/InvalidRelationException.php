@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Omatech\Mcore\Editora\Domain\Clazz\Exceptions;
+namespace Omatech\Mcore\Editora\Domain\Instance\Validator\Exceptions;
 
 use Exception;
 

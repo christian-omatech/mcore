@@ -4,7 +4,7 @@ namespace Tests\Editora\Domain\Instance;
 
 use DateTime;
 use Omatech\Mcore\Editora\Domain\Clazz\Exceptions\InvalidRelationClassException;
-use Omatech\Mcore\Editora\Domain\Clazz\Exceptions\InvalidRelationException;
+use Omatech\Mcore\Editora\Domain\Instance\Validator\Exceptions\InvalidRelationException;
 use Omatech\Mcore\Editora\Domain\Instance\Exceptions\InvalidEndDatePublishingException;
 use Omatech\Mcore\Editora\Domain\Instance\InstanceBuilder;
 use Omatech\Mcore\Editora\Domain\Instance\PublicationStatus;

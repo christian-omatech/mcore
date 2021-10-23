@@ -9,13 +9,11 @@ RUN apk --update --no-cache add \
     curl \
     git
 
-RUN apk --update --no-cache add autoconf g++ make && \
-        pecl install -f xdebug && \
-        docker-php-ext-enable xdebug && \
-        apk del --purge autoconf g++ make
-
-RUN echo "xdebug.mode=coverage" >> "$PHP_INI_DIR/php.ini-development"
+RUN apk --update --no-cache add --virtual deps $PHPIZE_DEPS
+RUN pecl install -f xdebug
 RUN mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
+RUN docker-php-ext-enable xdebug
+RUN apk del --purge deps
 
 RUN addgroup -S -g ${GID} app \
     && adduser -S -D -u ${UID} -s /sbin/nologin -h /home/app -G app app \

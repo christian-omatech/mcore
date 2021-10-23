@@ -4,9 +4,9 @@ namespace Omatech\Mcore\Editora\Domain\Instance\Validator;
 
 use Omatech\Mcore\Editora\Domain\Attribute\Attribute;
 use Omatech\Mcore\Editora\Domain\Attribute\AttributeCollection;
-use Omatech\Mcore\Editora\Domain\Clazz\Exceptions\InvalidRelationException;
 use Omatech\Mcore\Editora\Domain\Clazz\Relation;
 use Omatech\Mcore\Editora\Domain\Instance\InstanceRelation;
+use Omatech\Mcore\Editora\Domain\Instance\Validator\Exceptions\InvalidRelationException;
 use Omatech\Mcore\Editora\Domain\Instance\Validator\Exceptions\InvalidRuleException;
 use Omatech\Mcore\Editora\Domain\Value\BaseValue;
 use function Lambdish\Phunctional\each;

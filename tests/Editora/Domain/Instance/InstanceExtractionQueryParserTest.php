@@ -20,7 +20,7 @@ class InstanceExtractionQueryParserTest extends TestCase
                 price
                 Articles(limit: 1, page: 2, type: parent)
                 Photos(limit: 3, type: "invalid-type") {
-                    Location(limit: 1)
+                    Location()
                 }
             }
         }';
@@ -91,7 +91,7 @@ class InstanceExtractionQueryParserTest extends TestCase
                             'language' => 'en',
                             'attributes' => [],
                             'params' => [
-                                'limit' => 1,
+                                'limit' => 0,
                                 'class' => 'location',
                                 'key' => null,
                                 'preview' => false,

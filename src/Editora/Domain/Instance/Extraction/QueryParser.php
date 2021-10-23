@@ -13,7 +13,7 @@ final class QueryParser
 {
     public function parse(string $query): array
     {
-        $graphQuery = Parser::parse($query);
+        $graphQuery = Parser::parse(str_replace('()', '(limit: 0)', $query));
         return reduce(function (array $acc, FieldNode $node): array {
             $acc[] = $this->parseNode($node);
             return $acc;

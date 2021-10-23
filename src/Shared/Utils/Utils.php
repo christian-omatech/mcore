@@ -2,18 +2,11 @@
 
 namespace Omatech\Mcore\Shared\Utils;
 
-use Cocur\Slugify\Slugify;
 use function Lambdish\Phunctional\filter;
 
 class Utils
 {
     private static ?Utils $instance = null;
-    private Slugify $slugify;
-
-    private function __construct()
-    {
-        $this->slugify = new Slugify();
-    }
 
     public static function getInstance(): Utils
     {
@@ -28,10 +21,7 @@ class Utils
         if ($this->isEmpty($string)) {
             return $string;
         }
-        return $this->slugify->slugify($string, [
-            'regexp' => '/(?<=[[:^upper:]])(?=[[:upper:]])/',
-            'lowercase_after_regexp' => true,
-        ]);
+        return trim(strtolower(preg_replace('/[A-Z]([A-Z](?![a-z]))*/', '-$0', $string)), '-');
     }
 
     public function isEmpty(mixed $value): bool

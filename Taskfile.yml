@@ -3,17 +3,21 @@ version: '3'
 env:
   UID: $(id -u)
   GID: $(id -g)
+  PROJECT_NAME: mcore
 
 tasks:
   build:
     cmds:
-      - UID=$UID GID=$GID docker-compose -f .docker/docker-compose.yml -p mcore build --pull --no-cache --force-rm
+      - UID=$UID GID=$GID docker-compose -f .docker/docker-compose.yml -p $PROJECT_NAME build --compress --pull --no-cache --force-rm
+  down:
+    cmds:
+      - UID=$UID GID=$GID docker-compose -f .docker/docker-compose.yml -p $PROJECT_NAME down
   clear:
     cmds:
-      - UID=$UID GID=$GID docker-compose -f .docker/docker-compose.yml -p mcore down --rmi all --volumes
+      - UID=$UID GID=$GID docker-compose -f .docker/docker-compose.yml -p $PROJECT_NAME down --rmi all
   composer:
     cmds:
-      - UID=$UID GID=$GID docker-compose -f .docker/docker-compose.yml -p mcore run php composer {{.CLI_ARGS}}
+      - UID=$UID GID=$GID docker-compose -f .docker/docker-compose.yml -p $PROJECT_NAME run --rm php composer {{.CLI_ARGS}}
   install:
     cmds:
       - task: composer
@@ -26,11 +30,11 @@ tasks:
     cmds:
       - task: composer
         vars: {CLI_ARGS: 'dump'}
-  test:
-    cmds:
-      - task: composer
-        vars: {CLI_ARGS: 'test'}
   analyse:
     cmds:
       - task: composer
         vars: {CLI_ARGS: 'analyse'}
+  test:
+    cmds:
+      - task: composer
+        vars: {CLI_ARGS: 'test'}
