@@ -49,8 +49,10 @@ final class ExtractInstanceCommandHandler
                 $query->params()
             );
             $query->setPagination($results->pagination());
-            $acc[$query->param('class')]['instances'] = $results;
-            $acc[$query->param('class')]['relations'] = $this->fillRelations($results, $query);
+            $acc[$query->param('class')][$query->param('type')] = [
+                'instances' => $results,
+                'relations' => $this->fillRelations($results, $query),
+            ];
             return $acc;
         }, $relations, []);
     }

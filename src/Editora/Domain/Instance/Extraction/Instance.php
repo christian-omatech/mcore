@@ -2,6 +2,7 @@
 
 namespace Omatech\Mcore\Editora\Domain\Instance\Extraction;
 
+use function Lambdish\Phunctional\first;
 use function Lambdish\Phunctional\map;
 use function Lambdish\Phunctional\reduce;
 
@@ -18,6 +19,20 @@ final class Instance
         $this->relations = $query['relations'];
     }
 
+    private function relationsToArray(array $relations)
+    {
+        return reduce(static function (array $acc, array $relations, string $key): array {
+            $acc[$key] = map(static function (array $instances) {
+                return map(static fn (Instance $instance) => $instance->toArray(), $instances);
+            }, $relations);
+            if (count($acc[$key]) === 1) {
+                $acc[$key] = first($acc[$key]);
+                return $acc;
+            }
+            return $acc;
+        }, $relations, []);
+    }
+
     public function toArray(): array
     {
         return [
@@ -26,17 +41,7 @@ final class Instance
                 static fn (Attribute $attribute) => $attribute->toArray(),
                 $this->attributes
             ),
-            'relations' => reduce(static function (
-                array $acc,
-                array $relations,
-                string $key
-            ): array {
-                $acc[$key] = map(
-                    static fn (Instance $instance) => $instance->toArray(),
-                    $relations
-                );
-                return $acc;
-            }, $this->relations, []),
+            'relations' => $this->relationsToArray($this->relations),
         ];
     }
 }
