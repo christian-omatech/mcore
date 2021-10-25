@@ -6,7 +6,7 @@ use Omatech\Mcore\Editora\Domain\Attribute\AttributeCollection;
 use Omatech\Mcore\Editora\Domain\Clazz\Clazz;
 use Omatech\Mcore\Editora\Domain\Instance\Validator\Validator;
 
-abstract class Instance
+class Instance
 {
     private Clazz $clazz;
     private Metadata $metadata;

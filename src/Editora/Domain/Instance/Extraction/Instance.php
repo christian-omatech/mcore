@@ -19,12 +19,10 @@ final class Instance
         $this->relations = $query['relations'];
     }
 
-    private function relationsToArray(array $relations)
+    private function relatedInstancesToArray(array $relations): array
     {
-        return reduce(static function (array $acc, array $relations, string $key): array {
-            $acc[$key] = map(static function (array $instances) {
-                return map(static fn (Instance $instance) => $instance->toArray(), $instances);
-            }, $relations);
+        return reduce(function (array $acc, array $relations, string $key): array {
+            $acc[$key] = $this->instancesToArray($relations);
             if (count($acc[$key]) === 1) {
                 $acc[$key] = first($acc[$key]);
                 return $acc;
@@ -33,15 +31,23 @@ final class Instance
         }, $relations, []);
     }
 
+    private function instancesToArray(array $relations): array
+    {
+        return map(static function (array $instances): array {
+            return map(static function (Instance $instance): array {
+                return $instance->toArray();
+            }, $instances);
+        }, $relations);
+    }
+
     public function toArray(): array
     {
         return [
             'key' => $this->key,
-            'attributes' => map(
-                static fn (Attribute $attribute) => $attribute->toArray(),
-                $this->attributes
-            ),
-            'relations' => $this->relationsToArray($this->relations),
+            'attributes' => map(static function (Attribute $attribute): array {
+                return $attribute->toArray();
+            }, $this->attributes),
+            'relations' => $this->relatedInstancesToArray($this->relations),
         ];
     }
 }

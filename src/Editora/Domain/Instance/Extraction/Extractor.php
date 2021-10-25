@@ -49,14 +49,7 @@ final class Extractor
     {
         return reduce(function (array $acc, Attribute $attribute) use ($queryAttributes): array {
             $queryAttribute = $this->searchForQueryAttribute($attribute, $queryAttributes);
-            if (count($queryAttributes) === 0) {
-                $queryAttribute = new QueryAttribute($attribute->key(), []);
-            }
             if ($queryAttribute) {
-                $queryAttribute->setAttributes($this->getAttributes(
-                    $queryAttribute->attributes(),
-                    $attribute->attributes()
-                ));
                 $acc[] = $this->fillValueForQueryAttribute($attribute, $queryAttribute);
             }
             return $acc;
@@ -67,9 +60,16 @@ final class Extractor
         Attribute $attribute,
         array $queryAttributes
     ): ?QueryAttribute {
-        return search(static function (QueryAttribute $queryAttribute) use ($attribute): bool {
-            return $attribute->key() === $queryAttribute->key();
-        }, $queryAttributes);
+        $queryAttribute = search(
+            static function (QueryAttribute $queryAttribute) use ($attribute): bool {
+                return $attribute->key() === $queryAttribute->key();
+            },
+            $queryAttributes
+        );
+        if (! count($queryAttributes)) {
+            $queryAttribute = new QueryAttribute($attribute->key(), []);
+        }
+        return $queryAttribute;
     }
 
     private function fillValueForQueryAttribute(
@@ -77,10 +77,12 @@ final class Extractor
         QueryAttribute $queryAttribute
     ): QueryAttribute {
         $values = reduce(static function (array $acc, BaseValue $value): array {
-            $acc[$value->language()]['id'] = $value->id();
-            $acc[$value->language()]['value'] = $value->value();
+            $acc[$value->language()] = ['id' => $value->id(), 'value' => $value->value()];
             return $acc;
         }, $attribute->values()->get(), []);
+        $queryAttribute->setAttributes(
+            $this->getAttributes($queryAttribute->attributes(), $attribute->attributes())
+        );
         $queryAttribute->setValue($this->getValue($values));
         return deep_copy($queryAttribute);
     }
@@ -92,7 +94,7 @@ final class Extractor
             $values['*'] ?? null,
             $values['+'] ?? null,
         ]);
-        return first(filter(static function ($value) {
+        return first(filter(static function ($value): bool {
             return isset($value['value']);
         }, $possibleValues)) ?? first($possibleValues);
     }
@@ -104,21 +106,26 @@ final class Extractor
             array $relation,
             string $key
         ) use ($queryRelations): array {
-            $acc[$key] = reduce(function (
-                array $acc,
-                array $relationInstances,
-                string $type
-            ) use ($key, $queryRelations) {
-                $queryRelation = search(static function ($query) use ($key, $type) {
-                    return $query->param('class') === $key && $query->param('type') === $type;
-                }, $queryRelations);
-                if ($queryRelation) {
-                    $acc[$type] = $this->addInstancesRelation($queryRelation, $relationInstances);
-                }
-                return $acc;
-            }, $relation, []);
+            $acc[$key] = $this->matchRelation($queryRelations, $relation, $key);
             return $acc;
         }, $relations, []);
+    }
+
+    private function matchRelation(array $queryRelations, array $relation, string $key): array
+    {
+        return reduce(function (
+            array $acc,
+            array $relationInstances,
+            string $type
+        ) use ($key, $queryRelations): array {
+            $queryRelation = search(static function ($query) use ($key, $type): bool {
+                return $query->param('class') === $key && $query->param('type') === $type;
+            }, $queryRelations);
+            if ($queryRelation) {
+                $acc[$type] = $this->addInstancesRelation($queryRelation, $relationInstances);
+            }
+            return $acc;
+        }, $relation, []);
     }
 
     private function addInstancesRelation(Query $queryRelation, array $instancesRelation): array

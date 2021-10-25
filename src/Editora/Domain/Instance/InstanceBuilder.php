@@ -15,9 +15,9 @@ final class InstanceBuilder
     private array $languages = [];
     private array $structure = [];
     private string $className = '';
-    private ?InstanceCacheInterface $instanceCache;
+    private InstanceCacheInterface $instanceCache;
 
-    public function __construct(?InstanceCacheInterface $instanceCache = null)
+    public function __construct(InstanceCacheInterface $instanceCache)
     {
         $this->instanceCache = $instanceCache;
     }
@@ -25,7 +25,7 @@ final class InstanceBuilder
     public function build(): Instance
     {
         $this->ensureBuilderIsValid();
-        return $this->instanceCache?->get($this->className) ?? $this->buildInstance();
+        return $this->instanceCache->get($this->className) ?? $this->buildInstance();
     }
 
     private function ensureBuilderIsValid(): void
@@ -54,9 +54,8 @@ final class InstanceBuilder
                 ->build(),
         ];
 
-        $instance = new class($instance) extends Instance {
-        };
-        $this->instanceCache?->put($this->className, $instance);
+        $instance = new Instance($instance);
+        $this->instanceCache->put($this->className, $instance);
         return $instance;
     }
 

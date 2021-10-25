@@ -13,7 +13,7 @@ final class ExtractInstanceCommand extends Command
         $this->query = $query;
     }
 
-    public function query()
+    public function query(): string
     {
         return $this->query;
     }

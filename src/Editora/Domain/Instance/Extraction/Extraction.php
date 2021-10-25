@@ -44,19 +44,17 @@ final class Extraction
     }
 
     /** @param array<Query> $queries */
-    public function setQueries(array $queries): self
+    public function setQueries(array $queries): void
     {
         $this->queries = $queries;
-        return $this;
     }
 
     public function toArray(): array
     {
-        $results = reduce(static function (array $acc, Query $query) {
-            $instances = map(
-                static fn (Instance $instance) => $instance->toArray(),
-                $query->results()
-            );
+        $results = reduce(static function (array $acc, Query $query): array {
+            $instances = map(static function (Instance $instance): array {
+                return $instance->toArray();
+            }, $query->results());
             $acc[] = count($instances) < 2 ? first($instances) ?? [] : $instances;
             return $acc;
         }, $this->queries, []);

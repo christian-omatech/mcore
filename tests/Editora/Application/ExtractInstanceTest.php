@@ -3,22 +3,19 @@
 namespace Tests\Editora\Application;
 
 use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Omatech\Mcore\Editora\Application\ExtractInstance\ExtractInstanceCommand;
 use Omatech\Mcore\Editora\Application\ExtractInstance\ExtractInstanceCommandHandler;
 use Omatech\Mcore\Editora\Domain\Instance\Contracts\ExtractionRepositoryInterface;
 use Omatech\Mcore\Editora\Domain\Instance\Extraction\Pagination;
 use Omatech\Mcore\Editora\Domain\Instance\Extraction\Results;
-use PHPUnit\Framework\TestCase;
 use Tests\Data\Objects\ArticlesMother;
 use Tests\Data\Objects\BooksMother;
 use Tests\Data\Objects\NewsMother;
 use Tests\Data\Objects\ObjectMother;
+use Tests\Editora\Domain\Instance\TestCase;
 
 class ExtractInstanceTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /** @test */
     public function extractInstancesByClassSuccessfully(): void
     {
@@ -48,7 +45,7 @@ class ExtractInstanceTest extends TestCase
         $command = new ExtractInstanceCommand('{
             News(preview: false, language: es, limit: 5, page: 1)
         }');
-        $extractions = (new ExtractInstanceCommandHandler($repository))->__invoke($command);
+        $extractions = (new ExtractInstanceCommandHandler($repository, $this->mockExtractionCache()))->__invoke($command);
         $this->assertEquals(ObjectMother::extraction($instances['instances'], [
             'title',
             'description',
@@ -116,7 +113,7 @@ class ExtractInstanceTest extends TestCase
                 author
             }
         }');
-        $extractions = (new ExtractInstanceCommandHandler($repository))->__invoke($command);
+        $extractions = (new ExtractInstanceCommandHandler($repository, $this->mockExtractionCache()))->__invoke($command);
 
         $this->assertEquals([
             ObjectMother::extraction($newsInstances['instances'], ['title', 'description'], 'es'),
@@ -192,7 +189,7 @@ class ExtractInstanceTest extends TestCase
             }
         }';
         $command = new ExtractInstanceCommand($graphQuery);
-        $extractions = (new ExtractInstanceCommandHandler($repository))->__invoke($command);
+        $extractions = (new ExtractInstanceCommandHandler($repository, $this->mockExtractionCache()))->__invoke($command);
 
         $this->assertEquals($graphQuery, $extractions->query());
         $this->assertEquals(md5($graphQuery), $extractions->hash());
@@ -312,7 +309,7 @@ class ExtractInstanceTest extends TestCase
                 }
             }
         }');
-        $extraction = (new ExtractInstanceCommandHandler($repository))->__invoke($command);
+        $extraction = (new ExtractInstanceCommandHandler($repository, $this->mockExtractionCache()))->__invoke($command);
         $this->assertEquals(
             ObjectMother::extraction($newsInstances['instances'], ['title'], 'es', [
                 'news-photos' => ObjectMother::extraction($newsInstances['relations']['news-photos']['instances'], ['url'], 'es', [
@@ -444,7 +441,7 @@ class ExtractInstanceTest extends TestCase
             }
         }');
 
-        $extraction = (new ExtractInstanceCommandHandler($repository))->__invoke($command);
+        $extraction = (new ExtractInstanceCommandHandler($repository, $this->mockExtractionCache()))->__invoke($command);
 
         $this->assertEquals(
             ObjectMother::extraction($booksInstances['instances'], [

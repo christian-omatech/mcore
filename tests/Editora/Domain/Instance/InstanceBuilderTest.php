@@ -87,36 +87,4 @@ class InstanceBuilderTest extends TestCase
 
         $this->assertEquals($this->expected, $instance->toArray());
     }
-
-    /** @test */
-    public function instanceBuildedWithLocalCache(): void
-    {
-        $instance1 = (new InstanceBuilder())
-            ->setLanguages($this->languages)
-            ->setStructure($this->structure[$this->className])
-            ->setClassName($this->className)
-            ->build();
-
-        $instance2 = (new InstanceBuilder())
-            ->setLanguages($this->languages)
-            ->setStructure($this->structure[$this->className])
-            ->setClassName($this->className)
-            ->build();
-
-        $this->assertNotSame($instance1, $instance2);
-    }
-
-    /** @test */
-    public function instanceBuildedCorrectlyFromReal(): void
-    {
-        $structure = Yaml::parseFile(dirname(__DIR__, 3).'/Data/dataExample1.yml')['Classes'];
-
-        foreach ($structure as $className => $classStructure) {
-            (new InstanceBuilder())
-                ->setLanguages($this->languages)
-                ->setStructure($classStructure)
-                ->setClassName($className)
-                ->build();
-        }
-    }
 }

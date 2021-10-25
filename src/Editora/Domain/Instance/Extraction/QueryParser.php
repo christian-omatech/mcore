@@ -83,11 +83,9 @@ final class QueryParser
     private function defaultRelationParams(array $params): array
     {
         $params['type'] = $params['type'] ?? 'child';
-        $params['type'] = search(
-            static fn ($type) => $type === $params['type'],
-            ['parent'],
-            'child'
-        );
+        $params['type'] = search(static function (string $type) use ($params): bool {
+            return $type === $params['type'];
+        }, ['parent'], 'child');
         return $params;
     }
 }

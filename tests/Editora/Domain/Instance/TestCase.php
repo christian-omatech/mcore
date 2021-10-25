@@ -5,6 +5,7 @@ namespace Tests\Editora\Domain\Instance;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Omatech\Mcore\Editora\Domain\Instance\Contracts\InstanceCacheInterface;
+use Omatech\Mcore\Editora\Domain\Instance\Extraction\Contracts\ExtractionCacheInterface;
 use PHPUnit\Framework\TestCase as PHPUnitTestCase;
 
 abstract class TestCase extends PHPUnitTestCase
@@ -33,5 +34,13 @@ abstract class TestCase extends PHPUnitTestCase
         $instanceCache->shouldReceive('get')->andReturn(null)->once();
         $instanceCache->shouldReceive('put')->andReturn(null)->once();
         return $instanceCache;
+    }
+
+    protected function mockExtractionCache(): ExtractionCacheInterface
+    {
+        $extractionCache = Mockery::mock(ExtractionCacheInterface::class);
+        $extractionCache->shouldReceive('get')->andReturn(null)->once();
+        $extractionCache->shouldReceive('put')->andReturn(null)->once();
+        return $extractionCache;
     }
 }

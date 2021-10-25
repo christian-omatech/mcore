@@ -43,10 +43,9 @@ final class Attribute
     {
         return [
             'key' => $this->key,
-            'attributes' => map(
-                static fn (Attribute $attribute) => $attribute->toQuery(),
-                $this->attributes
-            ),
+            'attributes' => map(static function (Attribute $attribute): array {
+                return $attribute->toQuery();
+            }, $this->attributes),
         ];
     }
 
@@ -56,10 +55,9 @@ final class Attribute
             'id' => $this->id,
             'key' => $this->key,
             'value' => $this->value,
-            'attributes' => map(
-                static fn (Attribute $attribute) => $attribute->toArray(),
-                $this->attributes
-            ),
+            'attributes' => map(static function (Attribute $attribute): array {
+                return $attribute->toArray();
+            }, $this->attributes),
         ];
     }
 }
