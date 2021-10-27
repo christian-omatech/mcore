@@ -101,41 +101,30 @@ final class Extractor
 
     private function matchRelations(array $queryRelations, array $relations): array
     {
-        return reduce(function (
-            array $acc,
-            array $relation,
-            string $key
-        ) use ($queryRelations): array {
-            $acc[$key] = $this->matchRelation($queryRelations, $relation, $key);
+        return reduce(function (array $acc, Relation $relation) use ($queryRelations): array {
+            $queryRelation = search(static function ($query) use ($relation): bool {
+                return $query->param('class') === $relation->name() &&
+                    $query->param('type') === $relation->type();
+            }, $queryRelations);
+            if ($queryRelation) {
+                $acc[$relation->name()][$relation->type()] = $this->addInstancesRelation(
+                    $queryRelation,
+                    $relation
+                );
+            }
             return $acc;
         }, $relations, []);
     }
 
-    private function matchRelation(array $queryRelations, array $relation, string $key): array
+    private function addInstancesRelation(Query $queryRelation, Relation $relation): array
     {
-        return reduce(function (
-            array $acc,
-            array $relationInstances,
-            string $type
-        ) use ($key, $queryRelations): array {
-            $queryRelation = search(static function ($query) use ($key, $type): bool {
-                return $query->param('class') === $key && $query->param('type') === $type;
-            }, $queryRelations);
-            if ($queryRelation) {
-                $acc[$type] = $this->addInstancesRelation($queryRelation, $relationInstances);
-            }
-            return $acc;
-        }, $relation, []);
-    }
-
-    private function addInstancesRelation(Query $queryRelation, array $instancesRelation): array
-    {
-        return reduce(function (
-            array $acc,
-            Instance $instance
-        ) use ($queryRelation, $instancesRelation): array {
-            $acc[] = $this->parse($queryRelation, $instance, $instancesRelation['relations']);
-            return $acc;
-        }, $instancesRelation['instances']->instances(), []);
+        return reduce(
+            function (array $acc, Instance $instance) use ($queryRelation, $relation): array {
+                $acc[] = $this->parse($queryRelation, $instance, $relation->relations());
+                return $acc;
+            },
+            $relation->instances(),
+            []
+        );
     }
 }
