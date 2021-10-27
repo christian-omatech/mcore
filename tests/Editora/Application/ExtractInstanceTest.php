@@ -313,9 +313,9 @@ class ExtractInstanceTest extends TestCase
 
         $this->assertEquals(
             ObjectMother::extraction($newsInstances['instances'], ['title'], 'es', [
-                'news-photos' => ObjectMother::extraction($newsInstances['relations']['news-photos']['instances'], ['url'], 'es', [
-                    'photos-locations' => ObjectMother::extraction($newsInstances['relations']['news-photos']['relations']['photos-locations']['instances'], ['country'], 'es'),
-                ]),
+                'news-photos' => ['child' => ObjectMother::extraction($newsInstances['relations']['news-photos']['instances'], ['url'], 'es', [
+                    'photos-locations' => ['child' => ObjectMother::extraction($newsInstances['relations']['news-photos']['relations']['photos-locations']['instances'], ['country'], 'es')],
+                ])],
             ]),
             $extraction->toArray()
         );
@@ -453,16 +453,15 @@ class ExtractInstanceTest extends TestCase
                 ],
                 'price',
             ], 'en', [
-                'articles' => [ObjectMother::extraction($booksInstances['relations']['articles']['instances'], [
+                'articles' => [ 'child' => [ObjectMother::extraction($booksInstances['relations']['articles']['instances'], [
                     'title',
                     'author',
                     'page',
-                ], 'en', []),
-                ],
-                'photos' => ObjectMother::extraction($booksInstances['relations']['photos']['instances'], [
+                ], 'en', [])]],
+                'photos' => [ 'child' => ObjectMother::extraction($booksInstances['relations']['photos']['instances'], [
                     'url',
                 ], 'en', [
-                    'photos-locations' => ObjectMother::extraction(
+                    'photos-locations' => ['child' => ObjectMother::extraction(
                         $booksInstances['relations']['photos']['relations']['photos-locations']['instances'],
                         [
                             'country',
@@ -470,8 +469,8 @@ class ExtractInstanceTest extends TestCase
                             'longitude',
                         ],
                         'en'
-                    ),
-                ]),
+                    )],
+                ])],
             ]),
             $extraction->toArray()
         );
