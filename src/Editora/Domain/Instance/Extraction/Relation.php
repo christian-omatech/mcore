@@ -4,32 +4,19 @@ namespace Omatech\Mcore\Editora\Domain\Instance\Extraction;
 
 final class Relation
 {
-    private string $name;
+    private string $key;
     private string $type;
-    private Results $results;
-    private array $relations;
+    private array $instances = [];
 
-    public function __construct(array $params)
+    public function __construct(string $key, string $type)
     {
-        $this->name = $params['class'];
-        $this->type = $params['type'];
+        $this->key = $key;
+        $this->type = $type;
     }
 
-    public function setResults(Results $results): Relation
+    public function key(): string
     {
-        $this->results = $results;
-        return $this;
-    }
-
-    public function setRelations(array $relations): Relation
-    {
-        $this->relations = $relations;
-        return $this;
-    }
-
-    public function name(): string
-    {
-        return $this->name;
+        return $this->key;
     }
 
     public function type(): string
@@ -39,11 +26,12 @@ final class Relation
 
     public function instances(): array
     {
-        return $this->results->instances();
+        return $this->instances;
     }
 
-    public function relations(): array
+    public function setInstances(array $instances): Relation
     {
-        return $this->relations;
+        $this->instances = $instances;
+        return $this;
     }
 }

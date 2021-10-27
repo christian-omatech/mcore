@@ -101,22 +101,24 @@ final class Extractor
 
     private function matchRelations(array $queryRelations, array $relations): array
     {
-        return reduce(function (array $acc, Relation $relation) use ($queryRelations): array {
-            $queryRelation = search(static function ($query) use ($relation): bool {
-                return $query->param('class') === $relation->name() &&
-                    $query->param('type') === $relation->type();
-            }, $queryRelations);
-            if ($queryRelation) {
-                $acc[$relation->name()][$relation->type()] = $this->addInstancesRelation(
-                    $queryRelation,
-                    $relation
-                );
-            }
-            return $acc;
-        }, $relations, []);
+        return reduce(
+            function (array $acc, InstanceRelation $relation) use ($queryRelations): array {
+                $queryRelation = search(static function ($query) use ($relation): bool {
+                    return $query->param('class') === $relation->key() &&
+                        $query->param('type') === $relation->type();
+                }, $queryRelations);
+                if ($queryRelation) {
+                    $acc[] = (new Relation($relation->key(), $relation->type()))
+                        ->setInstances($this->addInstancesRelation($queryRelation, $relation));
+                }
+                return $acc;
+            },
+            $relations,
+            []
+        );
     }
 
-    private function addInstancesRelation(Query $queryRelation, Relation $relation): array
+    private function addInstancesRelation(Query $queryRelation, InstanceRelation $relation): array
     {
         return reduce(
             function (array $acc, Instance $instance) use ($queryRelation, $relation): array {
