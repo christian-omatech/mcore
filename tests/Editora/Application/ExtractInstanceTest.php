@@ -310,6 +310,7 @@ class ExtractInstanceTest extends TestCase
             }
         }');
         $extraction = (new ExtractInstanceCommandHandler($repository, $this->mockExtractionCache()))->__invoke($command);
+
         $this->assertEquals(
             ObjectMother::extraction($newsInstances['instances'], ['title'], 'es', [
                 'news-photos' => ObjectMother::extraction($newsInstances['relations']['news-photos']['instances'], ['url'], 'es', [
@@ -343,7 +344,6 @@ class ExtractInstanceTest extends TestCase
                 ],
             ],
         ]);
-
         $repository = Mockery::mock(ExtractionRepositoryInterface::class);
         $repository->shouldReceive('instancesBy')
             ->with([
@@ -466,6 +466,8 @@ class ExtractInstanceTest extends TestCase
                         $booksInstances['relations']['photos']['relations']['photos-locations']['instances'],
                         [
                             'country',
+                            'latitude',
+                            'longitude',
                         ],
                         'en'
                     ),

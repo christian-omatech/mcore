@@ -15,6 +15,10 @@ RUN mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
 RUN docker-php-ext-enable xdebug
 RUN apk del --purge deps
 
+RUN echo "xdebug.client_host = host.docker.internal" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
+   && echo "xdebug.start_with_request = 1" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
+   && echo "xdebug.discover_client_host = 1" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+
 RUN addgroup -S -g ${GID} app \
     && adduser -S -D -u ${UID} -s /sbin/nologin -h /home/app -G app app \
     && chown -R app:app /home/app \
@@ -24,3 +28,5 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin -
 
 USER app
 WORKDIR /app
+
+EXPOSE 9003

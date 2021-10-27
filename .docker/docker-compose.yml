@@ -2,7 +2,7 @@ version: '3.8'
 services:
   php:
     environment:
-      - XDEBUG_MODE=coverage
+      - XDEBUG_MODE=develop,coverage
     build:
       context: "."
       dockerfile: "php/Dockerfile"

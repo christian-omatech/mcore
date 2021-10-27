@@ -32,12 +32,19 @@ return [
             'relations' => [
                 'PhotosLocations' => [
                     'Locations',
+                    'Coordinates'
                 ],
             ],
         ],
         'Locations' => [
             'attributes' => [
                 'country' => null,
+            ],
+        ],        
+        'Coordinates' => [
+            'attributes' => [
+                'latitude' => null,
+                'longitude' => null,
             ],
         ],
         'Books' => [

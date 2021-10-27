@@ -104,18 +104,20 @@ abstract class ObjectMother
             if (is_array($field)) {
                 $sub = self::extractAttributes($attributes->find($currentField)?->attributes(), $fields[$currentField], $language);
             }
-            $value = filter(static fn ($value) => ! is_null($value), [
-                $language => $attributes->find($currentField)?->value($language)?->value(),
-                '+' => $attributes->find($currentField)?->value('+')?->value(),
-                '*' => $attributes->find($currentField)?->value('*')?->value(),
-            ]);
-            $key = array_key_first($value) ?? $language;
-            $acc[] = [
-                'id' => $attributes->find($currentField)?->value($key)?->id(),
-                'key' => $currentField,
-                'value' => $value[$key] ?? null,
-                'attributes' => $sub,
-            ];
+            if($attributes->find($currentField)) {
+                $value = filter(static fn ($value) => ! is_null($value), [
+                    $language => $attributes->find($currentField)?->value($language)?->value(),
+                    '+' => $attributes->find($currentField)?->value('+')?->value(),
+                    '*' => $attributes->find($currentField)?->value('*')?->value(),
+                ]);
+                $key = array_key_first($value) ?? $language;
+                $acc[] = [
+                    'id' => $attributes->find($currentField)?->value($key)?->id(),
+                    'key' => $currentField,
+                    'value' => $value[$key] ?? null,
+                    'attributes' => $sub,
+                ];
+            }
             return $acc;
         }, $fields, []);
     }

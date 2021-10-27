@@ -9,8 +9,10 @@ use Omatech\Mcore\Editora\Domain\Instance\Extraction\Extractor;
 use Omatech\Mcore\Editora\Domain\Instance\Extraction\Instance as ExtractionInstance;
 use Omatech\Mcore\Editora\Domain\Instance\Extraction\Query;
 use Omatech\Mcore\Editora\Domain\Instance\Extraction\QueryParser;
+use Omatech\Mcore\Editora\Domain\Instance\Extraction\Relation;
 use Omatech\Mcore\Editora\Domain\Instance\Extraction\Results;
 use Omatech\Mcore\Editora\Domain\Instance\Instance;
+use function Lambdish\Phunctional\flat_map;
 use function Lambdish\Phunctional\map;
 use function Lambdish\Phunctional\reduce;
 
@@ -48,12 +50,12 @@ final class ExtractInstanceCommandHandler
     private function extractResults(Query $query, array $instances): array
     {
         return map(function (Instance $instance) use ($query): ExtractionInstance {
-            $relations = $this->prepareRelations($query->relations(), $instance);
+            $relations = $this->findRelatedInstances($query->relations(), $instance);
             return (new Extractor($query, $instance, $relations))->extract();
         }, $instances);
     }
 
-    private function prepareRelations(array $relations, Instance $instance): array
+    private function findRelatedInstances(array $relations, Instance $instance): array
     {
         return reduce(function (array $acc, Query $query) use ($instance): array {
             $results = $this->extractionRepository->findRelatedInstances(
@@ -61,21 +63,20 @@ final class ExtractInstanceCommandHandler
                 $query->params()
             );
             $query->setPagination($results->pagination());
-            $acc[$query->param('class')][$query->param('type')] = [
-                'instances' => $results,
-                'relations' => $this->fillRelations($results, $query),
-            ];
+            $acc[] = (new Relation($query->params()))
+                ->setResults($results)
+                ->setRelations($this->fillRelations($results, $query));
             return $acc;
         }, $relations, []);
     }
 
     private function fillRelations(Results $results, Query $query): array
     {
-        return reduce(function (array $acc, Instance $instance) use ($query): array {
+        return flat_map(function (Instance $instance) use ($query) {
             if ($instance->relations()->count()) {
-                $acc = $this->prepareRelations($query->relations(), $instance);
+                return $this->findRelatedInstances($query->relations(), $instance);
             }
-            return $acc;
-        }, $results->instances(), []);
+            return [];
+        }, $results->instances());
     }
 }

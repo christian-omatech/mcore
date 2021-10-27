@@ -4,34 +4,40 @@ namespace Tests\Data\Objects;
 
 use function Lambdish\Phunctional\reduce;
 
-class PhotosMother extends ObjectMother
+class CoordinatesMother extends ObjectMother
 {
-    protected array $availableRelations = [
-        'photos-locations' => [ 
-            LocationsMother::class,
-            CoordinatesMother::class
-        ],
-    ];
+    protected array $availableRelations = [];
 
     public function get(int $instancesNumber = 1, ?string $key = null, ?array $relations = []): array
     {
         $this->instances = [];
         for ($i = 1; $i <= $instancesNumber; $i++) {
-            $this->instances[] = $this->build('Photos')->fill([
+            $this->instances[] = $this->build('Coordinates')->fill([
                 'metadata' => [
                     'id' => $this->faker->randomNumber(),
-                    'key' => $key ?? 'photo-instance-'.$i,
+                    'key' => $key ?? 'coordinate-instance-'.$i,
                     'publication' => [
                         'startPublishingDate' => $this->faker->dateTime()->format('Y-m-d H:i:s'),
                     ],
                 ],
                 'attributes' => [
-                    'url' => [
+                    'latitude' => [
                         'values' => reduce(function (array $acc, string $language) {
                             $acc[] = [
                                 'id' => $this->faker->randomNumber(),
                                 'language' => $language,
-                                'value' => $this->faker->url(),
+                                'value' => $this->faker->randomDigit(),
+                            ];
+                            return $acc;
+                        }, $this->languages, []),
+                        'attributes' => [],
+                    ],
+                    'longitude' => [
+                        'values' => reduce(function (array $acc, string $language) {
+                            $acc[] = [
+                                'id' => $this->faker->randomNumber(),
+                                'language' => $language,
+                                'value' => $this->faker->randomDigit(),
                             ];
                             return $acc;
                         }, $this->languages, []),
