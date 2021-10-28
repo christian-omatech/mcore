@@ -21,7 +21,7 @@ final class Instance
     private function relatedInstancesToArray(array $relations): array
     {
         return reduce(function (array $acc, Relation $relation): array {
-            $acc[$relation->key()][$relation->type()] = 
+            $acc[$relation->key()][$relation->type()] =
                 $this->instancesToArray($relation->instances());
             return $acc;
         }, $relations, []);
