@@ -7,9 +7,9 @@ use Omatech\Mcore\Editora\Domain\Instance\Extraction\Contracts\ExtractionCacheIn
 use Omatech\Mcore\Editora\Domain\Instance\Extraction\Extraction;
 use Omatech\Mcore\Editora\Domain\Instance\Extraction\Extractor;
 use Omatech\Mcore\Editora\Domain\Instance\Extraction\Instance as ExtractionInstance;
-use Omatech\Mcore\Editora\Domain\Instance\Extraction\InstanceRelation;
 use Omatech\Mcore\Editora\Domain\Instance\Extraction\Query;
 use Omatech\Mcore\Editora\Domain\Instance\Extraction\QueryParser;
+use Omatech\Mcore\Editora\Domain\Instance\Extraction\RelationsResults;
 use Omatech\Mcore\Editora\Domain\Instance\Extraction\Results;
 use Omatech\Mcore\Editora\Domain\Instance\Instance;
 use function Lambdish\Phunctional\flat_map;
@@ -63,7 +63,7 @@ final class ExtractInstanceCommandHandler
                 $query->params()
             );
             $query->setPagination($results->pagination());
-            $acc[] = (new InstanceRelation($query->params()))
+            $acc[] = (new RelationsResults($query->params()))
                 ->setResults($results)
                 ->setRelations($this->fillRelations($results, $query));
             return $acc;

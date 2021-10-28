@@ -2,11 +2,12 @@
 
 namespace Omatech\Mcore\Editora\Domain\Instance\Extraction;
 
-final class InstanceRelation
+final class RelationsResults
 {
     private string $key;
     private string $type;
     private Results $results;
+    /** @var array<Results> $relations */
     private array $relations;
 
     public function __construct(array $params)
@@ -15,13 +16,13 @@ final class InstanceRelation
         $this->type = $params['type'];
     }
 
-    public function setResults(Results $results): InstanceRelation
+    public function setResults(Results $results): RelationsResults
     {
         $this->results = $results;
         return $this;
     }
 
-    public function setRelations(array $relations): InstanceRelation
+    public function setRelations(array $relations): RelationsResults
     {
         $this->relations = $relations;
         return $this;

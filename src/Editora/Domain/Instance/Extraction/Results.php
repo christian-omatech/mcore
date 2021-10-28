@@ -4,6 +4,7 @@ namespace Omatech\Mcore\Editora\Domain\Instance\Extraction;
 
 final class Results
 {
+    /** @var array<Instance> $instances */
     private array $instances;
     private ?Pagination $pagination;
 

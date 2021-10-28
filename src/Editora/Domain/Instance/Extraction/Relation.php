@@ -6,6 +6,7 @@ final class Relation
 {
     private string $key;
     private string $type;
+    /** @var array<Instance> $instances */
     private array $instances = [];
 
     public function __construct(string $key, string $type)
