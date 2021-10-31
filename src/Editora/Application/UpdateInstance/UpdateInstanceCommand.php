@@ -6,14 +6,14 @@ use Omatech\Mcore\Shared\Application\Command;
 
 final class UpdateInstanceCommand extends Command
 {
-    private int $id;
+    private string $uuid;
     private array $metadata;
     private array $attributes;
     private array $relations;
 
     public function __construct(array $data)
     {
-        $this->id = $data['id'];
+        $this->uuid = $data['uuid'];
         $this->metadata = [
             'key' => $data['key'],
             'publication' => [
@@ -26,9 +26,9 @@ final class UpdateInstanceCommand extends Command
         $this->relations = $data['relations'] ?? [];
     }
 
-    public function id(): int
+    public function uuid(): string
     {
-        return $this->id;
+        return $this->uuid;
     }
 
     public function metadata(): array

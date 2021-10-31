@@ -21,7 +21,7 @@ return [
     ],
     'metadata' => [
         'key' => null,
-        'id' => null,
+        'uuid' => null,
         'publication' => [
             'status' => 'pending',
             'startPublishingDate' => null,
@@ -39,14 +39,14 @@ return [
                     'configuration' => [],
                     'value' => null,
                     'extraData' => [],
-                    'id' => null,
+                    'uuid' => null,
                 ], [
                     'language' => 'en',
                     'rules' => [],
                     'configuration' => [],
                     'value' => null,
                     'extraData' => [],
-                    'id' => null,
+                    'uuid' => null,
                 ],
             ],
             'attributes' => [
@@ -60,14 +60,14 @@ return [
                             'configuration' => [],
                             'value' => null,
                             'extraData' => [],
-                            'id' => null,
+                            'uuid' => null,
                         ], [
                             'language' => 'en',
                             'rules' => [],
                             'configuration' => [],
                             'value' => null,
                             'extraData' => [],
-                            'id' => null,
+                            'uuid' => null,
                         ],
                     ],
                     'attributes' => [],
@@ -88,7 +88,7 @@ return [
                     ],
                     'value' => null,
                     'extraData' => [],
-                    'id' => null,
+                    'uuid' => null,
                 ], [
                     'language' => 'en',
                     'rules' => [
@@ -100,7 +100,7 @@ return [
                     ],
                     'value' => null,
                     'extraData' => [],
-                    'id' => null,
+                    'uuid' => null,
                 ],
             ],
             'attributes' => [],
@@ -119,7 +119,7 @@ return [
                     ],
                     'value' => null,
                     'extraData' => [],
-                    'id' => null,
+                    'uuid' => null,
                 ], [
                     'language' => 'en',
                     'rules' => [
@@ -131,7 +131,7 @@ return [
                     ],
                     'value' => null,
                     'extraData' => [],
-                    'id' => null,
+                    'uuid' => null,
                 ], [
                     'language' => '+',
                     'rules' => [
@@ -143,7 +143,7 @@ return [
                     ],
                     'value' => null,
                     'extraData' => [],
-                    'id' => null,
+                    'uuid' => null,
                 ],
             ],
             'attributes' => [],
@@ -164,7 +164,7 @@ return [
                     ],
                     'value' => null,
                     'extraData' => [],
-                    'id' => null,
+                    'uuid' => null,
                 ],
             ],
             'attributes' => [],

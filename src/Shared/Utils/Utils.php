@@ -11,7 +11,7 @@ class Utils
     public static function getInstance(): Utils
     {
         if (! self::$instance) {
-            self::$instance = new Utils();
+            self::$instance = new self();
         }
         return self::$instance;
     }
@@ -21,7 +21,7 @@ class Utils
         if ($this->isEmpty($string)) {
             return $string;
         }
-        return trim(strtolower(preg_replace('/[A-Z]([A-Z](?![a-z]))*/', '-$0', $string)), '-');
+        return strtolower(trim(preg_replace('/[A-Z]([A-Z](?![a-z]))*/', '-$0', $string), '-'));
     }
 
     public function isEmpty(mixed $value): bool

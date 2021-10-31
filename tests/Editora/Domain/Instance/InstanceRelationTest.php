@@ -11,11 +11,11 @@ final class InstanceRelationTest extends TestCase
     public function instanceExistsInRelations(): void
     {
         $relationInstance = new InstanceRelation('relation-key1', [
-            1 => 'class-one',
-            2 => 'class-two',
-            3 => 'class-three',
-            4 => 'class-four',
+            '1' => 'class-one',
+            '2' => 'class-two',
+            '3' => 'class-three',
+            '4' => 'class-four',
         ]);
-        $this->assertTrue($relationInstance->instanceExists(1));
+        $this->assertTrue($relationInstance->instanceExists('1'));
     }
 }

@@ -25,7 +25,7 @@ final class UpdateInstanceCommandHandler
     public function __invoke(UpdateInstanceCommand $command): void
     {
         $relations = $this->instanceFinder->findClassKeysGivenInstances($command->relations());
-        $instance = $this->instanceFinder->findOrFail($command->id());
+        $instance = $this->instanceFinder->findOrFail($command->uuid());
         $old = $this->instanceRepository->clone($instance);
         $instance->fill([
             'metadata' => $command->metadata(),

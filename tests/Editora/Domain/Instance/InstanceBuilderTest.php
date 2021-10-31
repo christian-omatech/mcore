@@ -7,20 +7,16 @@ use Omatech\Mcore\Editora\Domain\Instance\Exceptions\InvalidLanguagesException;
 use Omatech\Mcore\Editora\Domain\Instance\Exceptions\InvalidStructureException;
 use Omatech\Mcore\Editora\Domain\Instance\InstanceBuilder;
 use Omatech\Mcore\Editora\Domain\Value\Exceptions\InvalidValueTypeException;
-use Symfony\Component\Yaml\Yaml;
 
 class InstanceBuilderTest extends TestCase
 {
+    private array $languages = ['es', 'en'];
+    private string $className = 'VideoGames';
     private array $structure;
-    private array $languages;
-    private string $className = 'ClassOne';
-    private array $expected;
 
     public function setUp(): void
     {
-        $this->languages = ['es', 'en'];
-        $this->structure = Yaml::parseFile(dirname(__DIR__, 3).'/Data/data.yml');
-        $this->expected = include dirname(__DIR__, 3).'/Data/ExpectedInstance.php';
+        $this->structure = (include dirname(__DIR__, 3).'/Data/data.php')['classes'];
     }
 
     /** @test */
@@ -85,6 +81,178 @@ class InstanceBuilderTest extends TestCase
             ->setClassName($this->className)
             ->build();
 
-        $this->assertEquals($this->expected, $instance->toArray());
+        $this->assertEquals([
+            "class" => [
+                "key" => "video-games",
+                "relations" => [
+                    [
+                        "key" => "platforms",
+                        "classes" => [
+                            "platform"
+                        ]
+                    ], [
+                        "key" => "reviews",
+                        "classes" => [
+                            "articles",
+                            "blogs"
+                        ]
+                    ]
+                ]
+            ],
+            "metadata" => [
+                "uuid" => null,
+                "key" => "",
+                "publication" => [
+                    "status" => "pending",
+                    "startPublishingDate" => null,
+                    "endPublishingDate" => null
+                ]
+            ],
+            "attributes" => [
+                [
+                    "key" => "title",
+                    "type" => "string",
+                    "values" => [
+                        [
+                            "uuid" => null,
+                            "language" => "es",
+                            "rules" => [],
+                            "configuration" => [],
+                            "value" => null,
+                            "extraData" => []
+                        ], [
+                            "uuid" => null,
+                            "language" => "en",
+                            "rules" => [],
+                            "configuration" => [],
+                            "value" => null,
+                            "extraData" => []
+                        ]
+                    ],
+                    "attributes" => [
+                        [
+                            "key" => "sub-title",
+                            "type" => "string",
+                            "values" => [
+                                [
+                                    "uuid" => null,
+                                    "language" => "es",
+                                    "rules" => [],
+                                    "configuration" => [],
+                                    "value" => null,
+                                    "extraData" => []
+                                ], [
+                                    "uuid" => null,
+                                    "language" => "en",
+                                    "rules" => [],
+                                    "configuration" => [],
+                                    "value" => null,
+                                    "extraData" => [],
+                                ]
+                            ],
+                            "attributes" => []
+                        ]
+                    ]
+                ], [
+                    "key" => "synopsis",
+                    "type" => "textarea",
+                    "values" => [
+                        [
+                            "uuid" => null,
+                            "language" => "es",
+                            "rules" => [
+                                "required" => true
+                            ],
+                            "configuration" => [
+                                "cols" => 10,
+                                "rows" => 10
+                            ],
+                            "value" => null,
+                            "extraData" => []
+                        ], [
+                            "uuid" => null,
+                            "language" => "en",
+                            "rules" => [
+                                "required" => true
+                            ],
+                            "configuration" => [
+                                "cols" => 10,
+                                "rows" => 10
+                            ],
+                            "value" => null,
+                            "extraData" => []
+                        ]
+                    ],
+                    "attributes" => []
+                ], [
+                    "key" => "release-date",
+                    "type" => "string",
+                    "values" => [
+                        [
+                            "uuid" => null,
+                            "language" => "es",
+                            "rules" => [
+                                "required" => true
+                            ],
+                            "configuration" => [
+                                "cols" => 10,
+                                "rows" => 10
+                            ],
+                            "value" => null,
+                            "extraData" => []
+                        ], [
+                            "uuid" => null,
+                            "language" => "en",
+                            "rules" => [
+                                "required" => false
+                            ],
+                            "configuration" => [
+                                "cols" => 20,
+                                "rows" => 20
+                            ],
+                            "value" => null,
+                            "extraData" => []
+                        ], [
+                            "uuid" => null,
+                            "language" => "+",
+                            "rules" => [
+                                "required" => true
+                            ],
+                            "configuration" => [
+                                "cols" => 30,
+                                "rows" => 30
+                            ],
+                            "value" => null,
+                            "extraData" => []
+                        ]
+                    ],
+                    "attributes" => []
+                ], [
+                    "key" => "code",
+                    "type" => "lookup",
+                    "values" => [
+                        [
+                            "uuid" => null,
+                            "language" => "*",
+                            "rules" => [
+                                "required" => false
+                            ],
+                            "configuration" => [
+                                "options" => [
+                                    "pc-code",
+                                    "playstation-code",
+                                    "xbox-code",
+                                    "switch-code",
+                                ]
+                            ],
+                            "value" => null,
+                            "extraData" => []
+                        ]
+                    ],
+                    "attributes" => []
+                ]
+            ],
+            "relations" => [],
+        ], $instance->toArray());
     }
 }

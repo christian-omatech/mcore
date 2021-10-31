@@ -12,7 +12,7 @@ final class RelationsResults
 
     public function __construct(array $params)
     {
-        $this->key = $params['class'];
+        $this->key = $params['key'];
         $this->type = $params['type'];
     }
 

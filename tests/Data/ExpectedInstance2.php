@@ -21,7 +21,7 @@ return [
     ],
     'metadata' => [
         'key' => 'soy-la-key-de-la-instancia',
-        'id' => 1,
+        'uuid' => '1',
         'publication' => [
             'status' => 'in-revision',
             'startPublishingDate' => '1989-03-08 09:00:00',
@@ -41,14 +41,14 @@ return [
                     'extraData' => [
                         'ext' => 'png',
                     ],
-                    'id' => 1,
+                    'uuid' => '1',
                 ], [
                     'language' => 'en',
                     'rules' => [],
                     'configuration' => [],
                     'value' => 'adios',
                     'extraData' => [],
-                    'id' => null,
+                    'uuid' => null,
                 ],
             ],
             'attributes' => [
@@ -62,14 +62,14 @@ return [
                             'configuration' => [],
                             'value' => 'hola',
                             'extraData' => [],
-                            'id' => null,
+                            'uuid' => null,
                         ], [
                             'language' => 'en',
                             'rules' => [],
                             'configuration' => [],
                             'value' => 'adios',
                             'extraData' => [],
-                            'id' => null,
+                            'uuid' => null,
                         ],
                     ],
                     'attributes' => [],
@@ -90,7 +90,7 @@ return [
                     ],
                     'value' => 'hola',
                     'extraData' => [],
-                    'id' => null,
+                    'uuid' => null,
                 ], [
                     'language' => 'en',
                     'rules' => [
@@ -102,7 +102,7 @@ return [
                     ],
                     'value' => 'adios',
                     'extraData' => [],
-                    'id' => null,
+                    'uuid' => null,
                 ],
             ],
             'attributes' => [],
@@ -121,7 +121,7 @@ return [
                     ],
                     'value' => 'hola',
                     'extraData' => [],
-                    'id' => null,
+                    'uuid' => null,
                 ], [
                     'language' => 'en',
                     'rules' => [
@@ -133,7 +133,7 @@ return [
                     ],
                     'value' => 'adios',
                     'extraData' => [],
-                    'id' => null,
+                    'uuid' => null,
                 ], [
                     'language' => '+',
                     'rules' => [
@@ -145,7 +145,7 @@ return [
                     ],
                     'value' => 'default',
                     'extraData' => [],
-                    'id' => null,
+                    'uuid' => null,
                 ],
             ],
             'attributes' => [],
@@ -166,7 +166,7 @@ return [
                     ],
                     'value' => 'key1',
                     'extraData' => [],
-                    'id' => null,
+                    'uuid' => null,
                 ],
             ],
             'attributes' => [],

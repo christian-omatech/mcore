@@ -4,7 +4,7 @@ namespace Omatech\Mcore\Editora\Domain\Value;
 
 abstract class BaseValue
 {
-    protected ?int $id = null;
+    protected ?string $uuid = null;
     protected mixed $value = null;
     protected array $extraData = [];
     protected Configuration $configuration;
@@ -30,7 +30,7 @@ abstract class BaseValue
     {
         $this->value = $value['value'];
         $this->extraData = $value['extraData'] ?? $this->extraData;
-        $this->id = $value['id'] ?? $this->id;
+        $this->uuid = $value['uuid'] ?? $this->uuid;
     }
 
     public function language(): string
@@ -43,9 +43,9 @@ abstract class BaseValue
         return $this->metadata->rules();
     }
 
-    public function id(): ?int
+    public function uuid(): ?string
     {
-        return $this->id;
+        return $this->uuid;
     }
 
     public function key(): string
@@ -56,7 +56,7 @@ abstract class BaseValue
     public function toArray(): array
     {
         return [
-            'id' => $this->id,
+            'uuid' => $this->uuid,
             'language' => $this->metadata->language(),
             'rules' => $this->metadata->rules(),
             'configuration' => $this->configuration->get(),

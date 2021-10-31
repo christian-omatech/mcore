@@ -19,9 +19,9 @@ final class ValueTest extends TestCase
             'extraData' => [
                 'ext' => 'jpeg',
             ],
-            'id' => 1,
+            'uuid' => '1',
         ]);
-        $this->assertEquals(1, $value->id());
+        $this->assertEquals('1', $value->uuid());
         $this->assertEquals([
             'ext' => 'jpeg',
         ], $value->extraData());

@@ -24,7 +24,7 @@ final class DeleteInstanceCommandHandler
 
     public function __invoke(DeleteInstanceCommand $command): void
     {
-        $instance = $this->instanceFinder->findOrFail($command->id());
+        $instance = $this->instanceFinder->findOrFail($command->uuid());
         $this->instanceRepository->delete($instance);
         $this->eventPublisher->publish([new InstanceHasBeenDeleted($instance)]);
     }

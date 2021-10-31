@@ -257,10 +257,10 @@ class ExtractInstanceTest extends TestCase
 
         foreach ($newsInstances['instances'] as $instance) {
             $repository->shouldReceive('findRelatedInstances')
-                ->with($instance->id(), [
+                ->with($instance->uuid(), [
                     'limit' => 7,
-                    'class' => 'news-photos',
-                    'key' => null,
+                    'class' => null,
+                    'key' => 'news-photos',
                     'preview' => false,
                     'page' => '2',
                     'language' => 'es',
@@ -279,9 +279,9 @@ class ExtractInstanceTest extends TestCase
 
         foreach ($newsInstances['relations']['news-photos']['instances'] as $instance) {
             $repository->shouldReceive('findRelatedInstances')
-                ->with($instance->id(), [
-                    'class' => 'photos-locations',
-                    'key' => null,
+                ->with($instance->uuid(), [
+                    'class' => null,
+                    'key' => 'photos-locations',
                     'limit' => 2,
                     'language' => 'es',
                     'preview' => false,
@@ -366,10 +366,10 @@ class ExtractInstanceTest extends TestCase
 
         foreach ($booksInstances['instances'] as $bookInstance) {
             $repository->shouldReceive('findRelatedInstances')
-                ->with($bookInstance->id(), [
+                ->with($bookInstance->uuid(), [
                     'limit' => 1,
-                    'class' => 'articles',
-                    'key' => null,
+                    'class' => null,
+                    'key' => 'articles',
                     'preview' => false,
                     'page' => 1,
                     'language' => 'en',
@@ -384,10 +384,10 @@ class ExtractInstanceTest extends TestCase
                     )
                 )->once();
             $repository->shouldReceive('findRelatedInstances')
-                ->with($bookInstance->id(), [
+                ->with($bookInstance->uuid(), [
                     'limit' => 3,
-                    'class' => 'photos',
-                    'key' => null,
+                    'class' => null,
+                    'key' => 'photos',
                     'preview' => false,
                     'page' => 1,
                     'language' => 'en',
@@ -405,10 +405,10 @@ class ExtractInstanceTest extends TestCase
             $photosInstances = $booksInstances['relations']['photos']['instances'];
             foreach ($photosInstances as $photosInstance) {
                 $repository->shouldReceive('findRelatedInstances')
-                    ->with($photosInstance->id(), [
+                    ->with($photosInstance->uuid(), [
                         'limit' => 1,
-                        'class' => 'photos-locations',
-                        'key' => null,
+                        'class' => null,
+                        'key' => 'photos-locations',
                         'preview' => false,
                         'page' => 1,
                         'language' => 'en',

@@ -14,7 +14,7 @@ class ArticlesMother extends ObjectMother
         for ($i = 1; $i <= $instancesNumber; $i++) {
             $this->instances[] = $this->build('Articles')->fill([
                 'metadata' => [
-                    'id' => $this->faker->randomNumber(),
+                    'uuid' => $this->faker->uuid(),
                     'key' => $key ?? 'article-instance-'.$i,
                     'publication' => [
                         'startPublishingDate' => $this->faker->dateTime()->format('Y-m-d H:i:s'),
@@ -24,7 +24,7 @@ class ArticlesMother extends ObjectMother
                     'title' => [
                         'values' => reduce(function (array $acc, string $language) {
                             $acc[] = [
-                                'id' => $this->faker->randomNumber(),
+                                'uuid' => $this->faker->uuid(),
                                 'language' => $language,
                                 'value' => $this->faker->sentence(),
                             ];
@@ -35,7 +35,7 @@ class ArticlesMother extends ObjectMother
                     'author' => [
                         'values' => reduce(function (array $acc, string $language) {
                             $acc[] = [
-                                'id' => $this->faker->randomNumber(),
+                                'uuid' => $this->faker->uuid(),
                                 'language' => $language,
                                 'value' => $this->faker->name(),
                             ];
@@ -46,7 +46,7 @@ class ArticlesMother extends ObjectMother
                     'page' => [
                         'values' => reduce(function (array $acc, string $language) {
                             $acc[] = [
-                                'id' => $this->faker->randomNumber(),
+                                'uuid' => $this->faker->uuid(),
                                 'language' => $language,
                                 'value' => null,
                             ];

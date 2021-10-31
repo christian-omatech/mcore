@@ -59,7 +59,7 @@ final class ExtractInstanceCommandHandler
     {
         return reduce(function (array $acc, Query $query) use ($instance): array {
             $results = $this->extractionRepository->findRelatedInstances(
-                $instance->id(),
+                $instance->uuid(),
                 $query->params()
             );
             $query->setPagination($results->pagination());

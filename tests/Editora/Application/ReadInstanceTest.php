@@ -18,14 +18,14 @@ class ReadInstanceTest extends TestCase
     /** @test */
     public function readInstanceSuccessfully(): void
     {
-        $command = new ReadInstanceCommand(1);
+        $command = new ReadInstanceCommand('1');
 
         $instance = Mockery::mock(Instance::class);
         $instance->shouldReceive('toArray')
             ->andReturn([
                 'class' => [],
                 'metadata' => [
-                    'id' => 1,
+                    'uuid' => '1',
                 ],
                 'attributes' => [],
                 'relations' => [],
@@ -34,19 +34,19 @@ class ReadInstanceTest extends TestCase
 
         $repository = Mockery::mock(InstanceRepositoryInterface::class);
         $repository->shouldReceive('find')
-            ->with($command->id())
+            ->with($command->uuid())
             ->andReturn($instance)
             ->once();
 
-        $instanceArray = (new ReadInstanceCommandHandler($repository))->__invoke($command);
+        $instance = (new ReadInstanceCommandHandler($repository))->__invoke($command);
         $this->assertSame([
             'class' => [],
             'metadata' => [
-                'id' => 1,
+                'uuid' => '1',
             ],
             'attributes' => [],
             'relations' => [],
-        ], $instanceArray);
+        ], $instance->toArray());
     }
 
     /** @test */
@@ -54,11 +54,11 @@ class ReadInstanceTest extends TestCase
     {
         $this->expectException(InstanceDoesNotExistsException::class);
 
-        $command = new ReadInstanceCommand(1);
+        $command = new ReadInstanceCommand('1');
 
         $repository = Mockery::mock(InstanceRepositoryInterface::class);
         $repository->shouldReceive('find')
-            ->with($command->id())
+            ->with($command->uuid())
             ->andReturn(null)
             ->once();
 

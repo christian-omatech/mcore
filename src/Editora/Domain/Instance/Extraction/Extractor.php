@@ -77,7 +77,7 @@ final class Extractor
         QueryAttribute $queryAttribute
     ): QueryAttribute {
         $values = reduce(static function (array $acc, BaseValue $value): array {
-            $acc[$value->language()] = ['id' => $value->id(), 'value' => $value->value()];
+            $acc[$value->language()] = ['uuid' => $value->uuid(), 'value' => $value->value()];
             return $acc;
         }, $attribute->values()->get(), []);
         $queryAttribute->setAttributes(
@@ -104,7 +104,7 @@ final class Extractor
         return reduce(
             function (array $acc, RelationsResults $relation) use ($queryRelations): array {
                 $queryRelation = search(static function ($query) use ($relation): bool {
-                    return $query->param('class') === $relation->key() &&
+                    return $query->param('key') === $relation->key() &&
                         $query->param('type') === $relation->type();
                 }, $queryRelations);
                 if ($queryRelation) {

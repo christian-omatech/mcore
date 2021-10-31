@@ -15,14 +15,14 @@ final class QueryParser
     {
         $graphQuery = Parser::parse(str_replace('()', '(limit: 0)', $query));
         return reduce(function (array $acc, FieldNode $node): array {
-            $acc[] = $this->parseNode($node);
+            $acc[] = $this->parseRootNode($node);
             return $acc;
         }, $graphQuery->definitions[0]->selectionSet->selections, []);
     }
 
-    private function parseNode(FieldNode $node): Query
+    private function parseRootNode(FieldNode $node): Query
     {
-        $params = $this->parseParams($node);
+        $params = $this->parseParams($node, 'class');
         return new Query([
             'attributes' => $this->parseAttributes($node),
             'params' => $params,
@@ -33,14 +33,14 @@ final class QueryParser
         ]);
     }
 
-    private function parseParams(FieldNode $node): array
+    private function parseParams(FieldNode $node, string $nodeType): array
     {
         $params = reduce(static function (array $acc, ArgumentNode $argument): array {
             $acc[$argument->name->value] = $argument->value->value;
             return $acc;
         }, $node->arguments, []);
         if ($node->name->value !== 'instances') {
-            $params['class'] = $node->name->value;
+            $params[$nodeType] = $node->name->value;
         }
         $params['class'] = Utils::getInstance()->slug($params['class'] ?? null);
         $params['key'] = Utils::getInstance()->slug($params['key'] ?? null);
@@ -70,7 +70,7 @@ final class QueryParser
                 $acc[] = new Query([
                     'attributes' => $this->parseAttributes($node),
                     'params' => $this->defaultRelationParams(array_merge(
-                        $this->parseParams($node),
+                        $this->parseParams($node, 'key'),
                         $params
                     )),
                     'relations' => $this->parseRelations($node, $params),

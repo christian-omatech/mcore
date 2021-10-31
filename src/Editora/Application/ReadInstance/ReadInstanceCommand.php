@@ -6,15 +6,15 @@ use Omatech\Mcore\Shared\Application\Command;
 
 final class ReadInstanceCommand extends Command
 {
-    private int $id;
+    private string $uuid;
 
-    public function __construct(int $id)
+    public function __construct(string $uuid)
     {
-        $this->id = $id;
+        $this->uuid = $uuid;
     }
 
-    public function id(): int
+    public function uuid(): string
     {
-        return $this->id;
+        return $this->uuid;
     }
 }
