@@ -22,7 +22,7 @@ class BooksMother extends ObjectMother
         for ($i = 1; $i <= $instancesNumber; $i++) {
             $this->instances[] = $this->build('Books')->fill([
                 'metadata' => [
-                    'id' => $this->faker->randomNumber(),
+                    'uuid' => $this->faker->uuid(),
                     'key' => $key ?? 'book-instance-'.$i,
                     'publication' => [
                         'startPublishingDate' => $this->faker->dateTime()->format('Y-m-d H:i:s'),
@@ -32,7 +32,7 @@ class BooksMother extends ObjectMother
                     'title' => [
                         'values' => reduce(function (array $acc, string $language) {
                             $acc[] = [
-                                'id' => $this->faker->randomNumber(),
+                                'uuid' => $this->faker->uuid(),
                                 'language' => $language,
                                 'value' => $this->faker->sentence(),
                             ];
@@ -43,13 +43,13 @@ class BooksMother extends ObjectMother
                     'isbn' => [
                         'values' => array_merge(reduce(function (array $acc, string $language) {
                             $acc[] = [
-                                'id' => $this->faker->randomNumber(),
+                                'uuid' => $this->faker->uuid(),
                                 'language' => $language,
                                 'value' => null,
                             ];
                             return $acc;
                         }, $this->languages, []), [[
-                            'id' => $this->faker->randomNumber(),
+                            'uuid' => $this->faker->uuid(),
                             'language' => '+',
                             'value' => $this->faker->isbn13(),
                         ],
@@ -59,13 +59,13 @@ class BooksMother extends ObjectMother
                     'synopsis' => [
                         'values' => array_merge(reduce(function (array $acc, string $language) {
                             $acc[] = [
-                                'id' => $this->faker->randomNumber(),
+                                'uuid' => $this->faker->uuid(),
                                 'language' => $language,
                                 'value' => $this->faker->paragraph(),
                             ];
                             return $acc;
                         }, $this->languages, []), [[
-                            'id' => $this->faker->randomNumber(),
+                            'uuid' => $this->faker->uuid(),
                             'language' => '+',
                             'value' => $this->faker->paragraph(),
                         ],
@@ -75,7 +75,7 @@ class BooksMother extends ObjectMother
                     'picture' => [
                         'values' => reduce(function (array $acc, string $language) {
                             $acc[] = [
-                                'id' => $this->faker->randomNumber(),
+                                'uuid' => $this->faker->uuid(),
                                 'language' => $language,
                                 'value' => $this->faker->url(),
                             ];
@@ -85,7 +85,7 @@ class BooksMother extends ObjectMother
                             'alt' => [
                                 'values' => reduce(function (array $acc, string $language) {
                                     $acc[] = [
-                                        'id' => $this->faker->randomNumber(),
+                                        'uuid' => $this->faker->uuid(),
                                         'language' => $language,
                                         'value' => $this->faker->sentence(),
                                     ];
@@ -97,7 +97,7 @@ class BooksMother extends ObjectMother
                     'price' => [
                         'values' => [
                             [
-                                'id' => $this->faker->randomNumber(),
+                                'uuid' => $this->faker->uuid(),
                                 'language' => '*',
                                 'value' => $this->faker->randomFloat(),
                             ],

@@ -3,6 +3,7 @@
 namespace Omatech\Mcore\Editora\Application\ReadInstance;
 
 use Omatech\Mcore\Editora\Domain\Instance\Contracts\InstanceRepositoryInterface;
+use Omatech\Mcore\Editora\Domain\Instance\Instance;
 use Omatech\Mcore\Editora\Domain\Instance\Services\InstanceFinder;
 
 final class ReadInstanceCommandHandler
@@ -14,9 +15,8 @@ final class ReadInstanceCommandHandler
         $this->instanceFinder = new InstanceFinder($instanceRepository);
     }
 
-    public function __invoke(ReadInstanceCommand $command): array
+    public function __invoke(ReadInstanceCommand $command): Instance
     {
-        $instance = $this->instanceFinder->findOrFail($command->id());
-        return $instance->toArray();
+        return $this->instanceFinder->findOrFail($command->uuid());
     }
 }

@@ -4,10 +4,10 @@ namespace Tests\Editora\Domain\Instance;
 
 use DateTime;
 use Omatech\Mcore\Editora\Domain\Clazz\Exceptions\InvalidRelationClassException;
-use Omatech\Mcore\Editora\Domain\Instance\Validator\Exceptions\InvalidRelationException;
 use Omatech\Mcore\Editora\Domain\Instance\Exceptions\InvalidEndDatePublishingException;
 use Omatech\Mcore\Editora\Domain\Instance\InstanceBuilder;
 use Omatech\Mcore\Editora\Domain\Instance\PublicationStatus;
+use Omatech\Mcore\Editora\Domain\Instance\Validator\Exceptions\InvalidRelationException;
 use Omatech\Mcore\Editora\Domain\Instance\Validator\Exceptions\InvalidRuleException;
 use Omatech\Mcore\Editora\Domain\Instance\Validator\Exceptions\RequiredValueException;
 use Omatech\Mcore\Editora\Domain\Instance\Validator\Exceptions\UniqueValueException;
@@ -17,13 +17,8 @@ use Tests\Data\UniqueValueRepository;
 
 class InstanceTest extends TestCase
 {
-    private array $languages;
+    private array $languages = ['es', 'en'];
     private string $className = 'ClassOne';
-
-    public function setUp(): void
-    {
-        $this->languages = ['es', 'en'];
-    }
 
     /** @test */
     public function instanceAttributeValidationFailed(): void
@@ -90,7 +85,7 @@ class InstanceTest extends TestCase
                 'all-languages-attribute' => [
                     'values' => [
                         [
-                            'id' => 1,
+                            'uuid' => '1',
                             'language' => '*',
                             'value' => 'hola',
                         ],
@@ -282,7 +277,7 @@ class InstanceTest extends TestCase
         $instance->fill([
             'metadata' => [
                 'key' => 'soy-la-key-de-la-instancia',
-                'id' => 1,
+                'uuid' => '1',
                 'publication' => [
                     'status' => PublicationStatus::REVISION,
                     'startPublishingDate' => '1989-03-08 09:00:00',
@@ -293,7 +288,7 @@ class InstanceTest extends TestCase
                 'default-attribute' => [
                     'values' => [
                         [
-                            'id' => 1,
+                            'uuid' => '1',
                             'language' => 'es',
                             'value' => 'hola',
                             'extraData' => [
@@ -377,7 +372,7 @@ class InstanceTest extends TestCase
         ]);
 
         $this->assertEquals($expected, $instance->toArray());
-        $this->assertEquals(1, $instance->id());
+        $this->assertEquals(1, $instance->uuid());
         $this->assertEquals([
             'classKey' => 'class-one',
             'key' => 'soy-la-key-de-la-instancia',
@@ -494,14 +489,14 @@ class InstanceTest extends TestCase
                 'default-attribute' => [
                     'values' => [
                         [
-                            'id' => 1,
+                            'uuid' => '1',
                             'language' => 'es',
                             'value' => 'hola',
                             'extraData' => [
                                 'ext' => 'png',
                             ],
                         ], [
-                            'id' => null,
+                            'uuid' => null,
                             'language' => 'en',
                             'value' => 'hola',
                             'extraData' => [
@@ -520,7 +515,7 @@ class InstanceTest extends TestCase
                 'relations' => [],
             ],
             'metadata' => [
-                'id' => null,
+                'uuid' => null,
                 'key' => 'instance',
                 'publication' => [
                     'status' => 'pending',
@@ -541,7 +536,7 @@ class InstanceTest extends TestCase
                             'extraData' => [
                                 'ext' => 'png',
                             ],
-                            'id' => 1,
+                            'uuid' => '1',
                         ], [
                             'language' => 'en',
                             'rules' => [],
@@ -550,7 +545,7 @@ class InstanceTest extends TestCase
                             'extraData' => [
                                 'ext' => 'jpeg',
                             ],
-                            'id' => null,
+                            'uuid' => null,
                         ],
                     ],
                     'attributes' => [],
@@ -583,7 +578,7 @@ class InstanceTest extends TestCase
                 'relations' => [],
             ],
             'metadata' => [
-                'id' => null,
+                'uuid' => null,
                 'key' => 'instance',
                 'publication' => [
                     'status' => 'pending',
@@ -604,7 +599,7 @@ class InstanceTest extends TestCase
                             'extraData' => [
                                 'ext' => 'png',
                             ],
-                            'id' => 1,
+                            'uuid' => '1',
                         ], [
                             'language' => 'en',
                             'rules' => [],
@@ -613,7 +608,7 @@ class InstanceTest extends TestCase
                             'extraData' => [
                                 'ext' => 'jpeg',
                             ],
-                            'id' => null,
+                            'uuid' => null,
                         ],
                     ],
                     'attributes' => [],

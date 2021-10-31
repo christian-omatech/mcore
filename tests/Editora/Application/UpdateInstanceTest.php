@@ -21,7 +21,7 @@ class UpdateInstanceTest extends TestCase
     public function updateInstanceCommand(): void
     {
         $command = new UpdateInstanceCommand([
-            'id' => 1,
+            'uuid' => '1',
             'key' => 'test',
             'status' => 'published',
             'startPublishingDate' => '1989-03-08 09:00:00',
@@ -58,7 +58,7 @@ class UpdateInstanceTest extends TestCase
         $this->assertSame([], $command->relations());
 
         $command = new UpdateInstanceCommand([
-            'id' => 1,
+            'uuid' => '1',
             'key' => 'test',
             'status' => 'published',
             'startPublishingDate' => '1989-03-08 09:00:00',
@@ -90,25 +90,25 @@ class UpdateInstanceTest extends TestCase
     public function updateInstanceSuccessfully(): void
     {
         $command = new UpdateInstanceCommand([
-            'id' => 1,
+            'uuid' => '1',
             'key' => 'test',
             'status' => 'published',
             'startPublishingDate' => '1989-03-08 09:00:00',
             'attributes' => [],
             'relations' => [
                 'relation-key1' => [
-                    1,2,3,4,5,6,
+                    '1','2','3','4','5','6',
                 ],
             ],
         ]);
 
         $repository = Mockery::mock(InstanceRepositoryInterface::class);
-        $repository->shouldReceive('classKey')->with(1)->andReturn('class-one')->once();
-        $repository->shouldReceive('classKey')->with(2)->andReturn('class-one')->once();
-        $repository->shouldReceive('classKey')->with(3)->andReturn('class-one')->once();
-        $repository->shouldReceive('classKey')->with(4)->andReturn('class-two')->once();
-        $repository->shouldReceive('classKey')->with(5)->andReturn('class-two')->once();
-        $repository->shouldReceive('classKey')->with(6)->andReturn('class-two')->once();
+        $repository->shouldReceive('classKey')->with('1')->andReturn('class-one')->once();
+        $repository->shouldReceive('classKey')->with('2')->andReturn('class-one')->once();
+        $repository->shouldReceive('classKey')->with('3')->andReturn('class-one')->once();
+        $repository->shouldReceive('classKey')->with('4')->andReturn('class-two')->once();
+        $repository->shouldReceive('classKey')->with('5')->andReturn('class-two')->once();
+        $repository->shouldReceive('classKey')->with('6')->andReturn('class-two')->once();
 
         $instance = Mockery::mock(Instance::class);
         $instance2 = Mockery::mock(Instance::class);
@@ -118,12 +118,12 @@ class UpdateInstanceTest extends TestCase
                 'attributes' => $command->attributes(),
                 'relations' => [
                     'relation-key1' => [
-                        1 => 'class-one',
-                        2 => 'class-one',
-                        3 => 'class-one',
-                        4 => 'class-two',
-                        5 => 'class-two',
-                        6 => 'class-two',
+                        '1' => 'class-one',
+                        '2' => 'class-one',
+                        '3' => 'class-one',
+                        '4' => 'class-two',
+                        '5' => 'class-two',
+                        '6' => 'class-two',
                     ],
                 ],
             ])
@@ -131,7 +131,7 @@ class UpdateInstanceTest extends TestCase
             ->once();
 
         $repository->shouldReceive('find')
-            ->with($command->id())
+            ->with($command->uuid())
             ->andReturn($instance)
             ->once();
         $repository->shouldReceive('save')
@@ -162,14 +162,14 @@ class UpdateInstanceTest extends TestCase
         $this->expectException(InstanceDoesNotExistsException::class);
 
         $command = new UpdateInstanceCommand([
-            'id' => 1,
+            'uuid' => '1',
             'key' => 'test',
             'status' => 'published',
             'startPublishingDate' => '1989-03-08 09:00:00',
             'attributes' => [],
             'relations' => [
                 'relation-key1' => [
-                    1,2,3,4,5,6,
+                    '1','2','3','4','5','6',
                 ],
             ],
         ]);
@@ -180,12 +180,12 @@ class UpdateInstanceTest extends TestCase
             ->never();
 
         $repository = Mockery::mock(InstanceRepositoryInterface::class);
-        $repository->shouldReceive('classKey')->with(1)->andReturn('class-one')->once();
-        $repository->shouldReceive('classKey')->with(2)->andReturn('class-one')->once();
-        $repository->shouldReceive('classKey')->with(3)->andReturn(null)->once();
-        $repository->shouldReceive('classKey')->with(4)->andReturn('class-two')->never();
-        $repository->shouldReceive('classKey')->with(5)->andReturn('class-two')->never();
-        $repository->shouldReceive('classKey')->with(6)->andReturn('class-two')->never();
+        $repository->shouldReceive('classKey')->with('1')->andReturn('class-one')->once();
+        $repository->shouldReceive('classKey')->with('2')->andReturn('class-one')->once();
+        $repository->shouldReceive('classKey')->with('3')->andReturn(null)->once();
+        $repository->shouldReceive('classKey')->with('4')->andReturn('class-two')->never();
+        $repository->shouldReceive('classKey')->with('5')->andReturn('class-two')->never();
+        $repository->shouldReceive('classKey')->with('6')->andReturn('class-two')->never();
 
         (new UpdateInstanceCommandHandler($event, $repository))->__invoke($command);
     }
@@ -196,7 +196,7 @@ class UpdateInstanceTest extends TestCase
         $this->expectException(InstanceDoesNotExistsException::class);
 
         $command = new UpdateInstanceCommand([
-            'id' => 1,
+            'uuid' => '1',
             'key' => 'test',
             'startPublishingDate' => '1989-03-08 09:00:00',
             'attributes' => [],
@@ -210,7 +210,7 @@ class UpdateInstanceTest extends TestCase
 
         $repository = Mockery::mock(InstanceRepositoryInterface::class);
         $repository->shouldReceive('find')
-            ->with($command->id())
+            ->with($command->uuid())
             ->andReturn(null)
             ->once();
 

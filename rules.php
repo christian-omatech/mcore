@@ -9,6 +9,7 @@ use PhpCsFixer\Fixer\ClassNotation\OrderedClassElementsFixer;
 use PhpCsFixer\Fixer\Import\OrderedImportsFixer;
 use SlevomatCodingStandard\Sniffs\Classes\SuperfluousExceptionNamingSniff;
 use SlevomatCodingStandard\Sniffs\Classes\SuperfluousInterfaceNamingSniff;
+use SlevomatCodingStandard\Sniffs\ControlStructures\DisallowShortTernaryOperatorSniff;
 use SlevomatCodingStandard\Sniffs\TypeHints\DeclareStrictTypesSniff;
 use SlevomatCodingStandard\Sniffs\TypeHints\ParameterTypeHintSniff;
 use SlevomatCodingStandard\Sniffs\TypeHints\PropertyTypeHintSniff;
@@ -17,6 +18,7 @@ use SlevomatCodingStandard\Sniffs\TypeHints\ReturnTypeHintSniff;
 return [
     'preset' => 'default',
     'remove' => [
+        DisallowShortTernaryOperatorSniff::class,
         ParameterTypeHintSniff::class,
         ReturnTypeHintSniff::class,
         PropertyTypeHintSniff::class,

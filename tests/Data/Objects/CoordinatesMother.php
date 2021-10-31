@@ -14,7 +14,7 @@ class CoordinatesMother extends ObjectMother
         for ($i = 1; $i <= $instancesNumber; $i++) {
             $this->instances[] = $this->build('Coordinates')->fill([
                 'metadata' => [
-                    'id' => $this->faker->randomNumber(),
+                    'uuid' => $this->faker->uuid(),
                     'key' => $key ?? 'coordinate-instance-'.$i,
                     'publication' => [
                         'startPublishingDate' => $this->faker->dateTime()->format('Y-m-d H:i:s'),
@@ -24,7 +24,7 @@ class CoordinatesMother extends ObjectMother
                     'latitude' => [
                         'values' => reduce(function (array $acc, string $language) {
                             $acc[] = [
-                                'id' => $this->faker->randomNumber(),
+                                'uuid' => $this->faker->uuid(),
                                 'language' => $language,
                                 'value' => $this->faker->randomDigit(),
                             ];
@@ -35,7 +35,7 @@ class CoordinatesMother extends ObjectMother
                     'longitude' => [
                         'values' => reduce(function (array $acc, string $language) {
                             $acc[] = [
-                                'id' => $this->faker->randomNumber(),
+                                'uuid' => $this->faker->uuid(),
                                 'language' => $language,
                                 'value' => $this->faker->randomDigit(),
                             ];

@@ -6,7 +6,7 @@ use function Lambdish\Phunctional\map;
 
 final class Attribute
 {
-    private ?int $id = null;
+    private ?string $uuid = null;
     private string $key;
     private mixed $value = null;
     /** @var array<Attribute> $attributes */
@@ -35,7 +35,7 @@ final class Attribute
 
     public function setValue(array $value): void
     {
-        $this->id = $value['id'];
+        $this->uuid = $value['uuid'];
         $this->value = $value['value'];
     }
 
@@ -52,7 +52,7 @@ final class Attribute
     public function toArray(): array
     {
         return [
-            'id' => $this->id,
+            'uuid' => $this->uuid,
             'key' => $this->key,
             'value' => $this->value,
             'attributes' => map(static function (Attribute $attribute): array {

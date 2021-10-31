@@ -17,7 +17,7 @@ final class Pagination
 
     public function realLimit(): int
     {
-        return $this->limit ? $this->limit : $this->total;
+        return $this->limit ?: $this->total;
     }
 
     public function offset(): int

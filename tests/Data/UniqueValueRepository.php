@@ -9,7 +9,7 @@ final class UniqueValueRepository implements UniqueValueInterface
 {
     public function isUnique(BaseValue $baseValue): bool
     {
-        if ($baseValue->id() === null && $baseValue->key() === 'default-attribute4') {
+        if ($baseValue->uuid() === null && $baseValue->key() === 'default-attribute4') {
             return false;
         }
         return true;

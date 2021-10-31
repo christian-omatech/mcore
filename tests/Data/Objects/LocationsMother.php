@@ -14,7 +14,7 @@ class LocationsMother extends ObjectMother
         for ($i = 1; $i <= $instancesNumber; $i++) {
             $this->instances[] = $this->build('Locations')->fill([
                 'metadata' => [
-                    'id' => $this->faker->randomNumber(),
+                    'uuid' => $this->faker->uuid(),
                     'key' => $key ?? 'location-instance-'.$i,
                     'publication' => [
                         'startPublishingDate' => $this->faker->dateTime()->format('Y-m-d H:i:s'),
@@ -24,7 +24,7 @@ class LocationsMother extends ObjectMother
                     'country' => [
                         'values' => reduce(function (array $acc, string $language) {
                             $acc[] = [
-                                'id' => $this->faker->randomNumber(),
+                                'uuid' => $this->faker->uuid(),
                                 'language' => $language,
                                 'value' => $this->faker->country(),
                             ];

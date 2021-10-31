@@ -69,7 +69,7 @@ class CreateInstanceTest extends TestCase
             'attributes' => [],
             'relations' => [
                 'relation-key1' => [
-                    1,
+                    '1',
                 ],
             ],
         ]);
@@ -87,7 +87,7 @@ class CreateInstanceTest extends TestCase
         $this->assertSame([], $command->attributes());
         $this->assertSame([
             'relation-key1' => [
-                1,
+                '1',
             ],
         ], $command->relations());
     }
@@ -103,19 +103,19 @@ class CreateInstanceTest extends TestCase
             'attributes' => [],
             'relations' => [
                 'relation-key1' => [
-                    1,2,3,4,5,6,
+                    '1','2','3','4','5','6',
                 ],
             ],
         ]);
 
         $repository = Mockery::mock(InstanceRepositoryInterface::class);
         $repository->shouldReceive('exists')->with('test')->andReturn(false)->once();
-        $repository->shouldReceive('classKey')->with(1)->andReturn('class-one')->once();
-        $repository->shouldReceive('classKey')->with(2)->andReturn('class-one')->once();
-        $repository->shouldReceive('classKey')->with(3)->andReturn('class-one')->once();
-        $repository->shouldReceive('classKey')->with(4)->andReturn('class-two')->once();
-        $repository->shouldReceive('classKey')->with(5)->andReturn('class-two')->once();
-        $repository->shouldReceive('classKey')->with(6)->andReturn('class-two')->once();
+        $repository->shouldReceive('classKey')->with('1')->andReturn('class-one')->once();
+        $repository->shouldReceive('classKey')->with('2')->andReturn('class-one')->once();
+        $repository->shouldReceive('classKey')->with('3')->andReturn('class-one')->once();
+        $repository->shouldReceive('classKey')->with('4')->andReturn('class-two')->once();
+        $repository->shouldReceive('classKey')->with('5')->andReturn('class-two')->once();
+        $repository->shouldReceive('classKey')->with('6')->andReturn('class-two')->once();
 
         $instance = Mockery::mock(Instance::class);
         $instance->shouldReceive('fill')
@@ -124,12 +124,12 @@ class CreateInstanceTest extends TestCase
                 'attributes' => $command->attributes(),
                 'relations' => [
                     'relation-key1' => [
-                        1 => 'class-one',
-                        2 => 'class-one',
-                        3 => 'class-one',
-                        4 => 'class-two',
-                        5 => 'class-two',
-                        6 => 'class-two',
+                        '1' => 'class-one',
+                        '2' => 'class-one',
+                        '3' => 'class-one',
+                        '4' => 'class-two',
+                        '5' => 'class-two',
+                        '6' => 'class-two',
                     ],
                 ],
             ])
@@ -186,7 +186,7 @@ class CreateInstanceTest extends TestCase
             'attributes' => [],
             'relations' => [
                 'relation-key1' => [
-                    1,2,3,4,5,6,
+                    '1','2','3','4','5','6',
                 ],
             ],
         ]);
@@ -198,12 +198,12 @@ class CreateInstanceTest extends TestCase
 
         $repository = Mockery::mock(InstanceRepositoryInterface::class);
         $repository->shouldReceive('exists')->with('test')->andReturn(false)->once();
-        $repository->shouldReceive('classKey')->with(1)->andReturn('class-one')->once();
-        $repository->shouldReceive('classKey')->with(2)->andReturn('class-one')->once();
-        $repository->shouldReceive('classKey')->with(3)->andReturn('class-one')->once();
-        $repository->shouldReceive('classKey')->with(4)->andReturn('class-two')->once();
-        $repository->shouldReceive('classKey')->with(5)->andReturn('class-two')->once();
-        $repository->shouldReceive('classKey')->with(6)->andReturn(null)->once();
+        $repository->shouldReceive('classKey')->with('1')->andReturn('class-one')->once();
+        $repository->shouldReceive('classKey')->with('2')->andReturn('class-one')->once();
+        $repository->shouldReceive('classKey')->with('3')->andReturn('class-one')->once();
+        $repository->shouldReceive('classKey')->with('4')->andReturn('class-two')->once();
+        $repository->shouldReceive('classKey')->with('5')->andReturn('class-two')->once();
+        $repository->shouldReceive('classKey')->with('6')->andReturn(null)->once();
 
         (new CreateInstanceCommandHandler($eventPublisher, $repository))->__invoke($command);
     }

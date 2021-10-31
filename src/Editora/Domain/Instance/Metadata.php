@@ -4,7 +4,7 @@ namespace Omatech\Mcore\Editora\Domain\Instance;
 
 final class Metadata
 {
-    private ?int $id = null;
+    private ?string $uuid = null;
     private string $key = '';
     private Publication $publication;
 
@@ -17,14 +17,14 @@ final class Metadata
     {
         assert(isset($metadata['key']));
         assert(isset($metadata['publication']));
-        $this->id = $metadata['id'] ?? $this->id;
+        $this->uuid = $metadata['uuid'] ?? $this->uuid;
         $this->key = $metadata['key'];
         $this->publication->fill($metadata['publication']);
     }
 
-    public function id(): ?int
+    public function uuid(): ?string
     {
-        return $this->id;
+        return $this->uuid;
     }
 
     public function key(): string
@@ -42,7 +42,7 @@ final class Metadata
     public function toArray(): array
     {
         return [
-            'id' => $this->id,
+            'uuid' => $this->uuid,
             'key' => $this->key,
             'publication' => $this->publication->toArray(),
         ];

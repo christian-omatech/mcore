@@ -68,7 +68,7 @@ abstract class ObjectMother
 
             $relationsIds = reduce(static function (array $acc, array $instances, string $relationKey) {
                 $current[$relationKey] = reduce(static function (array $acc, $instance) {
-                    return $acc + [$instance->id() => $instance->data()['classKey']];
+                    return $acc + [$instance->uuid() => $instance->data()['classKey']];
                 }, $instances['instances'], []);
                 return array_merge($acc, $current);
             }, $relatedInstances, []);
@@ -112,7 +112,7 @@ abstract class ObjectMother
                 ]);
                 $key = array_key_first($value) ?? $language;
                 $acc[] = [
-                    'id' => $attributes->find($currentField)?->value($key)?->id(),
+                    'uuid' => $attributes->find($currentField)?->value($key)?->uuid(),
                     'key' => $currentField,
                     'value' => $value[$key] ?? null,
                     'attributes' => $sub,

@@ -23,9 +23,9 @@ final class InstanceRelation
         return $this->instances;
     }
 
-    public function instanceExists(int $id): bool
+    public function instanceExists(string $uuid): bool
     {
-        return isset($this->instances[$id]);
+        return isset($this->instances[$uuid]);
     }
 
     public function toArray(): array

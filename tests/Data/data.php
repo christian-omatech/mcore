@@ -87,5 +87,97 @@ return [
                 ],
             ],
         ],
+        'VideoGames' => [
+            'attributes' => [
+                'Title' => [
+                    'values' => [
+                        'type' => 'Value'
+                    ],
+                    'attributes' => [
+                        'SubTitle' => [
+                            'values' => [
+                                'type' => 'Tests\Data\Value'
+                            ]
+                        ]
+                    ]
+                ],
+                'Synopsis' => [
+                    'type' => 'textarea',
+                    'values' => [
+                        'type' => 'JsonValue',
+                        'rules' => [
+                            'required' => true
+                        ],
+                        'configuration' => [
+                            'cols' => 10,
+                            'rows' => 10
+                        ]
+                    ]
+                ],
+                'ReleaseDate' => [
+                    'values' => [
+                        'type' => 'DateValue',
+                        'rules' => [
+                            'required' => true
+                        ],
+                        'configuration' => [
+                            'cols' => 30,
+                            'rows' => 30
+                        ],
+                        'languages' => [
+                            '+' => null,
+                            'es' => [
+                                'rules' => [
+                                    'required' => true
+                                ],
+                                'configuration' => [
+                                    'cols' => 10,
+                                    'rows' => 10
+                                ]
+                            ],
+                            'en' => [
+                                'rules' => [
+                                    'required' => false
+                                ],
+                                'configuration' => [
+                                    'cols' => 20,
+                                    'rows' => 20
+                                ]
+                            ]
+                        ]
+                    ]
+                ],
+                'Code' => [
+                    'type' => 'lookup',
+                    'values' => [
+                        'languages' => [
+                            '*' => [
+                                'type' => 'LookupValue',
+                                'rules' => [
+                                    'required' => false
+                                ],
+                                'configuration' => [
+                                    'options' => [
+                                        'pc-code',
+                                        'playstation-code',
+                                        'xbox-code',
+                                        'switch-code'
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ],
+            'relations' => [
+                'Platforms' => [
+                    'Platform'
+                ],
+                'Reviews' => [
+                    'Articles',
+                    'Blogs'
+                ]
+            ]
+        ]
     ],
 ];

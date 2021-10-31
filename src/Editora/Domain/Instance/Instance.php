@@ -42,9 +42,9 @@ class Instance
         );
     }
 
-    public function id(): ?int
+    public function uuid(): ?string
     {
-        return $this->metadata->id();
+        return $this->metadata->uuid();
     }
 
     public function key(): string

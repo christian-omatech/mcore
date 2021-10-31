@@ -18,9 +18,9 @@ final class InstanceFinder
         $this->repository = $repository;
     }
 
-    public function findOrFail(int $id): Instance
+    public function findOrFail(string $uuid): Instance
     {
-        $instance = $this->repository->find($id);
+        $instance = $this->repository->find($uuid);
         return $instance ?? throw new InstanceDoesNotExistsException();
     }
 
@@ -34,8 +34,8 @@ final class InstanceFinder
     public function findClassKeysGivenInstances(array $relations): array
     {
         return map(function (array $relationKey): array {
-            return reduce(function (?array $acc, int $id): array {
-                $acc[$id] = $this->repository->classKey($id) ??
+            return reduce(function (?array $acc, string $uuid): array {
+                $acc[$uuid] = $this->repository->classKey($uuid) ??
                     throw new InstanceDoesNotExistsException();
                 return $acc;
             }, $relationKey, []);

@@ -19,7 +19,7 @@ class PhotosMother extends ObjectMother
         for ($i = 1; $i <= $instancesNumber; $i++) {
             $this->instances[] = $this->build('Photos')->fill([
                 'metadata' => [
-                    'id' => $this->faker->randomNumber(),
+                    'uuid' => $this->faker->uuid(),
                     'key' => $key ?? 'photo-instance-'.$i,
                     'publication' => [
                         'startPublishingDate' => $this->faker->dateTime()->format('Y-m-d H:i:s'),
@@ -29,7 +29,7 @@ class PhotosMother extends ObjectMother
                     'url' => [
                         'values' => reduce(function (array $acc, string $language) {
                             $acc[] = [
-                                'id' => $this->faker->randomNumber(),
+                                'uuid' => $this->faker->uuid(),
                                 'language' => $language,
                                 'value' => $this->faker->url(),
                             ];
