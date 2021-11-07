@@ -1,37 +1,37 @@
 {
-    "name": "omatech/mcore",
-    "require": {
-        "php": "^8.0",
-        "symfony/yaml": "^5.3",
-        "lambdish/phunctional": "^2.1",
-        "webonyx/graphql-php": "^14.9"
-    },
-    "require-dev": {
-        "roave/security-advisories": "dev-latest",
-        "phpunit/phpunit": "^9.0",
-        "infection/infection": "^0.25.0",
-        "nunomaduro/phpinsights": "^2.0",
-        "symfony/var-dumper": "^5.3",
-        "mockery/mockery": "^1.4",
-        "fakerphp/faker": "^1.0"
-    },
-    "autoload": {
-        "psr-4": {
-            "Omatech\\Mcore\\": "src/"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Tests\\": "tests/"
-        }
-    },
-    "scripts": {
-        "phpunit": "vendor/bin/phpunit",
-        "infection": "vendor/bin/infection -j8 --coverage=build --skip-initial-tests",
-        "test": [
-            "@phpunit",
-            "@infection"
-        ],
-        "analyse": "vendor/bin/phpinsights analyse --verbose --config-path=rules.php --no-interaction --fix src"
+  "name": "omatech/mcore",
+  "require": {
+    "php": "^8.0",
+    "symfony/yaml": "^5.3",
+    "lambdish/phunctional": "^2.1",
+    "webonyx/graphql-php": "^14.9"
+  },
+  "require-dev": {
+    "roave/security-advisories": "dev-latest",
+    "phpunit/phpunit": "^9.0",
+    "infection/infection": "^0.25",
+    "nunomaduro/phpinsights": "^2.0",
+    "symfony/var-dumper": "^5.3",
+    "mockery/mockery": "^1.4",
+    "fakerphp/faker": "^1.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Omatech\\Mcore\\": "src/"
     }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\": "tests/"
+    }
+  },
+  "scripts": {
+    "phpunit": "vendor/bin/phpunit",
+    "infection": "vendor/bin/infection -j8 --coverage=build --skip-initial-tests",
+    "test": [
+      "@phpunit",
+      "@infection"
+    ],
+    "analyse": "vendor/bin/phpinsights analyse --verbose --config-path=rules.php --no-interaction --fix src"
+  }
 }

@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace Tests\Data\Objects;
+namespace Tests\Editora\Data\Objects;
 
 use function Lambdish\Phunctional\reduce;
 
-class PicturesMother extends ObjectMother
+class CoordinatesMother extends ObjectMother
 {
     protected array $availableRelations = [];
 
@@ -12,21 +12,32 @@ class PicturesMother extends ObjectMother
     {
         $this->instances = [];
         for ($i = 1; $i <= $instancesNumber; $i++) {
-            $this->instances[] = $this->build('Pictures')->fill([
+            $this->instances[] = $this->build('Coordinates')->fill([
                 'metadata' => [
                     'uuid' => $this->faker->uuid(),
-                    'key' => $key ?? 'picture-instance-'.$i,
+                    'key' => $key ?? 'coordinate-instance-'.$i,
                     'publication' => [
                         'startPublishingDate' => $this->faker->dateTime()->format('Y-m-d H:i:s'),
                     ],
                 ],
                 'attributes' => [
-                    'url' => [
+                    'latitude' => [
                         'values' => reduce(function (array $acc, string $language) {
                             $acc[] = [
                                 'uuid' => $this->faker->uuid(),
                                 'language' => $language,
-                                'value' => $this->faker->url(),
+                                'value' => $this->faker->randomDigit(),
+                            ];
+                            return $acc;
+                        }, $this->languages, []),
+                        'attributes' => [],
+                    ],
+                    'longitude' => [
+                        'values' => reduce(function (array $acc, string $language) {
+                            $acc[] = [
+                                'uuid' => $this->faker->uuid(),
+                                'language' => $language,
+                                'value' => $this->faker->randomDigit(),
                             ];
                             return $acc;
                         }, $this->languages, []),

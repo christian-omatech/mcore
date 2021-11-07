@@ -7,18 +7,10 @@ use Omatech\Mcore\Editora\Domain\Instance\Exceptions\InvalidLanguagesException;
 use Omatech\Mcore\Editora\Domain\Instance\Exceptions\InvalidStructureException;
 use Omatech\Mcore\Editora\Domain\Instance\InstanceBuilder;
 use Omatech\Mcore\Editora\Domain\Value\Exceptions\InvalidValueTypeException;
+use Tests\Editora\EditoraTestCase;
 
-class InstanceBuilderTest extends TestCase
+class InstanceBuilderTest extends EditoraTestCase
 {
-    private array $languages = ['es', 'en'];
-    private string $className = 'VideoGames';
-    private array $structure;
-
-    public function setUp(): void
-    {
-        $this->structure = (include dirname(__DIR__, 3).'/Data/data.php')['classes'];
-    }
-
     /** @test */
     public function missingLanguagesOnInstanceBuilder(): void
     {
@@ -82,177 +74,232 @@ class InstanceBuilderTest extends TestCase
             ->build();
 
         $this->assertEquals([
-            "class" => [
-                "key" => "video-games",
-                "relations" => [
+            'class' => [
+                'key' => 'video-games',
+                'relations' => [
                     [
-                        "key" => "platforms",
-                        "classes" => [
-                            "platform"
-                        ]
+                        'key' => 'platforms',
+                        'classes' => [
+                            'platform',
+                        ],
                     ], [
-                        "key" => "reviews",
-                        "classes" => [
-                            "articles",
-                            "blogs"
-                        ]
-                    ]
-                ]
+                        'key' => 'reviews',
+                        'classes' => [
+                            'articles',
+                            'blogs',
+                        ],
+                    ],
+                ],
             ],
-            "metadata" => [
-                "uuid" => null,
-                "key" => "",
-                "publication" => [
-                    "status" => "pending",
-                    "startPublishingDate" => null,
-                    "endPublishingDate" => null
-                ]
+            'metadata' => [
+                'uuid' => null,
+                'key' => '',
+                'publication' => [
+                    'status' => 'pending',
+                    'startPublishingDate' => null,
+                    'endPublishingDate' => null,
+                ],
             ],
-            "attributes" => [
+            'attributes' => [
                 [
-                    "key" => "title",
-                    "type" => "string",
-                    "values" => [
+                    'key' => 'title',
+                    'type' => 'string',
+                    'values' => [
                         [
-                            "uuid" => null,
-                            "language" => "es",
-                            "rules" => [],
-                            "configuration" => [],
-                            "value" => null,
-                            "extraData" => []
+                            'uuid' => null,
+                            'language' => 'es',
+                            'rules' => [],
+                            'configuration' => [],
+                            'value' => null,
+                            'extraData' => [],
                         ], [
-                            "uuid" => null,
-                            "language" => "en",
-                            "rules" => [],
-                            "configuration" => [],
-                            "value" => null,
-                            "extraData" => []
-                        ]
+                            'uuid' => null,
+                            'language' => 'en',
+                            'rules' => [],
+                            'configuration' => [],
+                            'value' => null,
+                            'extraData' => [],
+                        ],
                     ],
-                    "attributes" => [
+                    'attributes' => [
                         [
-                            "key" => "sub-title",
-                            "type" => "string",
-                            "values" => [
+                            'key' => 'code',
+                            'type' => 'string',
+                            'values' => [
                                 [
-                                    "uuid" => null,
-                                    "language" => "es",
-                                    "rules" => [],
-                                    "configuration" => [],
-                                    "value" => null,
-                                    "extraData" => []
+                                    'uuid' => null,
+                                    'language' => 'es',
+                                    'rules' => [],
+                                    'configuration' => [],
+                                    'value' => null,
+                                    'extraData' => [],
                                 ], [
-                                    "uuid" => null,
-                                    "language" => "en",
-                                    "rules" => [],
-                                    "configuration" => [],
-                                    "value" => null,
-                                    "extraData" => [],
-                                ]
+                                    'uuid' => null,
+                                    'language' => 'en',
+                                    'rules' => [],
+                                    'configuration' => [],
+                                    'value' => null,
+                                    'extraData' => [],
+                                ],
                             ],
-                            "attributes" => []
-                        ]
-                    ]
-                ], [
-                    "key" => "synopsis",
-                    "type" => "textarea",
-                    "values" => [
-                        [
-                            "uuid" => null,
-                            "language" => "es",
-                            "rules" => [
-                                "required" => true
-                            ],
-                            "configuration" => [
-                                "cols" => 10,
-                                "rows" => 10
-                            ],
-                            "value" => null,
-                            "extraData" => []
+                            'attributes' => [],
                         ], [
-                            "uuid" => null,
-                            "language" => "en",
-                            "rules" => [
-                                "required" => true
+                            'key' => 'sub-title',
+                            'type' => 'string',
+                            'values' => [
+                                [
+                                    'uuid' => null,
+                                    'language' => 'es',
+                                    'rules' => [
+                                        'required' => true,
+                                    ],
+                                    'configuration' => [],
+                                    'value' => null,
+                                    'extraData' => [],
+                                ], [
+                                    'uuid' => null,
+                                    'language' => 'en',
+                                    'rules' => [
+                                        'required' => true,
+                                    ],
+                                    'configuration' => [],
+                                    'value' => null,
+                                    'extraData' => [],
+                                ],
                             ],
-                            "configuration" => [
-                                "cols" => 10,
-                                "rows" => 10
-                            ],
-                            "value" => null,
-                            "extraData" => []
-                        ]
+                            'attributes' => [],
+                        ],
                     ],
-                    "attributes" => []
                 ], [
-                    "key" => "release-date",
-                    "type" => "string",
-                    "values" => [
+                    'key' => 'sub-title',
+                    'type' => 'string',
+                    'values' => [
                         [
-                            "uuid" => null,
-                            "language" => "es",
-                            "rules" => [
-                                "required" => true
+                            'uuid' => null,
+                            'language' => 'es',
+                            'rules' => [
+                                'uniqueDB' => [
+                                    'class' => "Tests\Editora\Data\UniqueValueRepository",
+                                ],
                             ],
-                            "configuration" => [
-                                "cols" => 10,
-                                "rows" => 10
-                            ],
-                            "value" => null,
-                            "extraData" => []
+                            'configuration' => [],
+                            'value' => null,
+                            'extraData' => [],
                         ], [
-                            "uuid" => null,
-                            "language" => "en",
-                            "rules" => [
-                                "required" => false
+                            'uuid' => null,
+                            'language' => 'en',
+                            'rules' => [
+                                'uniqueDB' => [
+                                    'class' => "Tests\Editora\Data\UniqueValueRepository",
+                                ],
                             ],
-                            "configuration" => [
-                                "cols" => 20,
-                                "rows" => 20
-                            ],
-                            "value" => null,
-                            "extraData" => []
-                        ], [
-                            "uuid" => null,
-                            "language" => "+",
-                            "rules" => [
-                                "required" => true
-                            ],
-                            "configuration" => [
-                                "cols" => 30,
-                                "rows" => 30
-                            ],
-                            "value" => null,
-                            "extraData" => []
-                        ]
+                            'configuration' => [],
+                            'value' => null,
+                            'extraData' => [],
+                        ],
                     ],
-                    "attributes" => []
+                    'attributes' => [],
                 ], [
-                    "key" => "code",
-                    "type" => "lookup",
-                    "values" => [
+                    'key' => 'synopsis',
+                    'type' => 'textarea',
+                    'values' => [
                         [
-                            "uuid" => null,
-                            "language" => "*",
-                            "rules" => [
-                                "required" => false
+                            'uuid' => null,
+                            'language' => 'es',
+                            'rules' => [
+                                'required' => true,
                             ],
-                            "configuration" => [
-                                "options" => [
-                                    "pc-code",
-                                    "playstation-code",
-                                    "xbox-code",
-                                    "switch-code",
-                                ]
+                            'configuration' => [
+                                'cols' => 10,
+                                'rows' => 10,
                             ],
-                            "value" => null,
-                            "extraData" => []
-                        ]
+                            'value' => null,
+                            'extraData' => [],
+                        ], [
+                            'uuid' => null,
+                            'language' => 'en',
+                            'rules' => [
+                                'required' => true,
+                            ],
+                            'configuration' => [
+                                'cols' => 10,
+                                'rows' => 10,
+                            ],
+                            'value' => null,
+                            'extraData' => [],
+                        ],
                     ],
-                    "attributes" => []
-                ]
+                    'attributes' => [],
+                ], [
+                    'key' => 'release-date',
+                    'type' => 'string',
+                    'values' => [
+                        [
+                            'uuid' => null,
+                            'language' => 'es',
+                            'rules' => [
+                                'required' => true,
+                            ],
+                            'configuration' => [
+                                'cols' => 10,
+                                'rows' => 10,
+                            ],
+                            'value' => null,
+                            'extraData' => [],
+                        ], [
+                            'uuid' => null,
+                            'language' => 'en',
+                            'rules' => [
+                                'required' => false,
+                            ],
+                            'configuration' => [
+                                'cols' => 20,
+                                'rows' => 20,
+                            ],
+                            'value' => null,
+                            'extraData' => [],
+                        ], [
+                            'uuid' => null,
+                            'language' => '+',
+                            'rules' => [
+                                'required' => true,
+                            ],
+                            'configuration' => [
+                                'cols' => 30,
+                                'rows' => 30,
+                            ],
+                            'value' => null,
+                            'extraData' => [],
+                        ],
+                    ],
+                    'attributes' => [],
+                ], [
+                    'key' => 'code',
+                    'type' => 'lookup',
+                    'values' => [
+                        [
+                            'uuid' => null,
+                            'language' => '*',
+                            'rules' => [
+                                'required' => true,
+                                'unique' => [],
+                            ],
+                            'configuration' => [
+                                'options' => [
+                                    'pc-code',
+                                    'playstation-code',
+                                    'xbox-code',
+                                    'switch-code',
+                                ],
+                            ],
+                            'value' => null,
+                            'extraData' => [],
+                        ],
+                    ],
+                    'attributes' => [],
+                ],
             ],
-            "relations" => [],
+            'relations' => [],
         ], $instance->toArray());
     }
 }

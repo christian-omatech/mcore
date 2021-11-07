@@ -1,14 +1,12 @@
 <?php declare(strict_types=1);
 
-namespace Tests\Data\Objects;
+namespace Tests\Editora\Data\Objects;
 
 use Faker\Factory;
 use Faker\Generator;
 use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Omatech\Mcore\Editora\Domain\Attribute\AttributeCollection;
 use Omatech\Mcore\Editora\Domain\Instance\Contracts\InstanceCacheInterface;
-use Omatech\Mcore\Editora\Domain\Instance\Extraction\Contracts\ExtractionCacheInterface;
 use Omatech\Mcore\Editora\Domain\Instance\Instance;
 use Omatech\Mcore\Editora\Domain\Instance\InstanceBuilder;
 use function Lambdish\Phunctional\filter;
@@ -16,20 +14,21 @@ use function Lambdish\Phunctional\first;
 use function Lambdish\Phunctional\reduce;
 
 abstract class ObjectMother
-{    
+{
     protected array $structure;
     protected array $languages;
     protected array $instances = [];
     protected Generator $faker;
 
-    public function __construct(array $languages = ['es', 'en']) {
+    public function __construct(array $languages = ['es', 'en'])
+    {
         $this->languages = $languages;
-        $this->structure = (require __DIR__.'/../data.php')['classes'];
+        $this->structure = (require __DIR__.'/../structure.php')['classes'];
         $this->faker = Factory::create();
     }
 
     protected function build(string $className): Instance
-    {        
+    {
         $instanceCache = Mockery::mock(InstanceCacheInterface::class);
         $instanceCache->shouldReceive('get')->andReturn(null)->once();
         $instanceCache->shouldReceive('put')->andReturn(null)->once();
@@ -54,7 +53,7 @@ abstract class ObjectMother
         $createdRelatedInstances = [];
         for ($i = 1; $i <= $instancesNumber; $i++) {
             $relatedInstances = reduce(function (array $acc, array $instancesToCreate, string $relationKey) {
-                $acc[$relationKey] = reduce(function (array $acc, string $class) use ($instancesToCreate) {
+                $acc[$relationKey] = reduce(static function (array $acc, string $class) use ($instancesToCreate) {
                     $object = (new $class());
                     return array_merge_recursive($acc, $object->create(
                         $instancesToCreate['instances'],
@@ -104,7 +103,7 @@ abstract class ObjectMother
             if (is_array($field)) {
                 $sub = self::extractAttributes($attributes->find($currentField)?->attributes(), $fields[$currentField], $language);
             }
-            if($attributes->find($currentField)) {
+            if ($attributes->find($currentField)) {
                 $value = filter(static fn ($value) => ! is_null($value), [
                     $language => $attributes->find($currentField)?->value($language)?->value(),
                     '+' => $attributes->find($currentField)?->value('+')?->value(),

@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+use Omatech\Mcore\Editora\Domain\Value\Types\StringValue;
+use Tests\Editora\Data\UniqueValueRepository;
+
 return [
     'classes' => [
         'News' => [
@@ -32,7 +35,7 @@ return [
             'relations' => [
                 'PhotosLocations' => [
                     'Locations',
-                    'Coordinates'
+                    'Coordinates',
                 ],
             ],
         ],
@@ -40,7 +43,7 @@ return [
             'attributes' => [
                 'country' => null,
             ],
-        ],        
+        ],
         'Coordinates' => [
             'attributes' => [
                 'latitude' => null,
@@ -91,61 +94,79 @@ return [
             'attributes' => [
                 'Title' => [
                     'values' => [
-                        'type' => 'Value'
+                        'type' => 'Value',
                     ],
                     'attributes' => [
+                        'Code' => [
+                            'values' => [
+                                'type' => 'Value',
+                            ],
+                        ],
                         'SubTitle' => [
                             'values' => [
-                                'type' => 'Tests\Data\Value'
-                            ]
-                        ]
-                    ]
+                                'rules' => [
+                                    'required' => true,
+                                ],
+                                'type' => StringValue::class,
+                            ],
+                        ],
+                    ],
+                ],
+                'SubTitle' => [
+                    'values' => [
+                        'rules' => [
+                            'uniqueDB' => [
+                                'class' => UniqueValueRepository::class,
+                            ],
+                        ],
+                        'type' => StringValue::class,
+                    ],
                 ],
                 'Synopsis' => [
                     'type' => 'textarea',
                     'values' => [
                         'type' => 'JsonValue',
                         'rules' => [
-                            'required' => true
+                            'required' => true,
                         ],
                         'configuration' => [
                             'cols' => 10,
-                            'rows' => 10
-                        ]
-                    ]
+                            'rows' => 10,
+                        ],
+                    ],
                 ],
                 'ReleaseDate' => [
                     'values' => [
                         'type' => 'DateValue',
                         'rules' => [
-                            'required' => true
+                            'required' => true,
                         ],
                         'configuration' => [
                             'cols' => 30,
-                            'rows' => 30
+                            'rows' => 30,
                         ],
                         'languages' => [
                             '+' => null,
                             'es' => [
                                 'rules' => [
-                                    'required' => true
+                                    'required' => true,
                                 ],
                                 'configuration' => [
                                     'cols' => 10,
-                                    'rows' => 10
-                                ]
+                                    'rows' => 10,
+                                ],
                             ],
                             'en' => [
                                 'rules' => [
-                                    'required' => false
+                                    'required' => false,
                                 ],
                                 'configuration' => [
                                     'cols' => 20,
-                                    'rows' => 20
-                                ]
-                            ]
-                        ]
-                    ]
+                                    'rows' => 20,
+                                ],
+                            ],
+                        ],
+                    ],
                 ],
                 'Code' => [
                     'type' => 'lookup',
@@ -154,30 +175,42 @@ return [
                             '*' => [
                                 'type' => 'LookupValue',
                                 'rules' => [
-                                    'required' => false
+                                    'required' => true,
+                                    'unique' => [],
                                 ],
                                 'configuration' => [
                                     'options' => [
                                         'pc-code',
                                         'playstation-code',
                                         'xbox-code',
-                                        'switch-code'
-                                    ]
-                                ]
-                            ]
-                        ]
-                    ]
-                ]
+                                        'switch-code',
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
             ],
             'relations' => [
                 'Platforms' => [
-                    'Platform'
+                    'Platform',
                 ],
                 'Reviews' => [
                     'Articles',
-                    'Blogs'
-                ]
-            ]
-        ]
+                    'Blogs',
+                ],
+            ],
+        ],
+        'Movies' => [
+            'attributes' => [
+                'Title' => [
+                    'values' => [
+                        'rules' => [
+                            'noValidRule' => true,
+                        ],
+                    ],
+                ],
+            ],
+        ],
     ],
 ];

@@ -1,26 +1,26 @@
 <?php declare(strict_types=1);
 
-namespace Tests\Data\Objects;
+namespace Tests\Editora\Data\Objects;
 
 use function Lambdish\Phunctional\reduce;
 
 class PhotosMother extends ObjectMother
 {
     protected array $availableRelations = [
-        'photos-locations' => [ 
+        'photos-locations' => [
             LocationsMother::class,
-            CoordinatesMother::class
+            CoordinatesMother::class,
         ],
     ];
 
     public function get(int $instancesNumber = 1, ?string $key = null, ?array $relations = []): array
     {
         $this->instances = [];
-        for ($i = 1; $i <= $instancesNumber; $i++) {
+        for ($i = 1; $i <= $instancesNumber; ++$i) {
             $this->instances[] = $this->build('Photos')->fill([
                 'metadata' => [
                     'uuid' => $this->faker->uuid(),
-                    'key' => $key ?? 'photo-instance-'.$i,
+                    'key' => $key ?? 'photo-instance-' . $i,
                     'publication' => [
                         'startPublishingDate' => $this->faker->dateTime()->format('Y-m-d H:i:s'),
                     ],
@@ -33,6 +33,7 @@ class PhotosMother extends ObjectMother
                                 'language' => $language,
                                 'value' => $this->faker->url(),
                             ];
+
                             return $acc;
                         }, $this->languages, []),
                         'attributes' => [],
@@ -41,6 +42,7 @@ class PhotosMother extends ObjectMother
                 'relations' => $relations,
             ]);
         }
+
         return $this->instances;
     }
 }

@@ -3,8 +3,9 @@
 namespace Tests\Editora\Domain\Instance;
 
 use Omatech\Mcore\Editora\Domain\Instance\Extraction\QueryParser;
+use Tests\Editora\EditoraTestCase;
 
-class InstanceExtractionQueryParserTest extends TestCase
+class InstanceExtractionQueryParserTest extends EditoraTestCase
 {
     /** @test */
     public function queryParser(): void

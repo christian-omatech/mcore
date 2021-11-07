@@ -20,7 +20,7 @@ class DeleteInstanceTest extends TestCase
     /** @test */
     public function deleteInstanceSuccessfully(): void
     {
-        $command = new DeleteInstanceCommand('1');
+        $command = new DeleteInstanceCommand('df86408b-b2e6-4922-83e2-b762b000a335');
 
         $instance = Mockery::mock(Instance::class);
         $event = new InstanceHasBeenDeleted($instance);
@@ -49,7 +49,7 @@ class DeleteInstanceTest extends TestCase
     {
         $this->expectException(InstanceDoesNotExistsException::class);
 
-        $command = new DeleteInstanceCommand('1');
+        $command = new DeleteInstanceCommand('df86408b-b2e6-4922-83e2-b762b000a335');
 
         $event = Mockery::mock(EventPublisherInterface::class);
         $event->shouldReceive('publish')
