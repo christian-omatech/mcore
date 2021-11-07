@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Tests\Data\Objects;
+namespace Tests\Editora\Data\Objects;
 
 use function Lambdish\Phunctional\reduce;
 

@@ -8,13 +8,13 @@ use Omatech\Mcore\Editora\Application\ExtractInstance\ExtractInstanceCommandHand
 use Omatech\Mcore\Editora\Domain\Instance\Contracts\ExtractionRepositoryInterface;
 use Omatech\Mcore\Editora\Domain\Instance\Extraction\Pagination;
 use Omatech\Mcore\Editora\Domain\Instance\Extraction\Results;
-use Tests\Data\Objects\ArticlesMother;
-use Tests\Data\Objects\BooksMother;
-use Tests\Data\Objects\NewsMother;
-use Tests\Data\Objects\ObjectMother;
-use Tests\Editora\Domain\Instance\TestCase;
+use Tests\Editora\Data\Objects\ArticlesMother;
+use Tests\Editora\Data\Objects\BooksMother;
+use Tests\Editora\Data\Objects\NewsMother;
+use Tests\Editora\Data\Objects\ObjectMother;
+use Tests\Editora\EditoraTestCase;
 
-class ExtractInstanceTest extends TestCase
+class ExtractInstanceTest extends EditoraTestCase
 {
     /** @test */
     public function extractInstancesByClassSuccessfully(): void
@@ -315,7 +315,8 @@ class ExtractInstanceTest extends TestCase
             ObjectMother::extraction($newsInstances['instances'], ['title'], 'es', [
                 'news-photos' => ['child' => ObjectMother::extraction($newsInstances['relations']['news-photos']['instances'], ['url'], 'es', [
                     'photos-locations' => ['child' => ObjectMother::extraction($newsInstances['relations']['news-photos']['relations']['photos-locations']['instances'], ['country'], 'es')],
-                ])],
+                ]),
+                ],
             ]),
             $extraction->toArray()
         );
@@ -457,7 +458,9 @@ class ExtractInstanceTest extends TestCase
                     'title',
                     'author',
                     'page',
-                ], 'en', [])]],
+                ], 'en', []),
+                ],
+                ],
                 'photos' => [ 'child' => ObjectMother::extraction($booksInstances['relations']['photos']['instances'], [
                     'url',
                 ], 'en', [
@@ -469,8 +472,10 @@ class ExtractInstanceTest extends TestCase
                             'longitude',
                         ],
                         'en'
-                    )],
-                ])],
+                    ),
+                    ],
+                ]),
+                ],
             ]),
             $extraction->toArray()
         );

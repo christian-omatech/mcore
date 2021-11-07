@@ -15,6 +15,7 @@ final class CreateInstanceCommand extends Command
     {
         $this->classKey = $data['classKey'];
         $this->metadata = [
+            'uuid' => $data['uuid'],
             'key' => $data['key'],
             'publication' => [
                 'status' => $data['status'] ?? null,

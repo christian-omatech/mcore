@@ -23,6 +23,7 @@ class CreateInstanceTest extends TestCase
     public function createInstanceCommand(): void
     {
         $command = new CreateInstanceCommand([
+            'uuid' => 'df86408b-b2e6-4922-83e2-b762b000a335',
             'classKey' => 'test',
             'key' => 'test',
             'status' => 'published',
@@ -42,6 +43,7 @@ class CreateInstanceTest extends TestCase
         $this->assertSame('test', $command->classKey());
         $this->assertSame('test', $command->key());
         $this->assertSame([
+            'uuid' => 'df86408b-b2e6-4922-83e2-b762b000a335',
             'key' => 'test',
             'publication' => [
                 'status' => 'published',
@@ -62,6 +64,7 @@ class CreateInstanceTest extends TestCase
         $this->assertSame([], $command->relations());
 
         $command = new CreateInstanceCommand([
+            'uuid' => 'df86408b-b2e6-4922-83e2-b762b000a335',
             'classKey' => 'test',
             'key' => 'test1',
             'status' => 'published',
@@ -77,6 +80,7 @@ class CreateInstanceTest extends TestCase
         $this->assertSame('test', $command->classKey());
         $this->assertSame('test1', $command->key());
         $this->assertSame([
+            'uuid' => 'df86408b-b2e6-4922-83e2-b762b000a335',
             'key' => 'test1',
             'publication' => [
                 'status' => 'published',
@@ -96,6 +100,7 @@ class CreateInstanceTest extends TestCase
     public function createInstanceSuccessfully(): void
     {
         $command = new CreateInstanceCommand([
+            'uuid' => 'df86408b-b2e6-4922-83e2-b762b000a335',
             'classKey' => 'test',
             'key' => 'test',
             'status' => 'published',
@@ -154,6 +159,7 @@ class CreateInstanceTest extends TestCase
         $this->expectException(InstanceExistsException::class);
 
         $command = new CreateInstanceCommand([
+            'uuid' => 'df86408b-b2e6-4922-83e2-b762b000a335',
             'classKey' => 'test',
             'key' => 'test',
             'status' => 'published',
@@ -179,6 +185,7 @@ class CreateInstanceTest extends TestCase
         $this->expectException(InstanceDoesNotExistsException::class);
 
         $command = new CreateInstanceCommand([
+            'uuid' => 'df86408b-b2e6-4922-83e2-b762b000a335',
             'classKey' => 'test',
             'key' => 'test',
             'status' => 'published',
@@ -212,6 +219,7 @@ class CreateInstanceTest extends TestCase
     public function createInstanceWithoutRelationsSuccessfully(): void
     {
         $command = new CreateInstanceCommand([
+            'uuid' => 'df86408b-b2e6-4922-83e2-b762b000a335',
             'classKey' => 'test',
             'key' => 'test',
             'startPublishingDate' => '1989-03-08 09:00:00',

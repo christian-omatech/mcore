@@ -3,9 +3,9 @@
 namespace Tests\Editora\Domain\Instance;
 
 use Omatech\Mcore\Editora\Domain\Instance\InstanceRelation;
-use PHPUnit\Framework\TestCase;
+use Tests\Editora\EditoraTestCase;
 
-final class InstanceRelationTest extends TestCase
+final class InstanceRelationTest extends EditoraTestCase
 {
     /** @test */
     public function instanceExistsInRelations(): void

@@ -21,7 +21,7 @@ class UpdateInstanceTest extends TestCase
     public function updateInstanceCommand(): void
     {
         $command = new UpdateInstanceCommand([
-            'uuid' => '1',
+            'uuid' => 'df86408b-b2e6-4922-83e2-b762b000a335',
             'key' => 'test',
             'status' => 'published',
             'startPublishingDate' => '1989-03-08 09:00:00',
@@ -58,7 +58,7 @@ class UpdateInstanceTest extends TestCase
         $this->assertSame([], $command->relations());
 
         $command = new UpdateInstanceCommand([
-            'uuid' => '1',
+            'uuid' => 'df86408b-b2e6-4922-83e2-b762b000a335',
             'key' => 'test',
             'status' => 'published',
             'startPublishingDate' => '1989-03-08 09:00:00',
@@ -90,7 +90,7 @@ class UpdateInstanceTest extends TestCase
     public function updateInstanceSuccessfully(): void
     {
         $command = new UpdateInstanceCommand([
-            'uuid' => '1',
+            'uuid' => 'df86408b-b2e6-4922-83e2-b762b000a335',
             'key' => 'test',
             'status' => 'published',
             'startPublishingDate' => '1989-03-08 09:00:00',
@@ -162,7 +162,7 @@ class UpdateInstanceTest extends TestCase
         $this->expectException(InstanceDoesNotExistsException::class);
 
         $command = new UpdateInstanceCommand([
-            'uuid' => '1',
+            'uuid' => 'df86408b-b2e6-4922-83e2-b762b000a335',
             'key' => 'test',
             'status' => 'published',
             'startPublishingDate' => '1989-03-08 09:00:00',
@@ -196,7 +196,7 @@ class UpdateInstanceTest extends TestCase
         $this->expectException(InstanceDoesNotExistsException::class);
 
         $command = new UpdateInstanceCommand([
-            'uuid' => '1',
+            'uuid' => 'df86408b-b2e6-4922-83e2-b762b000a335',
             'key' => 'test',
             'startPublishingDate' => '1989-03-08 09:00:00',
             'attributes' => [],
