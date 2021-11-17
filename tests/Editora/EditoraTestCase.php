@@ -18,12 +18,12 @@ abstract class EditoraTestCase extends TestCase
 
     public function setUp(): void
     {
-        $this->structure = (include __DIR__.'/Data/structure.php')['classes'];
+        $this->structure = (include __DIR__ . '/Data/structure.php')['classes'];
     }
 
     protected function mockNeverCalledInstanceCache(): InstanceCacheInterface
     {
-        $instanceCache = (object) Mockery::mock(InstanceCacheInterface::class);
+        $instanceCache = (object)Mockery::mock(InstanceCacheInterface::class);
         $instanceCache->shouldReceive('get')->andReturn(null)->never();
         $instanceCache->shouldReceive('put')->andReturn(null)->never();
         return $instanceCache;
@@ -31,7 +31,7 @@ abstract class EditoraTestCase extends TestCase
 
     protected function mockGetCalledInstanceCache(): InstanceCacheInterface
     {
-        $instanceCache = (object) Mockery::mock(InstanceCacheInterface::class);
+        $instanceCache = (object)Mockery::mock(InstanceCacheInterface::class);
         $instanceCache->shouldReceive('get')->andReturn(null)->once();
         $instanceCache->shouldReceive('put')->andReturn(null)->never();
         return $instanceCache;
@@ -39,7 +39,7 @@ abstract class EditoraTestCase extends TestCase
 
     protected function mockInstanceCache(): InstanceCacheInterface
     {
-        $instanceCache = (object) Mockery::mock(InstanceCacheInterface::class);
+        $instanceCache = (object)Mockery::mock(InstanceCacheInterface::class);
         $instanceCache->shouldReceive('get')->andReturn(null)->once();
         $instanceCache->shouldReceive('put')->andReturn(null)->once();
         return $instanceCache;
@@ -47,7 +47,7 @@ abstract class EditoraTestCase extends TestCase
 
     protected function mockExtractionCache(): ExtractionCacheInterface
     {
-        $extractionCache = (object) Mockery::mock(ExtractionCacheInterface::class);
+        $extractionCache = (object)Mockery::mock(ExtractionCacheInterface::class);
         $extractionCache->shouldReceive('get')->andReturn(null)->once();
         $extractionCache->shouldReceive('put')->andReturn(null)->once();
         return $extractionCache;

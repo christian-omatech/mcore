@@ -97,7 +97,7 @@ class UpdateInstanceTest extends TestCase
             'attributes' => [],
             'relations' => [
                 'relation-key1' => [
-                    '1','2','3','4','5','6',
+                    '1', '2', '3', '4', '5', '6',
                 ],
             ],
         ]);
@@ -169,7 +169,7 @@ class UpdateInstanceTest extends TestCase
             'attributes' => [],
             'relations' => [
                 'relation-key1' => [
-                    '1','2','3','4','5','6',
+                    '1', '2', '3', '4', '5', '6',
                 ],
             ],
         ]);

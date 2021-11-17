@@ -454,14 +454,14 @@ class ExtractInstanceTest extends EditoraTestCase
                 ],
                 'price',
             ], 'en', [
-                'articles' => [ 'child' => [ObjectMother::extraction($booksInstances['relations']['articles']['instances'], [
+                'articles' => ['child' => [ObjectMother::extraction($booksInstances['relations']['articles']['instances'], [
                     'title',
                     'author',
                     'page',
                 ], 'en', []),
                 ],
                 ],
-                'photos' => [ 'child' => ObjectMother::extraction($booksInstances['relations']['photos']['instances'], [
+                'photos' => ['child' => ObjectMother::extraction($booksInstances['relations']['photos']['instances'], [
                     'url',
                 ], 'en', [
                     'photos-locations' => ['child' => ObjectMother::extraction(

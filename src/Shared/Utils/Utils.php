@@ -4,7 +4,7 @@ namespace Omatech\Mcore\Shared\Utils;
 
 use function Lambdish\Phunctional\filter;
 
-class Utils
+final class Utils
 {
     private static ?Utils $instance = null;
 

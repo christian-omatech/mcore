@@ -9,6 +9,6 @@ final class UniqueValueRepository implements UniqueValueInterface
 {
     public function isUnique(BaseValue $value): bool
     {
-        return ! ($value->uuid() === 'fake-uuid' && $value->key() === 'sub-title');
+        return !($value->uuid() === 'fake-uuid' && $value->key() === 'sub-title');
     }
 }

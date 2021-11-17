@@ -47,6 +47,12 @@ final class ExtractInstanceCommandHandler
         return $extraction;
     }
 
+    /**
+     * @param Query $query
+     * @param array<int, Instance> $instances
+     *
+     * @return array<int, ExtractionInstance>
+     */
     private function extractResults(Query $query, array $instances): array
     {
         return map(function (Instance $instance) use ($query): ExtractionInstance {

@@ -13,7 +13,8 @@
     "nunomaduro/phpinsights": "^2.0",
     "symfony/var-dumper": "^5.3",
     "mockery/mockery": "^1.4",
-    "fakerphp/faker": "^1.0"
+    "fakerphp/faker": "^1.0",
+    "phpstan/phpstan": "^1.1"
   },
   "autoload": {
     "psr-4": {
@@ -32,6 +33,10 @@
       "@phpunit",
       "@infection"
     ],
-    "analyse": "vendor/bin/phpinsights analyse --verbose --config-path=rules.php --no-interaction --fix src"
+    "phpinsights": "vendor/bin/phpinsights analyse --verbose --config-path=rules.php --no-interaction --fix src",
+    "phpstan": "vendor/bin/phpstan analyse -l 6 src",
+    "analyse": [
+      "@phpinsights"
+    ]
   }
 }

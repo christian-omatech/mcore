@@ -23,7 +23,7 @@ abstract class ObjectMother
     public function __construct(array $languages = ['es', 'en'])
     {
         $this->languages = $languages;
-        $this->structure = (require __DIR__.'/../structure.php')['classes'];
+        $this->structure = (require __DIR__ . '/../structure.php')['classes'];
         $this->faker = Factory::create();
     }
 
@@ -104,7 +104,7 @@ abstract class ObjectMother
                 $sub = self::extractAttributes($attributes->find($currentField)?->attributes(), $fields[$currentField], $language);
             }
             if ($attributes->find($currentField)) {
-                $value = filter(static fn ($value) => ! is_null($value), [
+                $value = filter(static fn($value) => !is_null($value), [
                     $language => $attributes->find($currentField)?->value($language)?->value(),
                     '+' => $attributes->find($currentField)?->value('+')?->value(),
                     '*' => $attributes->find($currentField)?->value('*')?->value(),
