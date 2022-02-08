@@ -5,6 +5,8 @@ FROM php:${PHP_VERSION}-cli-alpine
 ARG UID
 ARG GID
 
+RUN ${UID}
+
 COPY php/zzz-fpm.conf /usr/local/etc/php-fpm.d/zzz-fpm.conf
 
 RUN apk --update --no-cache add \
