@@ -1,9 +1,6 @@
 name: Mcore
-on: [push, pull_request]
 
-env:
-  UID: $(id -u)
-  GID: $(id -g)
+on: [push, pull_request]
 
 jobs:
   build:
@@ -12,8 +9,8 @@ jobs:
     steps:
       - name: Dump UID & GID
         run: |
-          echo User ID [UID]: ${{ env.UID }}
-          echo Group ID [GID]: ${{ env.GID }}
+          echo User ID [UID]: ${{ UID }}
+          echo Group ID [GID]: ${{ GID }}
 
       - name: Checkout
         uses: actions/checkout@v2
