@@ -3,7 +3,6 @@ version: '3'
 env:
   UID: $(id -u)
   GID: $(id -g)
-  PHP_VERSION: 8.0
   PROJECT_NAME: mcore
 
 tasks:

@@ -22,8 +22,6 @@ jobs:
         run: task build
         env:
           PHP_VERSION: "${{ matrix.php-versions }}"
-          UID: $(id -u)
-          GID: $(id -g)
 
       - name: Install Dependencies
         run: task install
