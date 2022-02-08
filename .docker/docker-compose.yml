@@ -4,7 +4,6 @@ services:
     container_name: mcore_php
     environment:
       - XDEBUG_MODE=develop,coverage
-      - PHP_VERSION=${PHP_VERSION:-8.0}
     image: mcore_php
     build:
       context: "."
@@ -12,6 +11,7 @@ services:
       args:
         UID: ${UID}
         GID: ${GID}
+        PHP_VERSION: ${PHP_VERSION:-8.0}
     networks:
       - docker
     volumes:
