@@ -7,13 +7,13 @@ jobs:
     runs-on: ubuntu-latest
     name: MCore Build
     env:
-      UID: id -u
-      GID: id -g
+      UID: $(id -u)
+      GID: $(id -g)
     steps:
       - name: Dump UID & GID
         run: |
-          echo User ID [UID]: $UID
-          echo Group ID [GID]: $GID
+          echo User ID [UID]: ${{ env.UID }}
+          echo Group ID [GID]: ${{ env.GID }}
 
 #      - name: Checkout
 #        uses: actions/checkout@v2
