@@ -1,8 +1,6 @@
 version: '3'
 
 env:
-  UID: $(id -u)
-  GID: $(id -g)
   PROJECT_NAME: mcore
 
 tasks:
