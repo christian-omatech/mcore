@@ -1,27 +1,27 @@
 version: '3'
 
 env:
+  PROJECT_NAME: mcore
   UID:
     sh: echo "$(id -u)"
   GID:
     sh: echo "$(id -g)"
   PHP_VERSION:
     sh: echo "${PHP_VERSION}"
-  PROJECT_NAME: mcore
 
 tasks:
   build:
     cmds:
-      - UID=$UID GID=$GID docker-compose -f .docker/docker-compose.yml -p $PROJECT_NAME build --compress --pull --no-cache --force-rm
+      - docker-compose -f .docker/docker-compose.yml -p $PROJECT_NAME build --compress --pull --no-cache --force-rm
   down:
     cmds:
-      - UID=$UID GID=$GID docker-compose -f .docker/docker-compose.yml -p $PROJECT_NAME down
+      - docker-compose -f .docker/docker-compose.yml -p $PROJECT_NAME down
   clear:
     cmds:
-      - UID=$UID GID=$GID docker-compose -f .docker/docker-compose.yml -p $PROJECT_NAME down --rmi all
+      - docker-compose -f .docker/docker-compose.yml -p $PROJECT_NAME down --rmi all
   composer:
     cmds:
-      - UID=$UID GID=$GID docker-compose -f .docker/docker-compose.yml -p $PROJECT_NAME run --rm php composer {{.CLI_ARGS}}
+      - docker-compose -f .docker/docker-compose.yml -p $PROJECT_NAME run --rm php composer {{.CLI_ARGS}}
   install:
     cmds:
       - task: composer
