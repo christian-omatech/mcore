@@ -12,6 +12,8 @@ jobs:
 
       - name: Install Task
         uses: arduino/setup-task@v1
+        with:
+          version: "3.9.2"
 
       - name: Build Container
         run: task build
