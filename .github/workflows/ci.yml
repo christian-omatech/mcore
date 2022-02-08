@@ -12,7 +12,7 @@ jobs:
     steps:
       - name: Dump UID & GID
         run: |
-          echo User ID [UID]: $UID
+          echo User ID [UID]: ${UID}
           echo Group ID [GID]: $GID
 
 #      - name: Checkout
