@@ -5,6 +5,8 @@ env:
     sh: echo "$(id -u)"
   GID:
     sh: echo "$(id -g)"
+  PHP_VERSION:
+    sh: echo "${PHP_VERSION}"
   PROJECT_NAME: mcore
 
 tasks:
