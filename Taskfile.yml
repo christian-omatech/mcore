@@ -8,7 +8,7 @@ env:
 tasks:
   build:
     cmds:
-      - UID=$UID GID=$GID docker-compose -f .docker/docker-compose.yml -p $PROJECT_NAME build --compress --pull --no-cache --force-rm
+      - echo "Using $UID and endpoint $GID"
   down:
     cmds:
       - UID=$UID GID=$GID docker-compose -f .docker/docker-compose.yml -p $PROJECT_NAME down
