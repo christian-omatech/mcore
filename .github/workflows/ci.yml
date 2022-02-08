@@ -15,6 +15,9 @@ jobs:
 
       - name: Build Container
         run: task build
+        env:
+          UID: $(id -u)
+          GID: $(id -g)
 
       - name: Install Dependencies
         run: task install
