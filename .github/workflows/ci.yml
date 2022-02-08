@@ -4,11 +4,6 @@ on: [push, pull_request]
 
 jobs:
   build:
-    strategy:
-      matrix:
-        php-versions:
-          - 8.0
-          - 8.1
     runs-on: ubuntu-latest
     name: MCore Build
     steps:
@@ -20,10 +15,6 @@ jobs:
 
       - name: Build Container
         run: task build
-        env:
-          PHP_VERSION: "${{ matrix.php-versions }}"
-          UID: $(id -u)
-          GID: $(id -g)
 
       - name: Install Dependencies
         run: task install
