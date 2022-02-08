@@ -4,7 +4,7 @@ on: [push, pull_request]
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     name: MCore Build
     steps:
       - name: Checkout
@@ -15,9 +15,6 @@ jobs:
 
       - name: Build Container
         run: task build
-        env:
-          UID: $(id -u)
-          GID: $(id -g)
 
       - name: Install Dependencies
         run: task install
