@@ -1,11 +1,7 @@
-ARG PHP_VERSION=8.0
-
-FROM php:${PHP_VERSION}-cli-alpine
+FROM php:8.0-cli-alpine
 
 ARG UID
 ARG GID
-
-RUN ${UID}
 
 COPY php/zzz-fpm.conf /usr/local/etc/php-fpm.d/zzz-fpm.conf
 
