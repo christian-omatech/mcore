@@ -15,14 +15,14 @@ jobs:
           echo User ID [UID]: ${{ env.UID }}
           echo Group ID [GID]: ${{ env.GID }}
 
-#      - name: Checkout
-#        uses: actions/checkout@v2
-#
-#      - name: Install Task
-#        uses: arduino/setup-task@v1
-#
-#      - name: Build Container
-#        run: task build
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Install Task
+        uses: arduino/setup-task@v1
+
+      - name: Build Container
+        run: task build
 #
 #      - name: Install Dependencies
 #        run: task install
