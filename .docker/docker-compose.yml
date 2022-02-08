@@ -11,7 +11,7 @@ services:
       args:
         UID: ${UID}
         GID: ${GID}
-        PHP_VERSION: ${PHP_VERSION:-8.0}
+        PHP_VERSION: ${PHP_VERSION}
     networks:
       - docker
     volumes:
