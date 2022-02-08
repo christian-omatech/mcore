@@ -6,6 +6,13 @@ jobs:
   build:
     runs-on: ubuntu-latest
     name: MCore Build
+    strategy:
+      matrix:
+        php-versions:
+          - 8.0
+          - 8.1
+    env:
+      PHP_VERSION: '{{ matrix.php-versions }}'
     steps:
       - name: Checkout
         uses: actions/checkout@v2
