@@ -30,7 +30,7 @@ final class ValueCollection
     {
         return search(static function (BaseValue $baseValue) use ($language) {
             return $baseValue->language() === $language;
-        }, $this->values, null);
+        }, $this->values);
     }
 
     /** @return array<BaseValue> */

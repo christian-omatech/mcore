@@ -7,8 +7,14 @@ return [
     'classes' => [
         'News' => [
             'attributes' => [
-                'title' => null,
-                'description' => null,
+                'title' => [
+                    'values' => [
+                        'languages' => [
+                            '+' => [],
+                        ],
+                    ],
+                ],
+                'description' => null
             ],
             'relations' => [
                 'NewsPhotos' => [

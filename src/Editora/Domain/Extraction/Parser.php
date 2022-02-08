@@ -1,19 +1,28 @@
 <?php declare(strict_types=1);
 
-namespace Omatech\Mcore\Editora\Domain\Instance\Extraction;
+namespace Omatech\Mcore\Editora\Domain\Extraction;
 
+use GraphQL\Error\SyntaxError;
 use GraphQL\Language\AST\ArgumentNode;
 use GraphQL\Language\AST\FieldNode;
-use GraphQL\Language\Parser;
+use GraphQL\Language\AST\NodeList;
+use GraphQL\Language\Parser as GraphQLParser;
 use Omatech\Mcore\Shared\Utils\Utils;
 use function Lambdish\Phunctional\reduce;
 use function Lambdish\Phunctional\search;
 
-final class QueryParser
+final class Parser
 {
+    /**
+     * @param string $query
+     *
+     * @return array<Query>
+     *
+     * @throws SyntaxError
+     */
     public function parse(string $query): array
     {
-        $graphQuery = Parser::parse(str_replace('()', '(limit: 0)', $query));
+        $graphQuery = GraphQLParser::parse(str_replace('()', '(limit: 0)', $query));
         return reduce(function (array $acc, FieldNode $node): array {
             $acc[] = $this->parseRootNode($node);
             return $acc;
@@ -27,16 +36,23 @@ final class QueryParser
             'attributes' => $this->parseAttributes($node),
             'params' => $params,
             'relations' => $this->parseRelations($node, [
-                'language' => $params['language'],
+                'languages' => $params['languages'],
                 'preview' => $params['preview'],
             ]),
         ]);
     }
 
+    /**
+     * @param FieldNode $node
+     * @param string $nodeType
+     *
+     * @return array<string, mixed>
+     */
     private function parseParams(FieldNode $node, string $nodeType): array
     {
-        $params = reduce(static function (array $acc, ArgumentNode $argument): array {
-            $acc[$argument->name->value] = $argument->value->value;
+        $params = reduce(function (array $acc, ArgumentNode $argument): array {
+            $acc[$argument->name->value] = $argument->value->value ??
+                $this->parseArrayParams($argument->value->values);
             return $acc;
         }, $node->arguments, []);
         if ($node->name->value !== 'instances') {
@@ -47,9 +63,41 @@ final class QueryParser
         $params['preview'] = $params['preview'] ?? false;
         $params['limit'] = (int) ($params['limit'] ?? 0);
         $params['page'] = (int) ($params['page'] ?? 1);
+        $params['languages'] = $this->parseLanguages($params['languages'] ?? []);
         return $params;
     }
 
+    /**
+     * @param NodeList $values
+     *
+     * @return array<string>
+     */
+    private function parseArrayParams(NodeList $values): array
+    {
+        return reduce(static function (array $acc, $value) {
+            $acc[] = $value->value;
+            return $acc;
+        }, $values, []);
+    }
+
+    /**
+     * @param string|array<string> $value
+     *
+     * @return array<string>
+     */
+    private function parseLanguages(string|array $value): array
+    {
+        if (is_string($value)) {
+            return [$value];
+        }
+        return $value;
+    }
+
+    /**
+     * @param FieldNode $node
+     *
+     * @return array<Attribute>
+     */
     private function parseAttributes(FieldNode $node): array
     {
         return reduce(function (array $acc, FieldNode $node): array {
@@ -63,6 +111,12 @@ final class QueryParser
         }, $node->selectionSet->selections ?? [], []);
     }
 
+    /**
+     * @param FieldNode $node
+     * @param array<string, mixed> $params
+     *
+     * @return array<Query>
+     */
     private function parseRelations(FieldNode $node, array $params = []): array
     {
         return reduce(function (array $acc, FieldNode $node) use ($params): array {
@@ -80,6 +134,11 @@ final class QueryParser
         }, $node->selectionSet->selections ?? [], []);
     }
 
+    /**
+     * @param array<string, mixed> $params
+     *
+     * @return array<string, mixed>
+     */
     private function defaultRelationParams(array $params): array
     {
         $params['type'] = $params['type'] ?? 'child';

@@ -2,15 +2,15 @@
 
 namespace Omatech\Mcore\Editora\Application\ExtractInstance;
 
+use Omatech\Mcore\Editora\Domain\Extraction\Contracts\ExtractionCacheInterface;
+use Omatech\Mcore\Editora\Domain\Extraction\Extraction;
+use Omatech\Mcore\Editora\Domain\Extraction\Extractor;
+use Omatech\Mcore\Editora\Domain\Extraction\Instance as ExtractionInstance;
+use Omatech\Mcore\Editora\Domain\Extraction\Parser;
+use Omatech\Mcore\Editora\Domain\Extraction\Query;
+use Omatech\Mcore\Editora\Domain\Extraction\RelationsResults;
+use Omatech\Mcore\Editora\Domain\Extraction\Results;
 use Omatech\Mcore\Editora\Domain\Instance\Contracts\ExtractionRepositoryInterface;
-use Omatech\Mcore\Editora\Domain\Instance\Extraction\Contracts\ExtractionCacheInterface;
-use Omatech\Mcore\Editora\Domain\Instance\Extraction\Extraction;
-use Omatech\Mcore\Editora\Domain\Instance\Extraction\Extractor;
-use Omatech\Mcore\Editora\Domain\Instance\Extraction\Instance as ExtractionInstance;
-use Omatech\Mcore\Editora\Domain\Instance\Extraction\Query;
-use Omatech\Mcore\Editora\Domain\Instance\Extraction\QueryParser;
-use Omatech\Mcore\Editora\Domain\Instance\Extraction\RelationsResults;
-use Omatech\Mcore\Editora\Domain\Instance\Extraction\Results;
 use Omatech\Mcore\Editora\Domain\Instance\Instance;
 use function Lambdish\Phunctional\flat_map;
 use function Lambdish\Phunctional\map;
@@ -42,7 +42,7 @@ final class ExtractInstanceCommandHandler
             return $query
                 ->setPagination($results->pagination())
                 ->setResults($this->extractResults($query, $results->instances()));
-        }, (new QueryParser())->parse($extraction->query())));
+        }, (new Parser())->parse($extraction->query())));
         $this->extractionCache->put($extraction->hash(), $extraction);
         return $extraction;
     }

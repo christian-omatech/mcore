@@ -2,7 +2,7 @@
 
 namespace Tests\Editora\Domain\Instance;
 
-use Omatech\Mcore\Editora\Domain\Instance\Extraction\QueryParser;
+use Omatech\Mcore\Editora\Domain\Extraction\Parser;
 use Tests\Editora\EditoraTestCase;
 
 class InstanceExtractionQueryParserTest extends EditoraTestCase
@@ -11,7 +11,7 @@ class InstanceExtractionQueryParserTest extends EditoraTestCase
     public function queryParser(): void
     {
         $graphQuery = '{
-            Books(language: en) {
+            Books(languages: [en]) {
                 title,
                 isbn,
                 synopsis,
@@ -25,18 +25,19 @@ class InstanceExtractionQueryParserTest extends EditoraTestCase
                 }
             }
         }';
-        $query = (new QueryParser())->parse($graphQuery)[0];
+        $query = (new Parser())->parse($graphQuery)[0];
+
         $this->assertNull($query->param('non-existent-param'));
         $this->assertSame([
-            'language' => 'en',
+            'languages' => ['en'],
             'attributes' => [
                 [
                     'key' => 'title',
                     'attributes' => [],
-                ],  [
+                ], [
                     'key' => 'isbn',
                     'attributes' => [],
-                ],  [
+                ], [
                     'key' => 'synopsis',
                     'attributes' => [],
                 ], [
@@ -53,7 +54,7 @@ class InstanceExtractionQueryParserTest extends EditoraTestCase
                 ],
             ],
             'params' => [
-                'language' => 'en',
+                'languages' => ['en'],
                 'class' => 'books',
                 'key' => null,
                 'preview' => false,
@@ -62,7 +63,7 @@ class InstanceExtractionQueryParserTest extends EditoraTestCase
             ],
             'relations' => [
                 [
-                    'language' => 'en',
+                    'languages' => ['en'],
                     'attributes' => [],
                     'params' => [
                         'limit' => 1,
@@ -71,12 +72,12 @@ class InstanceExtractionQueryParserTest extends EditoraTestCase
                         'key' => 'articles',
                         'class' => null,
                         'preview' => false,
-                        'language' => 'en',
+                        'languages' => ['en'],
                     ],
                     'relations' => [],
                     'pagination' => null,
                 ], [
-                    'language' => 'en',
+                    'languages' => ['en'],
                     'attributes' => [],
                     'params' => [
                         'limit' => 3,
@@ -85,11 +86,11 @@ class InstanceExtractionQueryParserTest extends EditoraTestCase
                         'class' => null,
                         'preview' => false,
                         'page' => 1,
-                        'language' => 'en',
+                        'languages' => ['en'],
                     ],
                     'relations' => [
                         [
-                            'language' => 'en',
+                            'languages' => ['en'],
                             'attributes' => [],
                             'params' => [
                                 'limit' => 0,
@@ -97,7 +98,7 @@ class InstanceExtractionQueryParserTest extends EditoraTestCase
                                 'class' => null,
                                 'preview' => false,
                                 'page' => 1,
-                                'language' => 'en',
+                                'languages' => ['en'],
                                 'type' => 'child',
                             ],
                             'relations' => [],

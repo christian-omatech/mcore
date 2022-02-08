@@ -2,10 +2,11 @@
 
 namespace Omatech\Mcore\Editora\Domain\Instance\Contracts;
 
-use Omatech\Mcore\Editora\Domain\Instance\Extraction\Results;
+use Omatech\Mcore\Editora\Domain\Extraction\Results;
 
 interface ExtractionRepositoryInterface
 {
     public function instancesBy(array $params): Results;
+
     public function findRelatedInstances(string $instanceUuid, array $params): Results;
 }

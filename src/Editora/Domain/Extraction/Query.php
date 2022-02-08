@@ -1,18 +1,24 @@
 <?php declare(strict_types=1);
 
-namespace Omatech\Mcore\Editora\Domain\Instance\Extraction;
+namespace Omatech\Mcore\Editora\Domain\Extraction;
 
 use function Lambdish\Phunctional\map;
 use function Lambdish\Phunctional\reduce;
 
 final class Query
 {
+    /** @var array|mixed */
     private array $params;
-    /** @var array<Attribute> $attributes */
+
+    /** @var array<Attribute> */
     private array $attributes;
+
     /** @var array<Query> $relations */
     private array $relations;
+
+    /** @var Pagination|null */
     private ?Pagination $pagination = null;
+
     /** @var array<Instance> $results */
     private array $results;
 
@@ -33,11 +39,6 @@ final class Query
     public function relations(): array
     {
         return $this->relations;
-    }
-
-    public function param(string $key): mixed
-    {
-        return $this->params[$key] ?? null;
     }
 
     public function params(): array
@@ -72,7 +73,7 @@ final class Query
     public function toArray(): array
     {
         return [
-            'language' => $this->param('language'),
+            'languages' => $this->languages(),
             'attributes' => map(static function (Attribute $attribute): array {
                 return $attribute->toQuery();
             }, $this->attributes),
@@ -83,5 +84,15 @@ final class Query
             }, $this->relations, []),
             'pagination' => $this->pagination?->toArray(),
         ];
+    }
+
+    public function languages(): array
+    {
+        return $this->param('languages');
+    }
+
+    public function param(string $key): mixed
+    {
+        return $this->params[$key] ?? null;
     }
 }

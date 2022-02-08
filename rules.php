@@ -11,6 +11,7 @@ use SlevomatCodingStandard\Sniffs\Classes\SuperfluousExceptionNamingSniff;
 use SlevomatCodingStandard\Sniffs\Classes\SuperfluousInterfaceNamingSniff;
 use SlevomatCodingStandard\Sniffs\ControlStructures\DisallowShortTernaryOperatorSniff;
 use SlevomatCodingStandard\Sniffs\TypeHints\DeclareStrictTypesSniff;
+use SlevomatCodingStandard\Sniffs\TypeHints\DisallowMixedTypeHintSniff;
 use SlevomatCodingStandard\Sniffs\TypeHints\ParameterTypeHintSniff;
 use SlevomatCodingStandard\Sniffs\TypeHints\PropertyTypeHintSniff;
 use SlevomatCodingStandard\Sniffs\TypeHints\ReturnTypeHintSniff;
@@ -26,7 +27,8 @@ return [
         SuperfluousInterfaceNamingSniff::class,
         ForbiddenSetterSniff::class,
         ForbiddenNormalClasses::class,
-        OrderedImportsFixer::class
+        OrderedImportsFixer::class,
+        DisallowMixedTypeHintSniff::class,
     ],
     'config' => [
         DeclareStrictTypesSniff::class => [

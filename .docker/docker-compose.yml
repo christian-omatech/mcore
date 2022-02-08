@@ -1,18 +1,23 @@
 version: '3.8'
 services:
   php:
+    container_name: mcore_php
     environment:
       - XDEBUG_MODE=develop,coverage
+    image: mcore_php
     build:
       context: "."
       dockerfile: "php/Dockerfile"
       args:
         UID: ${UID}
         GID: ${GID}
+        PHP_VERSION: ${PHP_VERSION:-8.0}
     networks:
       - docker
     volumes:
       - ../:/app
+      - ~/.config/composer/auth.json:/home/app/.composer/auth.json
+      - ~/.ssh/:/home/app/.ssh:ro
 networks:
   docker:
     name: docker

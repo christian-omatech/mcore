@@ -5,9 +5,9 @@ namespace Tests\Editora\Application;
 use Mockery;
 use Omatech\Mcore\Editora\Application\ExtractInstance\ExtractInstanceCommand;
 use Omatech\Mcore\Editora\Application\ExtractInstance\ExtractInstanceCommandHandler;
+use Omatech\Mcore\Editora\Domain\Extraction\Pagination;
+use Omatech\Mcore\Editora\Domain\Extraction\Results;
 use Omatech\Mcore\Editora\Domain\Instance\Contracts\ExtractionRepositoryInterface;
-use Omatech\Mcore\Editora\Domain\Instance\Extraction\Pagination;
-use Omatech\Mcore\Editora\Domain\Instance\Extraction\Results;
 use Tests\Editora\Data\Objects\ArticlesMother;
 use Tests\Editora\Data\Objects\BooksMother;
 use Tests\Editora\Data\Objects\NewsMother;
@@ -28,7 +28,7 @@ class ExtractInstanceTest extends EditoraTestCase
                 'key' => null,
                 'class' => 'news',
                 'preview' => false,
-                'language' => 'es',
+                'languages' => ['es', 'en'],
                 'limit' => 5,
                 'page' => 1,
             ])
@@ -43,7 +43,7 @@ class ExtractInstanceTest extends EditoraTestCase
             )->once();
 
         $command = new ExtractInstanceCommand('{
-            News(preview: false, language: es, limit: 5, page: 1)
+            News(preview: false, languages: [es, en], limit: 5, page: 1)
         }');
         $extractions = (new ExtractInstanceCommandHandler($repository, $this->mockExtractionCache()))->__invoke($command);
         $this->assertEquals(ObjectMother::extraction($instances['instances'], [

@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Omatech\Mcore\Editora\Domain\Instance\Extraction;
+namespace Omatech\Mcore\Editora\Domain\Extraction;
 
 use function Lambdish\Phunctional\map;
 use function Lambdish\Phunctional\reduce;
@@ -34,13 +34,23 @@ final class Instance
         }, $instances);
     }
 
+    /**
+     * @return array{key: string, attributes: array, relations: array}
+     */
     public function toArray(): array
     {
         return [
             'key' => $this->key,
-            'attributes' => map(static function (Attribute $attribute): array {
-                return $attribute->toArray();
-            }, $this->attributes),
+            'attributes' => reduce(static function (
+                array $acc,
+                array $attributes,
+                string $language
+            ): array {
+                $acc[$language] = map(static function (Attribute $attribute): array {
+                    return $attribute->toArray();
+                }, $attributes);
+                return $acc;
+            }, $this->attributes, []),
             'relations' => $this->relatedInstancesToArray($this->relations),
         ];
     }

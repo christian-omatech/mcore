@@ -24,14 +24,19 @@ class NewsMother extends ObjectMother
                 ],
                 'attributes' => [
                     'title' => [
-                        'values' => reduce(function (array $acc, string $language) {
+                        'values' => array_merge(reduce(function (array $acc, string $language) {
                             $acc[] = [
-                                'uuid' => $this->faker->uuid(),
+                                'uuid' => $language.'-'.$this->faker->uuid(),
                                 'language' => $language,
-                                'value' => $this->faker->sentence(),
+                                'value' => null,
                             ];
                             return $acc;
-                        }, $this->languages, []),
+                        }, $this->languages, []), [[
+                            'uuid' => $this->faker->uuid(),
+                            'language' => '+',
+                            'value' => null,
+                        ],
+                        ]),
                         'attributes' => [],
                     ],
                     'description' => [

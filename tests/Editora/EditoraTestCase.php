@@ -4,8 +4,8 @@ namespace Tests\Editora;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Omatech\Mcore\Editora\Domain\Extraction\Contracts\ExtractionCacheInterface;
 use Omatech\Mcore\Editora\Domain\Instance\Contracts\InstanceCacheInterface;
-use Omatech\Mcore\Editora\Domain\Instance\Extraction\Contracts\ExtractionCacheInterface;
 use PHPUnit\Framework\TestCase;
 
 abstract class EditoraTestCase extends TestCase

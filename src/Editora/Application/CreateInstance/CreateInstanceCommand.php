@@ -6,9 +6,32 @@ use Omatech\Mcore\Shared\Application\Command;
 
 final class CreateInstanceCommand extends Command
 {
+    /**
+     * @var string
+     */
     private string $classKey;
+
+    /**
+     * @var array{
+     *     uuid: string,
+     *     key: string,
+     *     publication: array{
+     *         status: string,
+     *         startPublishingDate: string,
+     *         endPublishingDate: string
+     *     }
+     * }
+     */
     private array $metadata;
+
+    /**
+     * @var array<string, mixed>
+     */
     private array $attributes;
+
+    /**
+     * @var array<string, mixed>
+     */
     private array $relations;
 
     public function __construct(array $data)
@@ -37,6 +60,17 @@ final class CreateInstanceCommand extends Command
         return $this->metadata['key'];
     }
 
+    /**
+     * @return array{
+     *     uuid: string,
+     *     key: string,
+     *     publication: array{
+     *         status: string,
+     *         startPublishingDate: string,
+     *         endPublishingDate: string
+     *     }
+     * }
+     */
     public function metadata(): array
     {
         return $this->metadata;

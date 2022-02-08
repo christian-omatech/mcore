@@ -23,7 +23,7 @@ final class Router
 
     public static function instance(array $routerConfiguration, array $languages): self
     {
-        if (!self::$instance) {
+        if (! self::$instance) {
             self::$instance = new self($routerConfiguration, $languages);
         }
         return self::$instance;
@@ -56,7 +56,7 @@ final class Router
 
     private function searchRoute(string $uri): Route
     {
-        return search(static fn(Route $route): bool => $route->uri() === $uri, $this->routes);
+        return search(static fn (Route $route): bool => $route->uri() === $uri, $this->routes);
     }
 
     public function locateExtraction(string $uri, string $class): string
@@ -80,9 +80,10 @@ final class Router
         $variableSegments = filter(static function ($segment) {
             return preg_match('/[{](.*)[}]/', $segment);
         }, $uriSegments);
-        $variableSegments = map(static function ($index, $key) use ($path) {
-            return explode('/', $path)[$key];
-        }, $variableSegments);
+        $variableSegments = reduce(static function ($acc, $index) use ($path) {
+            $acc[$index] = explode('/', $path)[$index];
+            return $acc;
+        }, array_flip($variableSegments), []);
         return implode('/', array_replace($uriSegments, $variableSegments));
     }
 

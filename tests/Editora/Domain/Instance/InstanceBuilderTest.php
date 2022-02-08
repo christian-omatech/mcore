@@ -5,8 +5,9 @@ namespace Tests\Editora\Domain\Instance;
 use Omatech\Mcore\Editora\Domain\Instance\Exceptions\InvalidClassNameException;
 use Omatech\Mcore\Editora\Domain\Instance\Exceptions\InvalidLanguagesException;
 use Omatech\Mcore\Editora\Domain\Instance\Exceptions\InvalidStructureException;
-use Omatech\Mcore\Editora\Domain\Instance\InstanceBuilder;
 use Omatech\Mcore\Editora\Domain\Value\Exceptions\InvalidValueTypeException;
+use Tests\Editora\Data\InstanceArrayBuilder;
+use Tests\Editora\Data\InstanceBuilder;
 use Tests\Editora\EditoraTestCase;
 
 class InstanceBuilderTest extends EditoraTestCase
@@ -17,8 +18,7 @@ class InstanceBuilderTest extends EditoraTestCase
         $this->expectException(InvalidLanguagesException::class);
 
         (new InstanceBuilder($this->mockNeverCalledInstanceCache()))
-            ->setClassName($this->className)
-            ->setStructure($this->structure[$this->className])
+            ->setLanguages([])
             ->build();
     }
 
@@ -28,8 +28,7 @@ class InstanceBuilderTest extends EditoraTestCase
         $this->expectException(InvalidStructureException::class);
 
         (new InstanceBuilder($this->mockNeverCalledInstanceCache()))
-            ->setLanguages($this->languages)
-            ->setClassName($this->className)
+            ->setStructure([])
             ->build();
     }
 
@@ -39,8 +38,7 @@ class InstanceBuilderTest extends EditoraTestCase
         $this->expectException(InvalidClassNameException::class);
 
         (new InstanceBuilder($this->mockNeverCalledInstanceCache()))
-            ->setLanguages($this->languages)
-            ->setStructure($this->structure[$this->className])
+            ->setClassName('')
             ->build();
     }
 
@@ -50,7 +48,6 @@ class InstanceBuilderTest extends EditoraTestCase
         $this->expectException(InvalidValueTypeException::class);
 
         (new InstanceBuilder($this->mockGetCalledInstanceCache()))
-            ->setLanguages($this->languages)
             ->setStructure([
                 'attributes' => [
                     'Invalid' => [
@@ -60,7 +57,6 @@ class InstanceBuilderTest extends EditoraTestCase
                     ],
                 ],
             ])
-            ->setClassName($this->className)
             ->build();
     }
 
@@ -68,10 +64,20 @@ class InstanceBuilderTest extends EditoraTestCase
     public function instanceBuildedCorrectly(): void
     {
         $instance = (new InstanceBuilder($this->mockInstanceCache()))
-            ->setLanguages($this->languages)
-            ->setStructure($this->structure[$this->className])
-            ->setClassName($this->className)
             ->build();
+
+        $array = (new InstanceArrayBuilder())
+            ->addClassKey('video-games')
+            ->addClassRelations('platforms', ['platform'])
+            ->addClassRelations('reviews', ['articles', 'blogs'])
+            ->addPublication('pending')
+            ->addAttribute('title', 'string', [
+                [ 'language' => 'es' ],
+                [ 'language' => 'en' ]
+            ])
+            ->build();
+
+        dd($array);
 
         $this->assertEquals([
             'class' => [
