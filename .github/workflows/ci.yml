@@ -1,11 +1,11 @@
-name: Mcore
+name: MageCore
 
 on: [push, pull_request]
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    name: MCore Build
+    name: MageCore Build
     strategy:
       matrix:
         php-versions:
@@ -22,15 +22,15 @@ jobs:
 
       - name: Build Container
         run: task build
-#
-#      - name: Install Dependencies
-#        run: task install
-#
-#      - name: Code Analysis
-#        run: task analyse
-#
-#      - name: Testing
-#        run: task test
+
+      - name: Install Dependencies
+        run: task install
+
+      - name: Code Analysis
+        run: task analyse
+
+      - name: Testing
+        run: task test
 
 #      - name: Slack Notification
 #        uses: rtCamp/action-slack-notify@v2

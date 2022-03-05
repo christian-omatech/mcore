@@ -129,7 +129,7 @@ return [
                     ],
                 ],
                 'Synopsis' => [
-                    'type' => 'textarea',
+                    'type' => 'text',
                     'values' => [
                         'type' => 'JsonValue',
                         'rules' => [

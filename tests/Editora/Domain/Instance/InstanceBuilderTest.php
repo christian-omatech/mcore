@@ -9,11 +9,12 @@ use Omatech\Mcore\Editora\Domain\Value\Exceptions\InvalidValueTypeException;
 use Tests\Editora\Data\InstanceArrayBuilder;
 use Tests\Editora\Data\InstanceBuilder;
 use Tests\Editora\EditoraTestCase;
+use Tests\Editora\Data\UniqueValueRepository;
 
 class InstanceBuilderTest extends EditoraTestCase
 {
     /** @test */
-    public function missingLanguagesOnInstanceBuilder(): void
+    public function expectInvalidLanguageExceptionGivenEmptyLanguages(): void
     {
         $this->expectException(InvalidLanguagesException::class);
 
@@ -23,7 +24,7 @@ class InstanceBuilderTest extends EditoraTestCase
     }
 
     /** @test */
-    public function missingStructureOnInstanceBuilder(): void
+    public function expectInvalidStructureExceptionGivenEmptyStructure(): void
     {
         $this->expectException(InvalidStructureException::class);
 
@@ -33,7 +34,7 @@ class InstanceBuilderTest extends EditoraTestCase
     }
 
     /** @test */
-    public function missingClassNameOnInstanceBuilder(): void
+    public function expectInvalidClassNameExceptionGivenBlankClassName(): void
     {
         $this->expectException(InvalidClassNameException::class);
 
@@ -43,7 +44,7 @@ class InstanceBuilderTest extends EditoraTestCase
     }
 
     /** @test */
-    public function invalidValueTypeWhenCreateInstance(): void
+    public function expectInvalidValueTypeExceptionGivenANonExistingValueType(): void
     {
         $this->expectException(InvalidValueTypeException::class);
 
@@ -61,251 +62,44 @@ class InstanceBuilderTest extends EditoraTestCase
     }
 
     /** @test */
-    public function instanceBuildedCorrectly(): void
+    public function expectInstanceBuiltCorrectly(): void
     {
         $instance = (new InstanceBuilder($this->mockInstanceCache()))
             ->build();
 
-        $array = (new InstanceArrayBuilder())
+        $instanceArray = (new InstanceArrayBuilder())
             ->addClassKey('video-games')
             ->addClassRelations('platforms', ['platform'])
             ->addClassRelations('reviews', ['articles', 'blogs'])
             ->addPublication('pending')
-            ->addAttribute('title', 'string', [
-                [ 'language' => 'es' ],
-                [ 'language' => 'en' ]
+            ->addAttribute('title', 'string', [], [
+                fn($builder) => $builder->addSubAttribute('code', 'string', []),
+                fn($builder) => $builder->addSubAttribute('sub-title', 'string', [
+                    ['language' => 'es', 'rules' => ['required' => true]],
+                    ['language' => 'en', 'rules' => ['required' => true]]
+                ]),
+            ])
+            ->addAttribute('sub-title', 'string', [
+                ['language' => 'es', 'rules' => ['uniqueDB' => ['class' => UniqueValueRepository::class]]],
+                ['language' => 'en', 'rules' => ['uniqueDB' => ['class' => UniqueValueRepository::class]]]
+            ])
+            ->addAttribute('synopsis', 'text', [
+                ['language' => 'es', 'rules' => ['required' => true], 'configuration' => ['cols' => 10, 'rows' => 10]],
+                ['language' => 'en', 'rules' => ['required' => true], 'configuration' => ['cols' => 10, 'rows' => 10]]
+            ])
+            ->addAttribute('release-date', 'string', [
+                ['language' => 'es', 'rules' => ['required' => true], 'configuration' => ['cols' => 10, 'rows' => 10]],
+                ['language' => 'en', 'rules' => ['required' => false], 'configuration' => ['cols' => 20, 'rows' => 20]],
+                ['language' => '+', 'rules' => ['required' => true], 'configuration' => ['cols' => 30, 'rows' => 30]],
+            ])
+            ->addAttribute('code', 'lookup', [
+                [
+                    'language' => '*', 'rules' => ['required' => true, 'unique' => []],
+                    'configuration' => ['options' => ['pc-code', 'playstation-code', 'xbox-code', 'switch-code']]
+                ]
             ])
             ->build();
 
-        dd($array);
-
-        $this->assertEquals([
-            'class' => [
-                'key' => 'video-games',
-                'relations' => [
-                    [
-                        'key' => 'platforms',
-                        'classes' => [
-                            'platform',
-                        ],
-                    ], [
-                        'key' => 'reviews',
-                        'classes' => [
-                            'articles',
-                            'blogs',
-                        ],
-                    ],
-                ],
-            ],
-            'metadata' => [
-                'uuid' => null,
-                'key' => '',
-                'publication' => [
-                    'status' => 'pending',
-                    'startPublishingDate' => null,
-                    'endPublishingDate' => null,
-                ],
-            ],
-            'attributes' => [
-                [
-                    'key' => 'title',
-                    'type' => 'string',
-                    'values' => [
-                        [
-                            'uuid' => null,
-                            'language' => 'es',
-                            'rules' => [],
-                            'configuration' => [],
-                            'value' => null,
-                            'extraData' => [],
-                        ], [
-                            'uuid' => null,
-                            'language' => 'en',
-                            'rules' => [],
-                            'configuration' => [],
-                            'value' => null,
-                            'extraData' => [],
-                        ],
-                    ],
-                    'attributes' => [
-                        [
-                            'key' => 'code',
-                            'type' => 'string',
-                            'values' => [
-                                [
-                                    'uuid' => null,
-                                    'language' => 'es',
-                                    'rules' => [],
-                                    'configuration' => [],
-                                    'value' => null,
-                                    'extraData' => [],
-                                ], [
-                                    'uuid' => null,
-                                    'language' => 'en',
-                                    'rules' => [],
-                                    'configuration' => [],
-                                    'value' => null,
-                                    'extraData' => [],
-                                ],
-                            ],
-                            'attributes' => [],
-                        ], [
-                            'key' => 'sub-title',
-                            'type' => 'string',
-                            'values' => [
-                                [
-                                    'uuid' => null,
-                                    'language' => 'es',
-                                    'rules' => [
-                                        'required' => true,
-                                    ],
-                                    'configuration' => [],
-                                    'value' => null,
-                                    'extraData' => [],
-                                ], [
-                                    'uuid' => null,
-                                    'language' => 'en',
-                                    'rules' => [
-                                        'required' => true,
-                                    ],
-                                    'configuration' => [],
-                                    'value' => null,
-                                    'extraData' => [],
-                                ],
-                            ],
-                            'attributes' => [],
-                        ],
-                    ],
-                ], [
-                    'key' => 'sub-title',
-                    'type' => 'string',
-                    'values' => [
-                        [
-                            'uuid' => null,
-                            'language' => 'es',
-                            'rules' => [
-                                'uniqueDB' => [
-                                    'class' => "Tests\Editora\Data\UniqueValueRepository",
-                                ],
-                            ],
-                            'configuration' => [],
-                            'value' => null,
-                            'extraData' => [],
-                        ], [
-                            'uuid' => null,
-                            'language' => 'en',
-                            'rules' => [
-                                'uniqueDB' => [
-                                    'class' => "Tests\Editora\Data\UniqueValueRepository",
-                                ],
-                            ],
-                            'configuration' => [],
-                            'value' => null,
-                            'extraData' => [],
-                        ],
-                    ],
-                    'attributes' => [],
-                ], [
-                    'key' => 'synopsis',
-                    'type' => 'textarea',
-                    'values' => [
-                        [
-                            'uuid' => null,
-                            'language' => 'es',
-                            'rules' => [
-                                'required' => true,
-                            ],
-                            'configuration' => [
-                                'cols' => 10,
-                                'rows' => 10,
-                            ],
-                            'value' => null,
-                            'extraData' => [],
-                        ], [
-                            'uuid' => null,
-                            'language' => 'en',
-                            'rules' => [
-                                'required' => true,
-                            ],
-                            'configuration' => [
-                                'cols' => 10,
-                                'rows' => 10,
-                            ],
-                            'value' => null,
-                            'extraData' => [],
-                        ],
-                    ],
-                    'attributes' => [],
-                ], [
-                    'key' => 'release-date',
-                    'type' => 'string',
-                    'values' => [
-                        [
-                            'uuid' => null,
-                            'language' => 'es',
-                            'rules' => [
-                                'required' => true,
-                            ],
-                            'configuration' => [
-                                'cols' => 10,
-                                'rows' => 10,
-                            ],
-                            'value' => null,
-                            'extraData' => [],
-                        ], [
-                            'uuid' => null,
-                            'language' => 'en',
-                            'rules' => [
-                                'required' => false,
-                            ],
-                            'configuration' => [
-                                'cols' => 20,
-                                'rows' => 20,
-                            ],
-                            'value' => null,
-                            'extraData' => [],
-                        ], [
-                            'uuid' => null,
-                            'language' => '+',
-                            'rules' => [
-                                'required' => true,
-                            ],
-                            'configuration' => [
-                                'cols' => 30,
-                                'rows' => 30,
-                            ],
-                            'value' => null,
-                            'extraData' => [],
-                        ],
-                    ],
-                    'attributes' => [],
-                ], [
-                    'key' => 'code',
-                    'type' => 'lookup',
-                    'values' => [
-                        [
-                            'uuid' => null,
-                            'language' => '*',
-                            'rules' => [
-                                'required' => true,
-                                'unique' => [],
-                            ],
-                            'configuration' => [
-                                'options' => [
-                                    'pc-code',
-                                    'playstation-code',
-                                    'xbox-code',
-                                    'switch-code',
-                                ],
-                            ],
-                            'value' => null,
-                            'extraData' => [],
-                        ],
-                    ],
-                    'attributes' => [],
-                ],
-            ],
-            'relations' => [],
-        ], $instance->toArray());
+        $this->assertEquals($instanceArray, $instance->toArray());
     }
 }

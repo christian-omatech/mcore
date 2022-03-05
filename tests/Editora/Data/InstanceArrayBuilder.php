@@ -6,7 +6,13 @@ use function Lambdish\Phunctional\map;
 
 class InstanceArrayBuilder
 {
-    private array $instance;
+    private array $languages = [
+        ['language' => 'es'],
+        ['language' => 'en']
+    ];
+    private array $instance = [
+        'relations' => []
+    ];
 
     public function addClassKey(string $classKey): self
     {
@@ -37,12 +43,34 @@ class InstanceArrayBuilder
         return $this;
     }
 
-    public function addAttribute(string $key, string $type, array $values): self
+    public function addAttribute(
+        string $key,
+        string $type,
+        array  $values,
+        array  $fn = []
+    ): self
     {
-        $this->instance['attributes'][] = [
+        $this->instance['attributes'][] = $this->attribute($key, $type, $values, $fn);
+        return $this;
+    }
+
+    public function addSubAttribute(string $key, string $type, array $values, array $fn = []): array
+    {
+        return $this->attribute($key, $type, $values, $fn);
+    }
+
+    public function addRelation(): self
+    {
+        $this->instance['relations'] = [];
+        return $this;
+    }
+
+    private function attribute(string $key, string $type, array $values, array $fn = []): array
+    {
+        return [
             'key' => $key,
             'type' => $type,
-            'values' => map(static function(array $value) {
+            'values' => map(static function (array $value) {
                 return array_merge([
                     'uuid' => null,
                     'language' => '',
@@ -51,10 +79,12 @@ class InstanceArrayBuilder
                     'value' => null,
                     'extraData' => [],
                 ], $value);
-            }, $values),
-            'attributes' => []
+            }, ($values === []) ? $this->languages : $values),
+            'attributes' => array_reduce($fn, function (array $acc, callable $fn) {
+                $acc[] = $fn($this);
+                return $acc;
+            }, [])
         ];
-        return $this;
     }
 
     public function build(): array
