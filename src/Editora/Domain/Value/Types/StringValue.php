@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace Omatech\Mcore\Editora\Domain\Value\Types;
+namespace Omatech\MageCore\Editora\Domain\Value\Types;
 
-use Omatech\Mcore\Editora\Domain\Value\BaseValue;
+use Omatech\MageCore\Editora\Domain\Value\BaseValue;
 
 class StringValue extends BaseValue
 {

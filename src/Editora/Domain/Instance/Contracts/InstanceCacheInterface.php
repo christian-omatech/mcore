@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace Omatech\Mcore\Editora\Domain\Instance\Contracts;
+namespace Omatech\MageCore\Editora\Domain\Instance\Contracts;
 
-use Omatech\Mcore\Editora\Domain\Instance\Instance;
+use Omatech\MageCore\Editora\Domain\Instance\Instance;
 
 interface InstanceCacheInterface
 {

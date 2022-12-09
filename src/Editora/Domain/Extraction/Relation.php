@@ -1,12 +1,11 @@
 <?php declare(strict_types=1);
 
-namespace Omatech\Mcore\Editora\Domain\Extraction;
+namespace Omatech\MageCore\Editora\Domain\Extraction;
 
 final class Relation
 {
-    private string $key;
-    private string $type;
-    /** @var array<Instance> $instances */
+    private readonly string $key;
+    private readonly string $type;
     private array $instances = [];
 
     public function __construct(string $key, string $type)

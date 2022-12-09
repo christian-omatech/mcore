@@ -1,112 +1,56 @@
-<?php declare(strict_types=1);
+<?php
 
 namespace Tests\Editora\Data\Objects;
 
-use function Lambdish\Phunctional\reduce;
+use Tests\Editora\Data\InstanceArrayBuilder;
+use Tests\Editora\Data\InstanceFactory;
 
-class BooksMother extends ObjectMother
+class BooksMother
 {
-    protected array $availableRelations = [
-        'articles' => [
-            ArticlesMother::class,
-        ],
-        'photos' => [
-            PhotosMother::class,
-            PicturesMother::class,
-        ],
-    ];
-
-    public function get(int $instancesNumber = 1, ?string $key = null, ?array $relations = []): array
+    public static function get(int $instancesNumber = 1, array $relations = []): array
     {
-        $this->instances = [];
-        for ($i = 1; $i <= $instancesNumber; $i++) {
-            $this->instances[] = $this->build('Books')->fill([
-                'metadata' => [
-                    'uuid' => $this->faker->uuid(),
-                    'key' => $key ?? 'book-instance-'.$i,
-                    'publication' => [
-                        'startPublishingDate' => $this->faker->dateTime()->format('Y-m-d H:i:s'),
-                    ],
-                ],
-                'attributes' => [
-                    'title' => [
-                        'values' => reduce(function (array $acc, string $language) {
-                            $acc[] = [
-                                'uuid' => $this->faker->uuid(),
-                                'language' => $language,
-                                'value' => $this->faker->sentence(),
-                            ];
-                            return $acc;
-                        }, $this->languages, []),
-                        'attributes' => [],
-                    ],
-                    'isbn' => [
-                        'values' => array_merge(reduce(function (array $acc, string $language) {
-                            $acc[] = [
-                                'uuid' => $this->faker->uuid(),
-                                'language' => $language,
-                                'value' => null,
-                            ];
-                            return $acc;
-                        }, $this->languages, []), [[
-                            'uuid' => $this->faker->uuid(),
-                            'language' => '+',
-                            'value' => $this->faker->isbn13(),
-                        ],
-                        ]),
-                        'attributes' => [],
-                    ],
-                    'synopsis' => [
-                        'values' => array_merge(reduce(function (array $acc, string $language) {
-                            $acc[] = [
-                                'uuid' => $this->faker->uuid(),
-                                'language' => $language,
-                                'value' => $this->faker->paragraph(),
-                            ];
-                            return $acc;
-                        }, $this->languages, []), [[
-                            'uuid' => $this->faker->uuid(),
-                            'language' => '+',
-                            'value' => $this->faker->paragraph(),
-                        ],
-                        ]),
-                        'attributes' => [],
-                    ],
-                    'picture' => [
-                        'values' => reduce(function (array $acc, string $language) {
-                            $acc[] = [
-                                'uuid' => $this->faker->uuid(),
-                                'language' => $language,
-                                'value' => $this->faker->url(),
-                            ];
-                            return $acc;
-                        }, $this->languages, []),
-                        'attributes' => [
-                            'alt' => [
-                                'values' => reduce(function (array $acc, string $language) {
-                                    $acc[] = [
-                                        'uuid' => $this->faker->uuid(),
-                                        'language' => $language,
-                                        'value' => $this->faker->sentence(),
-                                    ];
-                                    return $acc;
-                                }, $this->languages, []),
-                            ],
-                        ],
-                    ],
-                    'price' => [
-                        'values' => [
-                            [
-                                'uuid' => $this->faker->uuid(),
-                                'language' => '*',
-                                'value' => $this->faker->randomFloat(),
-                            ],
-                        ],
-                    ],
-                ],
-                'relations' => $relations,
-            ]);
+        $instances = [];
+        for($i=1; $i <= $instancesNumber; $i++) {
+            $instances[] = InstanceFactory::fill('Books', static function (InstanceArrayBuilder $builder) use ($relations, $i) {
+                $builder
+                    ->addMetadata('uuid', 'book-instance-'.$i)
+                    ->addAttribute('title', 'string', [
+                        ['uuid' => 'uuid', 'language' => 'es', 'value' => 'title-es-'.$i],
+                        ['uuid' => 'uuid', 'language' => 'en', 'value' => 'title-en-'.$i],
+                    ])
+                    ->addAttribute('isbn', 'text', [
+                        ['uuid' => 'uuid', 'language' => 'es', 'value' => 'author-es-'.$i],
+                        ['uuid' => 'uuid', 'language' => 'en', 'value' => 'author-en-'.$i],
+                        ['uuid' => 'uuid', 'language' => '+', 'value' => 'author-en-'.$i],
+                    ])
+                    ->addAttribute('synopsis', 'text', [
+                        ['uuid' => 'uuid', 'language' => 'es', 'value' => 'synopsis-es-'.$i],
+                        ['uuid' => 'uuid', 'language' => 'en', 'value' => 'synopsis-en-'.$i],
+                        ['uuid' => 'uuid', 'language' => '+', 'value' => 'synopsis-en-'.$i],
+                    ])
+                    ->addAttribute('picture', 'text', [
+                        ['uuid' => 'uuid', 'language' => 'es', 'value' => 'picture-es-'.$i],
+                        ['uuid' => 'uuid', 'language' => 'en', 'value' => 'picture-en-'.$i],
+                        ['uuid' => 'uuid', 'language' => '+', 'value' => 'picture-en-'.$i],
+                    ], [
+                        fn (InstanceArrayBuilder $builder) => $builder->addSubAttribute('alt', 'string', [
+                            ['uuid' => 'uuid', 'language' => 'es', 'value' => 'alt-es-'.$i],
+                            ['uuid' => 'uuid', 'language' => 'en', 'value' => 'alt-en-'.$i],
+                        ])
+                    ])
+                    ->addAttribute('price', 'text', [
+                        ['uuid' => 'uuid', 'language' => '*', 'value' => 'price-'.$i],
+                    ]);
+                foreach($relations as $relation => $relatedInstances) {
+                    $relatedInstancesIds = [];
+                    foreach($relatedInstances as $relatedInstance) {
+                        $relatedInstancesIds[$relatedInstance->uuid()] = $relatedInstance->data()['classKey'];
+                    }
+                    $builder->addRelation($relation, $relatedInstancesIds);
+                }
+                return $builder->build();
+            });
         }
-        return $this->instances;
+        return $instances;
     }
 }

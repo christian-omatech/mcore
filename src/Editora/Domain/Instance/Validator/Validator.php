@@ -1,14 +1,14 @@
 <?php declare(strict_types=1);
 
-namespace Omatech\Mcore\Editora\Domain\Instance\Validator;
+namespace Omatech\MageCore\Editora\Domain\Instance\Validator;
 
-use Omatech\Mcore\Editora\Domain\Attribute\Attribute;
-use Omatech\Mcore\Editora\Domain\Attribute\AttributeCollection;
-use Omatech\Mcore\Editora\Domain\Clazz\Relation;
-use Omatech\Mcore\Editora\Domain\Instance\InstanceRelation;
-use Omatech\Mcore\Editora\Domain\Instance\Validator\Exceptions\InvalidRelationException;
-use Omatech\Mcore\Editora\Domain\Instance\Validator\Exceptions\InvalidRuleException;
-use Omatech\Mcore\Editora\Domain\Value\BaseValue;
+use Omatech\MageCore\Editora\Domain\Attribute\Attribute;
+use Omatech\MageCore\Editora\Domain\Attribute\AttributeCollection;
+use Omatech\MageCore\Editora\Domain\Clazz\Relation;
+use Omatech\MageCore\Editora\Domain\Instance\InstanceRelation;
+use Omatech\MageCore\Editora\Domain\Instance\Validator\Exceptions\InvalidRelationException;
+use Omatech\MageCore\Editora\Domain\Instance\Validator\Exceptions\InvalidRuleException;
+use Omatech\MageCore\Editora\Domain\Value\BaseValue;
 use function Lambdish\Phunctional\each;
 use function Lambdish\Phunctional\filter;
 use function Lambdish\Phunctional\first;
@@ -30,7 +30,7 @@ final class Validator
     {
         each(static function (mixed $conditions, string $rule) use ($attributes, $value): void {
             $class = first(filter(static fn ($class) => class_exists($class), [
-                'Omatech\\Mcore\\Editora\\Domain\\Instance\\Validator\\Rules\\' . ucfirst($rule),
+                'Omatech\\MageCore\\Editora\\Domain\\Instance\\Validator\\Rules\\' . ucfirst($rule),
                 $rule,
             ])) ?? InvalidRuleException::withRule($rule);
             (new $class($attributes, $conditions))->validate($value);
@@ -40,9 +40,7 @@ final class Validator
     public function validateRelations(array $classRelation, array $instanceRelations): void
     {
         each(static function (InstanceRelation $instanceRelation) use ($classRelation): void {
-            $relation = search(static function (Relation $relation) use ($instanceRelation): bool {
-                return $relation->key() === $instanceRelation->key();
-            }, $classRelation);
+            $relation = search(static fn (Relation $relation): bool => $relation->key() === $instanceRelation->key(), $classRelation);
             if (is_null($relation)) {
                 InvalidRelationException::withRelation($instanceRelation->key());
             }

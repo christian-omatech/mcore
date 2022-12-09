@@ -1,17 +1,17 @@
 <?php declare(strict_types=1);
 
-namespace Omatech\Mcore\Editora\Domain\Instance\Services;
+namespace Omatech\MageCore\Editora\Domain\Instance\Services;
 
-use Omatech\Mcore\Editora\Domain\Instance\Contracts\InstanceRepositoryInterface;
-use Omatech\Mcore\Editora\Domain\Instance\Exceptions\InstanceDoesNotExistsException;
-use Omatech\Mcore\Editora\Domain\Instance\Exceptions\InstanceExistsException;
-use Omatech\Mcore\Editora\Domain\Instance\Instance;
+use Omatech\MageCore\Editora\Domain\Instance\Contracts\InstanceRepositoryInterface;
+use Omatech\MageCore\Editora\Domain\Instance\Exceptions\InstanceDoesNotExistsException;
+use Omatech\MageCore\Editora\Domain\Instance\Exceptions\InstanceExistsException;
+use Omatech\MageCore\Editora\Domain\Instance\Instance;
 use function Lambdish\Phunctional\map;
 use function Lambdish\Phunctional\reduce;
 
-final class InstanceFinder
+class InstanceFinder
 {
-    private InstanceRepositoryInterface $repository;
+    private readonly InstanceRepositoryInterface $repository;
 
     public function __construct(InstanceRepositoryInterface $repository)
     {
@@ -33,12 +33,10 @@ final class InstanceFinder
 
     public function findClassKeysGivenInstances(array $relations): array
     {
-        return map(function (array $relationKey): array {
-            return reduce(function (?array $acc, string $uuid): array {
-                $acc[$uuid] = $this->repository->classKey($uuid) ??
-                    throw new InstanceDoesNotExistsException();
-                return $acc;
-            }, $relationKey, []);
-        }, $relations);
+        return map(fn (array $relationKey): array => reduce(function (?array $acc, string $uuid): array {
+            $acc[$uuid] = $this->repository->classKey($uuid) ??
+                throw new InstanceDoesNotExistsException();
+            return $acc;
+        }, $relationKey, []), $relations);
     }
 }

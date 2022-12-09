@@ -1,25 +1,17 @@
 <?php declare(strict_types=1);
 
-namespace Omatech\Mcore\Editora\Domain\Extraction;
+namespace Omatech\MageCore\Editora\Domain\Extraction;
 
-use GraphQL\Error\SyntaxError;
 use GraphQL\Language\AST\ArgumentNode;
 use GraphQL\Language\AST\FieldNode;
 use GraphQL\Language\AST\NodeList;
 use GraphQL\Language\Parser as GraphQLParser;
-use Omatech\Mcore\Shared\Utils\Utils;
+use Omatech\MageCore\Shared\Utils\Utils;
 use function Lambdish\Phunctional\reduce;
 use function Lambdish\Phunctional\search;
 
 final class Parser
 {
-    /**
-     * @param string $query
-     *
-     * @return array<Query>
-     *
-     * @throws SyntaxError
-     */
     public function parse(string $query): array
     {
         $graphQuery = GraphQLParser::parse(str_replace('()', '(limit: 0)', $query));
@@ -42,12 +34,6 @@ final class Parser
         ]);
     }
 
-    /**
-     * @param FieldNode $node
-     * @param string $nodeType
-     *
-     * @return array<string, mixed>
-     */
     private function parseParams(FieldNode $node, string $nodeType): array
     {
         $params = reduce(function (array $acc, ArgumentNode $argument): array {
@@ -58,20 +44,15 @@ final class Parser
         if ($node->name->value !== 'instances') {
             $params[$nodeType] = $node->name->value;
         }
-        $params['class'] = Utils::getInstance()->slug($params['class'] ?? null);
-        $params['key'] = Utils::getInstance()->slug($params['key'] ?? null);
-        $params['preview'] = $params['preview'] ?? false;
+        $params['class'] = Utils::slug($params['class'] ?? null);
+        $params['key'] = Utils::slug($params['key'] ?? null);
+        $params['preview'] ??= false;
         $params['limit'] = (int) ($params['limit'] ?? 0);
         $params['page'] = (int) ($params['page'] ?? 1);
         $params['languages'] = $this->parseLanguages($params['languages'] ?? []);
         return $params;
     }
 
-    /**
-     * @param NodeList $values
-     *
-     * @return array<string>
-     */
     private function parseArrayParams(NodeList $values): array
     {
         return reduce(static function (array $acc, $value) {
@@ -80,11 +61,6 @@ final class Parser
         }, $values, []);
     }
 
-    /**
-     * @param string|array<string> $value
-     *
-     * @return array<string>
-     */
     private function parseLanguages(string|array $value): array
     {
         if (is_string($value)) {
@@ -93,17 +69,12 @@ final class Parser
         return $value;
     }
 
-    /**
-     * @param FieldNode $node
-     *
-     * @return array<Attribute>
-     */
     private function parseAttributes(FieldNode $node): array
     {
         return reduce(function (array $acc, FieldNode $node): array {
             if (! count($node->arguments)) {
                 $acc[] = new Attribute(
-                    Utils::getInstance()->slug($node->name->value),
+                    Utils::slug($node->name->value),
                     $this->parseAttributes($node)
                 );
             }
@@ -111,22 +82,13 @@ final class Parser
         }, $node->selectionSet->selections ?? [], []);
     }
 
-    /**
-     * @param FieldNode $node
-     * @param array<string, mixed> $params
-     *
-     * @return array<Query>
-     */
     private function parseRelations(FieldNode $node, array $params = []): array
     {
         return reduce(function (array $acc, FieldNode $node) use ($params): array {
             if (count($node->arguments)) {
                 $acc[] = new Query([
                     'attributes' => $this->parseAttributes($node),
-                    'params' => $this->defaultRelationParams(array_merge(
-                        $this->parseParams($node, 'key'),
-                        $params
-                    )),
+                    'params' => $this->defaultRelationParams([...$this->parseParams($node, 'key'), ...$params]),
                     'relations' => $this->parseRelations($node, $params),
                 ]);
             }
@@ -134,17 +96,10 @@ final class Parser
         }, $node->selectionSet->selections ?? [], []);
     }
 
-    /**
-     * @param array<string, mixed> $params
-     *
-     * @return array<string, mixed>
-     */
     private function defaultRelationParams(array $params): array
     {
-        $params['type'] = $params['type'] ?? 'child';
-        $params['type'] = search(static function (string $type) use ($params): bool {
-            return $type === $params['type'];
-        }, ['parent'], 'child');
+        $params['type'] ??= 'child';
+        $params['type'] = search(static fn (string $type): bool => $type === $params['type'], ['parent'], 'child');
         return $params;
     }
 }

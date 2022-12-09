@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace Omatech\Mcore\Editora\Domain\Value;
+namespace Omatech\MageCore\Editora\Domain\Value;
 
-use Omatech\Mcore\Editora\Domain\Value\Exceptions\InvalidValueTypeException;
+use Omatech\MageCore\Editora\Domain\Value\Exceptions\InvalidValueTypeException;
 use function Lambdish\Phunctional\filter;
 use function Lambdish\Phunctional\first;
 use function Lambdish\Phunctional\flat_map;
@@ -23,29 +23,23 @@ final class ValueBuilder
 
     private function normalizeLanguages(): void
     {
-        $this->values['languages'] = $this->values['languages'] ?? [];
+        $this->values['languages'] ??= [];
         if (! array_key_exists('*', $this->values['languages'])) {
             if (array_key_exists('+', $this->values['languages'])) {
                 $this->languages['+'] = [];
             }
-            $this->values['languages'] = map(function ($values, $language): array {
-                return $this->values['languages'][$language] ?? $values;
-            }, $this->languages);
+            $this->values['languages'] = map(fn ($values, $language): array => $this->values['languages'][$language] ?? $values, $this->languages);
         }
     }
 
     private function normalizeValues(): void
     {
-        $this->values = map(function ($properties): array {
-            return $this->defaultsToValue($properties ?? []);
-        }, $this->values['languages']);
+        $this->values = map(fn ($properties): array => $this->defaultsToValue($properties ?? []), $this->values['languages']);
     }
 
     private function defaultsToValue(array $properties): array
     {
-        return map(function ($value, $key) use ($properties): string | array {
-            return $properties[$key] ?? $this->values[$key] ?? $value;
-        }, [
+        return map(fn ($value, $key): string | array => $properties[$key] ?? $this->values[$key] ?? $value, [
             'configuration' => [],
             'rules' => [],
             'type' => 'Value',
@@ -56,7 +50,7 @@ final class ValueBuilder
     {
         return flat_map(function ($properties, $language): BaseValue {
             $class = first(filter(static fn ($class) => class_exists($class), [
-                'Omatech\\Mcore\\Editora\\Domain\\Value\\Types\\' . $properties['type'],
+                'Omatech\\MageCore\\Editora\\Domain\\Value\\Types\\' . $properties['type'],
                 $properties['type'],
             ])) ?? InvalidValueTypeException::withType($properties['type']);
             return new $class($this->key, $language, $properties);

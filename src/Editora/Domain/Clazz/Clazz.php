@@ -1,11 +1,11 @@
 <?php declare(strict_types=1);
 
-namespace Omatech\Mcore\Editora\Domain\Clazz;
+namespace Omatech\MageCore\Editora\Domain\Clazz;
 
 final class Clazz
 {
-    private string $key;
-    private RelationCollection $relationCollection;
+    private readonly string $key;
+    private readonly RelationCollection $relationCollection;
 
     public function __construct(array $class)
     {

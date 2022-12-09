@@ -1,12 +1,12 @@
 <?php declare(strict_types=1);
 
-namespace Omatech\Mcore\Editora\Domain\Value;
+namespace Omatech\MageCore\Editora\Domain\Value;
 
 use function Lambdish\Phunctional\get_in;
 
 final class Configuration
 {
-    private array $configuration;
+    private readonly array $configuration;
 
     public function __construct(array $configuration)
     {

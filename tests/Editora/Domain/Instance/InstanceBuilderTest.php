@@ -2,23 +2,26 @@
 
 namespace Tests\Editora\Domain\Instance;
 
-use Omatech\Mcore\Editora\Domain\Instance\Exceptions\InvalidClassNameException;
-use Omatech\Mcore\Editora\Domain\Instance\Exceptions\InvalidLanguagesException;
-use Omatech\Mcore\Editora\Domain\Instance\Exceptions\InvalidStructureException;
-use Omatech\Mcore\Editora\Domain\Value\Exceptions\InvalidValueTypeException;
+use Mockery;
+use Omatech\MageCore\Editora\Domain\Instance\Contracts\InstanceCacheInterface;
+use Omatech\MageCore\Editora\Domain\Instance\Exceptions\InvalidClassNameException;
+use Omatech\MageCore\Editora\Domain\Instance\Exceptions\InvalidLanguagesException;
+use Omatech\MageCore\Editora\Domain\Instance\Exceptions\InvalidStructureException;
+use Omatech\MageCore\Editora\Domain\Value\Exceptions\InvalidValueTypeException;
 use Tests\Editora\Data\InstanceArrayBuilder;
 use Tests\Editora\Data\InstanceBuilder;
-use Tests\Editora\EditoraTestCase;
 use Tests\Editora\Data\UniqueValueRepository;
+use Tests\TestCase;
 
-class InstanceBuilderTest extends EditoraTestCase
+class InstanceBuilderTest extends TestCase
 {
     /** @test */
     public function expectInvalidLanguageExceptionGivenEmptyLanguages(): void
     {
         $this->expectException(InvalidLanguagesException::class);
 
-        (new InstanceBuilder($this->mockNeverCalledInstanceCache()))
+        (new InstanceBuilder())
+            ->setInstanceCache($this->mockNeverCalledInstanceCache())
             ->setLanguages([])
             ->build();
     }
@@ -28,7 +31,8 @@ class InstanceBuilderTest extends EditoraTestCase
     {
         $this->expectException(InvalidStructureException::class);
 
-        (new InstanceBuilder($this->mockNeverCalledInstanceCache()))
+        (new InstanceBuilder())
+            ->setInstanceCache($this->mockNeverCalledInstanceCache())
             ->setStructure([])
             ->build();
     }
@@ -38,7 +42,8 @@ class InstanceBuilderTest extends EditoraTestCase
     {
         $this->expectException(InvalidClassNameException::class);
 
-        (new InstanceBuilder($this->mockNeverCalledInstanceCache()))
+        (new InstanceBuilder())
+            ->setInstanceCache($this->mockNeverCalledInstanceCache())
             ->setClassName('')
             ->build();
     }
@@ -48,7 +53,8 @@ class InstanceBuilderTest extends EditoraTestCase
     {
         $this->expectException(InvalidValueTypeException::class);
 
-        (new InstanceBuilder($this->mockGetCalledInstanceCache()))
+        (new InstanceBuilder())
+            ->setInstanceCache($this->mockGetCalledInstanceCache())
             ->setStructure([
                 'attributes' => [
                     'Invalid' => [
@@ -64,28 +70,29 @@ class InstanceBuilderTest extends EditoraTestCase
     /** @test */
     public function expectInstanceBuiltCorrectly(): void
     {
-        $instance = (new InstanceBuilder($this->mockInstanceCache()))
+        $instance = (new InstanceBuilder())
+            ->setInstanceCache($this->mockInstanceCache())
             ->build();
 
-        $instanceArray = (new InstanceArrayBuilder())
+        $instanceArray = (new InstanceArrayBuilder(false))
+            ->addMetadata(null, null, ['startPublishingDate' => null])
             ->addClassKey('video-games')
             ->addClassRelations('platforms', ['platform'])
             ->addClassRelations('reviews', ['articles', 'blogs'])
-            ->addPublication('pending')
             ->addAttribute('title', 'string', [], [
-                fn($builder) => $builder->addSubAttribute('code', 'string', []),
-                fn($builder) => $builder->addSubAttribute('sub-title', 'string', [
+                fn (InstanceArrayBuilder $builder) => $builder->addSubAttribute('code', 'string', []),
+                fn (InstanceArrayBuilder $builder) => $builder->addSubAttribute('sub-title', 'string', [
                     ['language' => 'es', 'rules' => ['required' => true]],
-                    ['language' => 'en', 'rules' => ['required' => true]]
+                    ['language' => 'en', 'rules' => ['required' => true]],
                 ]),
             ])
             ->addAttribute('sub-title', 'string', [
                 ['language' => 'es', 'rules' => ['uniqueDB' => ['class' => UniqueValueRepository::class]]],
-                ['language' => 'en', 'rules' => ['uniqueDB' => ['class' => UniqueValueRepository::class]]]
+                ['language' => 'en', 'rules' => ['uniqueDB' => ['class' => UniqueValueRepository::class]]],
             ])
             ->addAttribute('synopsis', 'text', [
                 ['language' => 'es', 'rules' => ['required' => true], 'configuration' => ['cols' => 10, 'rows' => 10]],
-                ['language' => 'en', 'rules' => ['required' => true], 'configuration' => ['cols' => 10, 'rows' => 10]]
+                ['language' => 'en', 'rules' => ['required' => true], 'configuration' => ['cols' => 10, 'rows' => 10]],
             ])
             ->addAttribute('release-date', 'string', [
                 ['language' => 'es', 'rules' => ['required' => true], 'configuration' => ['cols' => 10, 'rows' => 10]],
@@ -95,11 +102,35 @@ class InstanceBuilderTest extends EditoraTestCase
             ->addAttribute('code', 'lookup', [
                 [
                     'language' => '*', 'rules' => ['required' => true, 'unique' => []],
-                    'configuration' => ['options' => ['pc-code', 'playstation-code', 'xbox-code', 'switch-code']]
-                ]
+                    'configuration' => ['options' => ['pc-code', 'playstation-code', 'xbox-code', 'switch-code']],
+                ],
             ])
             ->build();
 
         $this->assertEquals($instanceArray, $instance->toArray());
+    }
+
+    private function mockNeverCalledInstanceCache(): InstanceCacheInterface
+    {
+        $mock = Mockery::mock(InstanceCacheInterface::class);
+        $mock->shouldReceive('get')->never();
+        $mock->shouldReceive('put')->never();
+        return $mock;
+    }
+
+    private function mockGetCalledInstanceCache(): InstanceCacheInterface
+    {
+        $mock = Mockery::mock(InstanceCacheInterface::class);
+        $mock->shouldReceive('get')->once()->andReturn(null);
+        $mock->shouldReceive('put')->never();
+        return $mock;
+    }
+
+    private function mockInstanceCache(): InstanceCacheInterface
+    {
+        $mock = Mockery::mock(InstanceCacheInterface::class);
+        $mock->shouldReceive('get')->once()->andReturn(null);
+        $mock->shouldReceive('put')->once()->andReturn(null);
+        return $mock;
     }
 }

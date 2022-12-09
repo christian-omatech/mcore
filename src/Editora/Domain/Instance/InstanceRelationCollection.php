@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Omatech\Mcore\Editora\Domain\Instance;
+namespace Omatech\MageCore\Editora\Domain\Instance;
 
 use function Lambdish\Phunctional\flat_map;
 use function Lambdish\Phunctional\map;
@@ -12,12 +12,7 @@ final class InstanceRelationCollection
 
     public function fill(array $relations): void
     {
-        $this->instanceRelations = flat_map(static function (
-            array $instances,
-            string $relationKey
-        ) {
-            return new InstanceRelation($relationKey, $instances);
-        }, $relations);
+        $this->instanceRelations = flat_map(static fn (array $instances, string $relationKey) => new InstanceRelation($relationKey, $instances), $relations);
     }
 
     /** @return array<InstanceRelation> */
@@ -33,8 +28,6 @@ final class InstanceRelationCollection
 
     public function toArray(): array
     {
-        return map(static function (InstanceRelation $relation): array {
-            return $relation->toArray();
-        }, $this->instanceRelations);
+        return map(static fn (InstanceRelation $relation): array => $relation->toArray(), $this->instanceRelations);
     }
 }

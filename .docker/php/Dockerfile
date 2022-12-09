@@ -1,25 +1,26 @@
-ARG PHP_VERSION
-
-FROM php:${PHP_VERSION}-cli-alpine
+FROM php:8.2.0-cli-alpine
 
 ARG UID
 ARG GID
-
-COPY php/zzz-fpm.conf /usr/local/etc/php-fpm.d/zzz-fpm.conf
 
 RUN apk --update --no-cache add \
     curl \
     git
 
-RUN apk --update --no-cache add --virtual deps $PHPIZE_DEPS
+RUN apk --update --no-cache add --virtual deps $PHPIZE_DEPS linux-headers
 RUN pecl install -f xdebug
-RUN mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
 RUN docker-php-ext-enable xdebug
 RUN apk del --purge deps
 
-RUN echo "xdebug.client_host = host.docker.internal" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
- && echo "xdebug.start_with_request = 1" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
- && echo "xdebug.discover_client_host = 1" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+RUN mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
+
+RUN echo "xdebug.client_host=host.docker.internal" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
+ && echo "xdebug.start_with_request=1" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
+ && echo "xdebug.discover_client_host=1" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
+ && echo "opcache.enable=0" >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini \
+ && echo "opcache.enable_cli=0" >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini \
+ && echo "opcache.jit=1255" >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini \
+ && echo "opcache.jit_buffer_size=256MB" >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini
 
 RUN addgroup -S -g ${GID} app \
  && adduser -S -D -u ${UID} -s /sbin/nologin -h /home/app -G app app \
@@ -33,5 +34,3 @@ RUN mkdir -p /home/app/.composer \
 
 USER app
 WORKDIR /app
-
-EXPOSE 9003

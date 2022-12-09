@@ -1,12 +1,12 @@
 <?php declare(strict_types=1);
 
-namespace Omatech\Mcore\Editora\Domain\Instance;
+namespace Omatech\MageCore\Editora\Domain\Instance;
 
 final class Metadata
 {
     private ?string $uuid = null;
     private string $key = '';
-    private Publication $publication;
+    private readonly Publication $publication;
 
     public function __construct()
     {
@@ -15,11 +15,9 @@ final class Metadata
 
     public function fill(array $metadata): void
     {
-        assert(isset($metadata['key']));
-        assert(isset($metadata['publication']));
         $this->uuid = $metadata['uuid'] ?? $this->uuid;
-        $this->key = $metadata['key'];
-        $this->publication->fill($metadata['publication']);
+        $this->key = $metadata['key'] ?? $this->key;
+        $this->publication->fill($metadata['publication'] ?? $this->publication->toArray());
     }
 
     public function uuid(): ?string

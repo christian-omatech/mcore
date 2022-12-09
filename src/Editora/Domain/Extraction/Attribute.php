@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Omatech\Mcore\Editora\Domain\Extraction;
+namespace Omatech\MageCore\Editora\Domain\Extraction;
 
 use function Lambdish\Phunctional\map;
 
@@ -9,7 +9,6 @@ final class Attribute
     private ?string $uuid = null;
     private string $key;
     private mixed $value = null;
-    /** @var array<Attribute> $attributes */
     private array $attributes;
 
     public function __construct(string $key, array $attributes)
@@ -43,9 +42,10 @@ final class Attribute
     {
         return [
             'key' => $this->key,
-            'attributes' => map(static function (Attribute $attribute): array {
-                return $attribute->toQuery();
-            }, $this->attributes),
+            'attributes' => map(
+                static fn (Attribute $attribute): array => $attribute->toQuery(),
+                $this->attributes
+            ),
         ];
     }
 
@@ -55,9 +55,10 @@ final class Attribute
             'uuid' => $this->uuid,
             'key' => $this->key,
             'value' => $this->value,
-            'attributes' => map(static function (Attribute $attribute): array {
-                return $attribute->toArray();
-            }, $this->attributes),
+            'attributes' => map(
+                static fn (Attribute $attribute): array => $attribute->toArray(),
+                $this->attributes
+            ),
         ];
     }
 }

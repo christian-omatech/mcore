@@ -1,17 +1,17 @@
 <?php declare(strict_types=1);
 
-namespace Omatech\Mcore\Editora\Domain\Instance;
+namespace Omatech\MageCore\Editora\Domain\Instance;
 
-use Omatech\Mcore\Editora\Domain\Attribute\AttributeCollection;
-use Omatech\Mcore\Editora\Domain\Clazz\Clazz;
-use Omatech\Mcore\Editora\Domain\Instance\Validator\Validator;
+use Omatech\MageCore\Editora\Domain\Attribute\AttributeCollection;
+use Omatech\MageCore\Editora\Domain\Clazz\Clazz;
+use Omatech\MageCore\Editora\Domain\Instance\Validator\Validator;
 
 class Instance
 {
-    private Clazz $clazz;
-    private Metadata $metadata;
-    private AttributeCollection $attributesCollection;
-    private InstanceRelationCollection $instanceRelationCollection;
+    private readonly Clazz $clazz;
+    private readonly Metadata $metadata;
+    private readonly AttributeCollection $attributesCollection;
+    private readonly InstanceRelationCollection $instanceRelationCollection;
 
     public function __construct(array $instance)
     {

@@ -1,12 +1,12 @@
 <?php declare(strict_types=1);
 
-namespace Omatech\Mcore\Editora\Domain\Extraction;
+namespace Omatech\MageCore\Editora\Domain\Extraction;
 
 final class Pagination
 {
-    private int $total;
-    private int $limit;
-    private int $page;
+    private readonly int $total;
+    private readonly int $limit;
+    private readonly int $page;
 
     public function __construct(array $params, int $total)
     {

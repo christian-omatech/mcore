@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Omatech\Mcore\Editora\Domain\Value;
+namespace Omatech\MageCore\Editora\Domain\Value;
 
 abstract class BaseValue
 {
@@ -8,7 +8,7 @@ abstract class BaseValue
     protected mixed $value = null;
     protected array $extraData = [];
     protected Configuration $configuration;
-    private Metadata $metadata;
+    private readonly Metadata $metadata;
 
     public function __construct(string $attributeKey, string $language, array $properties)
     {

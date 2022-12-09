@@ -8,11 +8,28 @@ class InstanceArrayBuilder
 {
     private array $languages = [
         ['language' => 'es'],
-        ['language' => 'en']
+        ['language' => 'en'],
     ];
     private array $instance = [
-        'relations' => []
+        'class' => [
+            'key' => null,
+        ],
+        'metadata' => [
+            'uuid' => '',
+            'key' => '',
+            'publication' => [
+                'status' => 'pending',
+                'startPublishingDate' => '1989-03-08 09:00:00',
+                'endPublishingDate' => null,
+            ],
+        ],
+        'attributes' => [],
+        'relations' => [],
     ];
+
+    public function __construct(private readonly bool $input = true)
+    {
+    }
 
     public function addClassKey(string $classKey): self
     {
@@ -24,21 +41,21 @@ class InstanceArrayBuilder
     {
         $this->instance['class']['relations'][] = [
             'key' => $relationKey,
-            'classes' => $allowedClasses
+            'classes' => $allowedClasses,
         ];
         return $this;
     }
 
-    public function addPublication(string $status): self
+    public function addMetadata(string $uuid = null, string $key = null, ?array $publication = []): self
     {
         $this->instance['metadata'] = [
-            'uuid' => null,
-            'key' => '',
-            'publication' => [
-                'status' => $status,
-                'startPublishingDate' => null,
-                'endPublishingDate' => null
-            ]
+            'uuid' => $uuid,
+            'key' => $key,
+            'publication' => array_merge([
+                'status' => 'pending',
+                'startPublishingDate' => '1989-03-08 09:00:00',
+                'endPublishingDate' => null,
+            ], $publication ?? []),
         ];
         return $this;
     }
@@ -46,22 +63,14 @@ class InstanceArrayBuilder
     public function addAttribute(
         string $key,
         string $type,
-        array  $values,
-        array  $fn = []
-    ): self
-    {
-        $this->instance['attributes'][] = $this->attribute($key, $type, $values, $fn);
-        return $this;
-    }
-
-    public function addSubAttribute(string $key, string $type, array $values, array $fn = []): array
-    {
-        return $this->attribute($key, $type, $values, $fn);
-    }
-
-    public function addRelation(): self
-    {
-        $this->instance['relations'] = [];
+        array $values,
+        array $fn = []
+    ): self {
+        if ($this->input) {
+            $this->instance['attributes'][$key] = $this->attribute($key, $type, $values, $fn);
+        } else {
+            $this->instance['attributes'][] = $this->attribute($key, $type, $values, $fn);
+        }
         return $this;
     }
 
@@ -79,12 +88,32 @@ class InstanceArrayBuilder
                     'value' => null,
                     'extraData' => [],
                 ], $value);
-            }, ($values === []) ? $this->languages : $values),
+            }, ([] === $values) ? $this->languages : $values),
             'attributes' => array_reduce($fn, function (array $acc, callable $fn) {
-                $acc[] = $fn($this);
+                if ($this->input) {
+                    $attribute = $fn($this);
+                    $acc[$attribute['key']] = $attribute;
+                } else {
+                    $acc[] = $fn($this);
+                }
                 return $acc;
-            }, [])
+            }, []),
         ];
+    }
+
+    public function addSubAttribute(string $key, string $type, array $values, array $fn = []): array
+    {
+        return $this->attribute($key, $type, $values, $fn);
+    }
+
+    public function addRelation(string $key, array $values): self
+    {
+        if ($this->input) {
+            $this->instance['relations'][$key] = $values;
+        } else {
+            $this->instance['relations'][] = [ 'key' => $key, 'instances' => $values ];
+        }
+        return $this;
     }
 
     public function build(): array

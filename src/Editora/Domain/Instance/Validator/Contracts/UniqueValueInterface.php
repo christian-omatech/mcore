@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace Omatech\Mcore\Editora\Domain\Instance\Validator\Contracts;
+namespace Omatech\MageCore\Editora\Domain\Instance\Validator\Contracts;
 
-use Omatech\Mcore\Editora\Domain\Value\BaseValue;
+use Omatech\MageCore\Editora\Domain\Value\BaseValue;
 
 interface UniqueValueInterface
 {

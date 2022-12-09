@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Omatech\Mcore\Editora\Domain\Attribute;
+namespace Omatech\MageCore\Editora\Domain\Attribute;
 
 use function Lambdish\Phunctional\each;
 use function Lambdish\Phunctional\map;
@@ -9,10 +9,8 @@ use function Lambdish\Phunctional\search;
 
 final class AttributeCollection
 {
-    /** @var array<Attribute> $attributes */
-    private array $attributes;
+    private readonly array $attributes;
 
-    /** @param array<Attribute> $attributes */
     public function __construct(array $attributes)
     {
         $this->attributes = map(static fn (Attribute $attribute) => $attribute, $attributes);
@@ -27,9 +25,10 @@ final class AttributeCollection
 
     public function find(string $key): ?Attribute
     {
-        return search(static function (Attribute $attribute) use ($key): bool {
-            return $attribute->key() === $key;
-        }, $this->attributes);
+        return search(
+            static fn (Attribute $attribute): bool => $attribute->key() === $key,
+            $this->attributes
+        );
     }
 
     public function findAll(string $key): array
@@ -48,7 +47,6 @@ final class AttributeCollection
         }, $attributes, []);
     }
 
-    /** @return array<Attribute> */
     public function get(): array
     {
         return $this->attributes;

@@ -2,8 +2,8 @@
 
 namespace Tests\Editora\Data;
 
-use Omatech\Mcore\Editora\Domain\Instance\Validator\Contracts\UniqueValueInterface;
-use Omatech\Mcore\Editora\Domain\Value\BaseValue;
+use Omatech\MageCore\Editora\Domain\Instance\Validator\Contracts\UniqueValueInterface;
+use Omatech\MageCore\Editora\Domain\Value\BaseValue;
 
 final class UniqueValueRepository implements UniqueValueInterface
 {

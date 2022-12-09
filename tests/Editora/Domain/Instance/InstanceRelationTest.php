@@ -2,10 +2,10 @@
 
 namespace Tests\Editora\Domain\Instance;
 
-use Omatech\Mcore\Editora\Domain\Instance\InstanceRelation;
-use Tests\Editora\EditoraTestCase;
+use Omatech\MageCore\Editora\Domain\Instance\InstanceRelation;
+use Tests\TestCase;
 
-final class InstanceRelationTest extends EditoraTestCase
+final class InstanceRelationTest extends TestCase
 {
     /** @test */
     public function instanceExistsInRelations(): void

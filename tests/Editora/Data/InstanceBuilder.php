@@ -1,23 +1,21 @@
-<?php declare(strict_types=1);
+<?php
 
 namespace Tests\Editora\Data;
 
-use Omatech\Mcore\Editora\Domain\Instance\Contracts\InstanceCacheInterface;
-use Omatech\Mcore\Editora\Domain\Instance\Instance;
-use Omatech\Mcore\Editora\Domain\Instance\InstanceBuilder as InstanceBuilderReal;
-use Omatech\Mcore\Shared\Utils\Utils;
+use Omatech\MageCore\Editora\Domain\Instance\Contracts\InstanceCacheInterface;
+use Omatech\MageCore\Editora\Domain\Instance\Instance;
+use Omatech\MageCore\Editora\Domain\Instance\InstanceBuilder as InstanceBuilderReal;
 
 class InstanceBuilder
 {
     private array $languages = ['es', 'en'];
     private string $className = 'VideoGames';
-    private array $structure = [];
+    private array $structure;
     private InstanceCacheInterface $instanceCache;
 
-    public function __construct(InstanceCacheInterface $instanceCache)
+    public function __construct()
     {
-        $this->instanceCache = $instanceCache;
-        $this->structure = (include __DIR__ . '/structure.php')['classes'][$this->className];
+        $this->structure = (include dirname(__DIR__).'/Data/structure.php')['classes'];
     }
 
     public function build(): Instance
@@ -25,7 +23,7 @@ class InstanceBuilder
         return (new InstanceBuilderReal($this->instanceCache))
             ->setLanguages($this->languages)
             ->setClassName($this->className)
-            ->setStructure($this->structure)
+            ->setStructure($this->structure[$this->className] ?? [])
             ->build();
     }
 
@@ -37,13 +35,19 @@ class InstanceBuilder
 
     public function setStructure(array $structure): InstanceBuilder
     {
-        $this->structure = $structure;
+        $this->structure = [$this->className => $structure];
         return $this;
     }
 
     public function setClassName(string $className): InstanceBuilder
     {
-        $this->className = Utils::getInstance()->slug($className);
+        $this->className = $className;
+        return $this;
+    }
+
+    public function setInstanceCache(InstanceCacheInterface $instanceCache): InstanceBuilder
+    {
+        $this->instanceCache = $instanceCache;
         return $this;
     }
 }

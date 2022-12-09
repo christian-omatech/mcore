@@ -1,12 +1,12 @@
 <?php declare(strict_types=1);
 
-namespace Omatech\Mcore\Editora\Domain\Extraction;
+namespace Omatech\MageCore\Editora\Domain\Extraction;
 
-use Omatech\Mcore\Editora\Domain\Attribute\Attribute;
-use Omatech\Mcore\Editora\Domain\Attribute\AttributeCollection as InstanceAttributes;
-use Omatech\Mcore\Editora\Domain\Extraction\Attribute as QueryAttribute;
-use Omatech\Mcore\Editora\Domain\Extraction\Instance as ExtractionInstance;
-use Omatech\Mcore\Editora\Domain\Instance\Instance;
+use Omatech\MageCore\Editora\Domain\Attribute\Attribute;
+use Omatech\MageCore\Editora\Domain\Attribute\AttributeCollection as InstanceAttributes;
+use Omatech\MageCore\Editora\Domain\Extraction\Attribute as QueryAttribute;
+use Omatech\MageCore\Editora\Domain\Extraction\Instance as ExtractionInstance;
+use Omatech\MageCore\Editora\Domain\Instance\Instance;
 use function DeepCopy\deep_copy;
 use function Lambdish\Phunctional\filter;
 use function Lambdish\Phunctional\first;
@@ -15,19 +15,10 @@ use function Lambdish\Phunctional\search;
 
 final class Extractor
 {
-    private Query $query;
-    private Instance $instance;
+    private readonly Query $query;
+    private readonly Instance $instance;
+    private readonly array $relations;
 
-    /**
-     * @var array<Query>
-     */
-    private array $relations;
-
-    /**
-     * @param Query $query
-     * @param Instance $instance
-     * @param array<Query> $relations
-     */
     public function __construct(Query $query, Instance $instance, array $relations = [])
     {
         $this->query = $query;
@@ -40,13 +31,6 @@ final class Extractor
         return $this->extractInstance($this->query, $this->instance, $this->relations);
     }
 
-    /**
-     * @param Query $query
-     * @param Instance $instance
-     * @param array<Query> $instanceRelations
-     *
-     * @return \Omatech\Mcore\Editora\Domain\Extraction\Instance
-     */
     private function extractInstance(
         Query $query,
         Instance $instance,
@@ -62,12 +46,6 @@ final class Extractor
         ]);
     }
 
-    /**
-     * @param array<QueryAttribute> $queryAttributes
-     * @param InstanceAttributes $instanceAttributes
-     *
-     * @return array<QueryAttribute>
-     */
     private function extractAttributes(
         array $queryAttributes,
         InstanceAttributes $instanceAttributes
@@ -85,13 +63,6 @@ final class Extractor
         }, $this->query->languages(), []);
     }
 
-    /**
-     * @param string $language
-     * @param array<QueryAttribute> $queryAttributes
-     * @param InstanceAttributes $instanceAttributes
-     *
-     * @return array<QueryAttribute>
-     */
     private function extractAttributesByLanguage(
         string $language,
         array $queryAttributes,
@@ -113,20 +84,12 @@ final class Extractor
         }, $instanceAttributes->get(), []);
     }
 
-    /**
-     * @param array<QueryAttribute> $queryAttributes
-     * @param Attribute $instanceAttribute
-     *
-     * @return QueryAttribute|null
-     */
     private function searchForQueryAttribute(
         array $queryAttributes,
         Attribute $instanceAttribute
     ): ?QueryAttribute {
         $queryAttribute = search(
-            static function (QueryAttribute $queryAttribute) use ($instanceAttribute): bool {
-                return $instanceAttribute->key() === $queryAttribute->key();
-            },
+            static fn (QueryAttribute $queryAttribute): bool => $instanceAttribute->key() === $queryAttribute->key(),
             $queryAttributes
         );
         if (! count($queryAttributes)) {
@@ -152,9 +115,6 @@ final class Extractor
     }
 
     /**
-     * @param Attribute $attribute
-     * @param string $language
-     *
      * @return array{uuid:string|null, value:mixed|null}
      */
     private function extractValue(Attribute $attribute, string $language): array
@@ -176,10 +136,8 @@ final class Extractor
             array $acc,
             RelationsResults $relation
         ) use ($queryRelations): array {
-            $queryRelation = search(static function ($query) use ($relation): bool {
-                return $query->param('key') === $relation->key() &&
-                    $query->param('type') === $relation->type();
-            }, $queryRelations);
+            $queryRelation = search(static fn ($query): bool => $query->param('key') === $relation->key() &&
+                $query->param('type') === $relation->type(), $queryRelations);
             if ($queryRelation) {
                 $acc[] = (new Relation($relation->key(), $relation->type()))
                     ->setInstances($this->addInstancesRelation($queryRelation, $relation));

@@ -1,16 +1,16 @@
 <?php declare(strict_types=1);
 
-namespace Omatech\Mcore\Editora\Domain\Attribute;
+namespace Omatech\MageCore\Editora\Domain\Attribute;
 
-use Omatech\Mcore\Editora\Domain\Value\BaseValue;
-use Omatech\Mcore\Editora\Domain\Value\ValueCollection;
+use Omatech\MageCore\Editora\Domain\Value\BaseValue;
+use Omatech\MageCore\Editora\Domain\Value\ValueCollection;
 
 final class Attribute
 {
-    private string $key;
-    private string $type;
-    private ValueCollection $valueCollection;
-    private AttributeCollection $attributeCollection;
+    private readonly string $key;
+    private readonly string $type;
+    private readonly ValueCollection $valueCollection;
+    private readonly AttributeCollection $attributeCollection;
 
     public function __construct(array $properties)
     {

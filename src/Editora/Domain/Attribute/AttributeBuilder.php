@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace Omatech\Mcore\Editora\Domain\Attribute;
+namespace Omatech\MageCore\Editora\Domain\Attribute;
 
-use Omatech\Mcore\Editora\Domain\Value\ValueBuilder;
-use Omatech\Mcore\Shared\Utils\Utils;
+use Omatech\MageCore\Editora\Domain\Value\ValueBuilder;
+use Omatech\MageCore\Shared\Utils\Utils;
 use function Lambdish\Phunctional\flat_map;
 
 final class AttributeBuilder
@@ -31,7 +31,7 @@ final class AttributeBuilder
     private function defaultsToAttribute(?array $properties, string $key): array
     {
         return [
-            'key' => Utils::getInstance()->slug($key),
+            'key' => Utils::slug($key),
             'type' => $properties['type'] ?? 'string',
             'values' => $properties['values'] ?? [],
             'attributes' => $properties['attributes'] ?? [],

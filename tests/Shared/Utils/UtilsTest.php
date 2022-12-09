@@ -2,56 +2,56 @@
 
 namespace Tests\Shared\Utils;
 
-use Omatech\Mcore\Shared\Utils\Utils;
+use Omatech\MageCore\Shared\Utils\Utils;
 use PHPUnit\Framework\TestCase;
 
 class UtilsTest extends TestCase
 {
     /** @test */
-    public function isEmptyWhenEmptyString(): void
+    public function givenEmptyStringWhenCallIsEmptyThenTrue(): void
     {
-        $this->assertTrue(Utils::getInstance()->isEmpty(''));
+        $this->assertTrue(Utils::isEmpty(''));
     }
 
     /** @test */
-    public function notEmptyWhenNotEmptyString(): void
+    public function givenNotEmptyStringWhenCallIsEmptyThenFalse(): void
     {
-        $this->assertFalse(Utils::getInstance()->isEmpty('test'));
+        $this->assertFalse(Utils::isEmpty('test'));
     }
 
     /** @test */
-    public function isEmptyWhenNull(): void
+    public function givenNullWhenCallIsEmptyThenTrue(): void
     {
-        $this->assertTrue(Utils::getInstance()->isEmpty(null));
+        $this->assertTrue(Utils::isEmpty(null));
     }
 
     /** @test */
-    public function isEmptyWhenEmptyArray(): void
+    public function givenEmptyArrayWhenCallIsEmptyThenTrue(): void
     {
-        $this->assertTrue(Utils::getInstance()->isEmpty([]));
+        $this->assertTrue(Utils::isEmpty([]));
     }
 
     /** @test */
-    public function notEmptyWhenArrayItems(): void
+    public function givenNonEmptyArrayWhenCallIsEmptyThenFalse(): void
     {
-        $this->assertFalse(Utils::getInstance()->isEmpty(['test']));
+        $this->assertFalse(Utils::isEmpty(['test']));
     }
 
     /** @test */
-    public function notEmptyWhenFalse(): void
+    public function givenFalseWhenCallIsEmptyThenFalse(): void
     {
-        $this->assertFalse(Utils::getInstance()->isEmpty(false));
+        $this->assertFalse(Utils::isEmpty(false));
     }
 
     /** @test */
-    public function notEmptyWhenTrue(): void
+    public function givenTrueWhenCallIsEmptyThenFalse(): void
     {
-        $this->assertFalse(Utils::getInstance()->isEmpty(true));
+        $this->assertFalse(Utils::isEmpty(true));
     }
 
     /** @test */
-    public function notEmptyWhenZero(): void
+    public function givenZeroWhenCallIsEmptyThenFalse(): void
     {
-        $this->assertFalse(Utils::getInstance()->isEmpty(0));
+        $this->assertFalse(Utils::isEmpty(0));
     }
 }

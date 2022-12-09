@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-use Omatech\Mcore\Editora\Domain\Value\Types\StringValue;
+use Omatech\MageCore\Editora\Domain\Value\Types\StringValue;
 use Tests\Editora\Data\UniqueValueRepository;
 
 return [

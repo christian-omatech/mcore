@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace Omatech\Mcore\Editora\Domain\Value\Types;
+namespace Omatech\MageCore\Editora\Domain\Value\Types;
 
-use Omatech\Mcore\Editora\Domain\Value\Exceptions\LookupValueOptionException;
-use Omatech\Mcore\Shared\Utils\Utils;
+use Omatech\MageCore\Editora\Domain\Value\Exceptions\LookupValueOptionException;
+use Omatech\MageCore\Shared\Utils\Utils;
 
 final class LookupValue extends StringValue
 {
@@ -15,7 +15,7 @@ final class LookupValue extends StringValue
 
     private function ensureLookupIsValid(mixed $value): void
     {
-        if (! Utils::getInstance()->isEmpty($value) &&
+        if (! Utils::isEmpty($value) &&
             ! $this->configuration->exists($value, ['options'])) {
             LookupValueOptionException::withValue($this);
         }

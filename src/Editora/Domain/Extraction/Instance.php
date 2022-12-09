@@ -1,15 +1,15 @@
 <?php declare(strict_types=1);
 
-namespace Omatech\Mcore\Editora\Domain\Extraction;
+namespace Omatech\MageCore\Editora\Domain\Extraction;
 
 use function Lambdish\Phunctional\map;
 use function Lambdish\Phunctional\reduce;
 
 final class Instance
 {
-    private string $key;
-    private array $attributes;
-    private array $relations;
+    private readonly string $key;
+    private readonly array $attributes;
+    private readonly array $relations;
 
     public function __construct(array $query)
     {
@@ -29,14 +29,9 @@ final class Instance
 
     private function instancesToArray(array $instances): array
     {
-        return map(static function (Instance $instance): array {
-            return $instance->toArray();
-        }, $instances);
+        return map(static fn (Instance $instance): array => $instance->toArray(), $instances);
     }
 
-    /**
-     * @return array{key: string, attributes: array, relations: array}
-     */
     public function toArray(): array
     {
         return [
@@ -46,9 +41,7 @@ final class Instance
                 array $attributes,
                 string $language
             ): array {
-                $acc[$language] = map(static function (Attribute $attribute): array {
-                    return $attribute->toArray();
-                }, $attributes);
+                $acc[$language] = map(static fn (Attribute $attribute): array => $attribute->toArray(), $attributes);
                 return $acc;
             }, $this->attributes, []),
             'relations' => $this->relatedInstancesToArray($this->relations),

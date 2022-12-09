@@ -1,12 +1,12 @@
 <?php declare(strict_types=1);
 
-namespace Omatech\Mcore\Editora\Domain\Extraction;
+namespace Omatech\MageCore\Editora\Domain\Extraction;
 
 final class Results
 {
     /** @var array<Instance> $instances */
-    private array $instances;
-    private ?Pagination $pagination;
+    private readonly array $instances;
+    private readonly ?Pagination $pagination;
 
     public function __construct(array $instances, ?Pagination $pagination)
     {

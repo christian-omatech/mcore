@@ -1,59 +1,39 @@
-<?php declare(strict_types=1);
+<?php
 
 namespace Tests\Editora\Data\Objects;
 
-use function Lambdish\Phunctional\reduce;
+use Tests\Editora\Data\InstanceArrayBuilder;
+use Tests\Editora\Data\InstanceFactory;
 
-class NewsMother extends ObjectMother
+class NewsMother
 {
-    protected array $availableRelations = [
-        'news-photos' => [ PhotosMother::class],
-    ];
-
-    public function get(int $instancesNumber = 1, ?string $key = null, ?array $relations = []): array
+    public static function get(int $instancesNumber = 1, array $relations = []): array
     {
-        $this->instances = [];
-        for ($i = 1; $i <= $instancesNumber; $i++) {
-            $this->instances[] = $this->build('News')->fill([
-                'metadata' => [
-                    'uuid' => $this->faker->uuid(),
-                    'key' => $key ?? 'new-instance-'.$i,
-                    'publication' => [
-                        'startPublishingDate' => $this->faker->dateTime()->format('Y-m-d H:i:s'),
-                    ],
-                ],
-                'attributes' => [
-                    'title' => [
-                        'values' => array_merge(reduce(function (array $acc, string $language) {
-                            $acc[] = [
-                                'uuid' => $language.'-'.$this->faker->uuid(),
-                                'language' => $language,
-                                'value' => null,
-                            ];
-                            return $acc;
-                        }, $this->languages, []), [[
-                            'uuid' => $this->faker->uuid(),
-                            'language' => '+',
-                            'value' => null,
-                        ],
-                        ]),
-                        'attributes' => [],
-                    ],
-                    'description' => [
-                        'values' => reduce(function (array $acc, string $language) {
-                            $acc[] = [
-                                'uuid' => $this->faker->uuid(),
-                                'language' => $language,
-                                'value' => $this->faker->paragraph(),
-                            ];
-                            return $acc;
-                        }, $this->languages, []),
-                        'attributes' => [],
-                    ],
-                ],
-                'relations' => $relations,
-            ]);
+        $instances = [];
+        for($i=1; $i <= $instancesNumber; $i++) {
+            $instances[] = InstanceFactory::fill('News', static function (InstanceArrayBuilder $builder) use ($relations, $i) {
+                $builder
+                    ->addMetadata('uuid', 'new-instance-'.$i)
+                    ->addAttribute('title', 'string', [
+                        ['uuid' => 'uuid', 'language' => 'es', 'value' => 'title-es-'.$i],
+                        ['uuid' => 'uuid', 'language' => 'en', 'value' => 'title-en-'.$i],
+                        ['uuid' => 'uuid', 'language' => '+', 'value' => 'title-default-'.$i],
+                    ])
+                    ->addAttribute('description', 'text', [
+                        ['uuid' => 'uuid', 'language' => 'es', 'value' => 'description-es-'.$i],
+                        ['uuid' => 'uuid', 'language' => 'en', 'value' => 'description-en-'.$i],
+                        ['uuid' => 'uuid', 'language' => '+', 'value' => 'description-default-'.$i],
+                    ]);
+                foreach($relations as $relation => $relatedInstances) {
+                    $relatedInstancesIds = [];
+                    foreach($relatedInstances as $relatedInstance) {
+                        $relatedInstancesIds[$relatedInstance->uuid()] = $relatedInstance->data()['classKey'];
+                    }
+                    $builder->addRelation($relation, $relatedInstancesIds);
+                }
+                return $builder->build();
+            });
         }
-        return $this->instances;
+        return $instances;
     }
 }

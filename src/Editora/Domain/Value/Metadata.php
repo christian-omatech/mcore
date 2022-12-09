@@ -1,12 +1,12 @@
 <?php declare(strict_types=1);
 
-namespace Omatech\Mcore\Editora\Domain\Value;
+namespace Omatech\MageCore\Editora\Domain\Value;
 
 final class Metadata
 {
-    private string $attributeKey;
-    private string $language;
-    private array $rules;
+    private readonly string $attributeKey;
+    private readonly string $language;
+    private readonly array $rules;
 
     public function __construct(string $attributeKey, string $language, array $rules)
     {

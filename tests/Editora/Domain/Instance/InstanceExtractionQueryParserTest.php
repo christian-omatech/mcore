@@ -2,13 +2,13 @@
 
 namespace Tests\Editora\Domain\Instance;
 
-use Omatech\Mcore\Editora\Domain\Extraction\Parser;
-use Tests\Editora\EditoraTestCase;
+use Omatech\MageCore\Editora\Domain\Extraction\Parser;
+use Tests\TestCase;
 
-class InstanceExtractionQueryParserTest extends EditoraTestCase
+class InstanceExtractionQueryParserTest extends TestCase
 {
     /** @test */
-    public function queryParser(): void
+    public function givenExtractionExpressionWhenGetParsedThenGeneratedArrayIsOk(): void
     {
         $graphQuery = '{
             Books(languages: [en]) {

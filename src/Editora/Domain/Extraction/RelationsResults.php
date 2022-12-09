@@ -1,11 +1,11 @@
 <?php declare(strict_types=1);
 
-namespace Omatech\Mcore\Editora\Domain\Extraction;
+namespace Omatech\MageCore\Editora\Domain\Extraction;
 
 final class RelationsResults
 {
-    private string $key;
-    private string $type;
+    private readonly string $key;
+    private readonly string $type;
     private Results $results;
     /** @var array<Results> $relations */
     private array $relations;

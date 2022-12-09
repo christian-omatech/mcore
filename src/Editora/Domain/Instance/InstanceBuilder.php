@@ -1,13 +1,13 @@
 <?php declare(strict_types=1);
 
-namespace Omatech\Mcore\Editora\Domain\Instance;
+namespace Omatech\MageCore\Editora\Domain\Instance;
 
-use Omatech\Mcore\Editora\Domain\Attribute\AttributeBuilder;
-use Omatech\Mcore\Editora\Domain\Instance\Contracts\InstanceCacheInterface;
-use Omatech\Mcore\Editora\Domain\Instance\Exceptions\InvalidClassNameException;
-use Omatech\Mcore\Editora\Domain\Instance\Exceptions\InvalidLanguagesException;
-use Omatech\Mcore\Editora\Domain\Instance\Exceptions\InvalidStructureException;
-use Omatech\Mcore\Shared\Utils\Utils;
+use Omatech\MageCore\Editora\Domain\Attribute\AttributeBuilder;
+use Omatech\MageCore\Editora\Domain\Instance\Contracts\InstanceCacheInterface;
+use Omatech\MageCore\Editora\Domain\Instance\Exceptions\InvalidClassNameException;
+use Omatech\MageCore\Editora\Domain\Instance\Exceptions\InvalidLanguagesException;
+use Omatech\MageCore\Editora\Domain\Instance\Exceptions\InvalidStructureException;
+use Omatech\MageCore\Shared\Utils\Utils;
 use function Lambdish\Phunctional\map;
 
 final class InstanceBuilder
@@ -15,7 +15,7 @@ final class InstanceBuilder
     private array $languages = [];
     private array $structure = [];
     private string $className = '';
-    private InstanceCacheInterface $instanceCache;
+    private readonly InstanceCacheInterface $instanceCache;
 
     public function __construct(InstanceCacheInterface $instanceCache)
     {
@@ -62,10 +62,8 @@ final class InstanceBuilder
     private function normalizeRelations(): array
     {
         return map(static function (array $relations, string &$key): array {
-            $key = Utils::getInstance()->slug($key);
-            return map(static function ($class): string {
-                return Utils::getInstance()->slug($class);
-            }, $relations);
+            $key = Utils::slug($key);
+            return map(static fn ($class): string => Utils::slug($class), $relations);
         }, $this->structure['relations'] ?? []);
     }
 
@@ -83,7 +81,7 @@ final class InstanceBuilder
 
     public function setClassName(string $className): InstanceBuilder
     {
-        $this->className = Utils::getInstance()->slug($className);
+        $this->className = Utils::slug($className);
         return $this;
     }
 }
