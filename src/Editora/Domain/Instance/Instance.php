@@ -23,10 +23,9 @@ class Instance
 
     public function fill(array $instance): self
     {
-        assert(isset($instance['metadata']));
         assert(isset($instance['attributes']));
         assert(isset($instance['relations']));
-        $this->metadata->fill($instance['metadata']);
+        $this->metadata->fill($instance['metadata'] ?? $this->metadata->toArray());
         $this->attributesCollection->fill($instance['attributes']);
         $this->instanceRelationCollection->fill($instance['relations']);
         $this->validate();

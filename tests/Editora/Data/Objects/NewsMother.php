@@ -13,6 +13,7 @@ class NewsMother
         for($i=1; $i <= $instancesNumber; $i++) {
             $instances[] = InstanceFactory::fill('News', static function (InstanceArrayBuilder $builder) use ($relations, $i) {
                 $builder
+                    ->addClassKey('news')
                     ->addMetadata('uuid', 'new-instance-'.$i)
                     ->addAttribute('title', 'string', [
                         ['uuid' => 'uuid', 'language' => 'es', 'value' => 'title-es-'.$i],

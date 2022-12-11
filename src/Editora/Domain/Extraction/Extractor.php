@@ -37,6 +37,7 @@ final class Extractor
         array $instanceRelations = []
     ): ExtractionInstance {
         return new ExtractionInstance([
+            'class' => $instance->data()['classKey'],
             'key' => $instance->key(),
             'attributes' => $this->extractAttributes(
                 $query->attributes(),

@@ -120,4 +120,26 @@ class InstanceArrayBuilder
     {
         return $this->instance;
     }
+
+    public function results(): array
+    {
+        $results = [
+            'key' => $this->instance['metadata']['key'],
+            'attributes' => [],
+            'relations' => [],
+        ];
+
+        foreach($this->instance['attributes'] as $attribute) {
+            foreach($attribute['values'] as $value) {
+                $results['attributes'][$value['language']][] = [
+                    'uuid' => $value['uuid'],
+                    'key' => $attribute['key'],
+                    'value' => $value['value'],
+                    'attributes' => []
+                ];
+            }
+        }
+
+        return $results;
+    }
 }

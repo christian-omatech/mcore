@@ -12,7 +12,7 @@ class InstanceFactory
     {
         return (new InstanceBuilder())
             ->setInstanceCache(self::mock())
-            ->setClassName('VideoGames')
+            ->setClassName($className)
             ->build();
     }
 

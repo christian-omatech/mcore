@@ -5,14 +5,16 @@ namespace Omatech\MageCore\Editora\Domain\Extraction;
 use function Lambdish\Phunctional\map;
 use function Lambdish\Phunctional\reduce;
 
-final class Instance
+final readonly class Instance
 {
-    private readonly string $key;
-    private readonly array $attributes;
-    private readonly array $relations;
+    private string $class;
+    private string $key;
+    private array $attributes;
+    private array $relations;
 
     public function __construct(array $query)
     {
+        $this->class = $query['class'];
         $this->key = $query['key'];
         $this->attributes = $query['attributes'];
         $this->relations = $query['relations'];
@@ -30,6 +32,11 @@ final class Instance
     private function instancesToArray(array $instances): array
     {
         return map(static fn (Instance $instance): array => $instance->toArray(), $instances);
+    }
+
+    public function class(): string
+    {
+        return $this->class;
     }
 
     public function toArray(): array
