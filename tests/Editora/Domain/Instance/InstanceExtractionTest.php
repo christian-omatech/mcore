@@ -68,7 +68,7 @@ class InstanceExtractionTest extends TestCase
         $news = NewsMother::get(11, [ 'news-photos' => $photos ]);
 
         $graphQuery = '{
-            News(languages: es, limit: 5, page: 1, preview: true) {
+            News(languages: es, limit: 5, page: 1) {
                 NewsPhotos()
             }
         }';
@@ -91,17 +91,13 @@ class InstanceExtractionTest extends TestCase
             'pages' => 3
         ], $extraction->results()[0]->pagination()->toArray());
         $this->assertEquals(5, $extraction->results()[0]->pagination()->limit());
-        $this->assertEquals(0, $extraction->results()[0]->pagination()->offset());
-        $this->assertTrue($extraction->results()[0]->param('preview'));
-
+        $this->assertFalse($extraction->results()[0]->params()['preview']);
         $this->assertEquals([
             'total' => 1,
             'limit' => 0,
             'current' => 1,
             'pages' => 1
         ], $extraction->results()[0]->relations()[0]->pagination()->toArray());
-        $this->assertEquals(1, $extraction->results()[0]->relations()[0]->pagination()->limit());
-        $this->assertEquals(0, $extraction->results()[0]->relations()[0]->pagination()->offset());
     }
 
     /** @test */

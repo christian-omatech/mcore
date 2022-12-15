@@ -59,8 +59,8 @@ final class InstanceTest extends TestCase
     {
         $this->expectException(RequiredValueException::class);
 
-        InstanceFactory::fill('VideoGames', static function (InstanceArrayBuilder $builder) {
-            return $builder->addAttribute('title', 'string', [
+        $instanceArrayBuilder = VideoGamesArrayBuilder::withAttributes()
+            ->addAttribute('title', 'string', [
                 ['language' => 'es', 'value' => 'titulo'],
                 ['language' => 'en', 'value' => 'title'],
             ], [
@@ -68,8 +68,8 @@ final class InstanceTest extends TestCase
                     ['language' => 'es'],
                     ['language' => 'en'],
                 ])
-            ])->build();
-        });
+            ]);
+        InstanceFactory::fill('VideoGames', static fn () => $instanceArrayBuilder->build());
     }
 
     /** @test */
@@ -351,6 +351,34 @@ final class InstanceTest extends TestCase
 
         $jsonInstance = json_encode($instance->toArray(), JSON_THROW_ON_ERROR);
         $this->assertStringContainsString('custom-uuid', $jsonInstance);
+        $this->assertStringContainsString('1989-03-08 09:00:00', $jsonInstance);
+        $this->assertStringContainsString('sinopsis-editada', $jsonInstance);
+        $this->assertStringContainsString('synopsis-edited', $jsonInstance);
+    }
+
+    /** @test */
+    public function givenFilledInstanceWhenFillInstanceWithDifferentUuidThenUpdatedOk(): void
+    {
+        $instanceArrayBuilder = VideoGamesArrayBuilder::withAttributes()
+            ->addMetadata('custom-uuid', 'video-game-instance', [
+                'status' => PublicationStatus::REVISION,
+                'startPublishingDate' => '1989-03-08 09:00:00',
+                'endPublishingDate' => '2021-07-27 14:30:00'
+            ]);
+        $instance = InstanceFactory::fill('VideoGames', static fn () => $instanceArrayBuilder->build());
+        $instance->fill([
+            'attributes' => ['synopsis' => ['values' => [
+                ['uuid' => 'bc011d62-60a1-3d3c-8983-9126bfa4261b', 'language' => 'es', 'value' => 'sinopsis-editada'],
+                ['uuid' => 'ec28da68-3b91-3aeb-9d44-f08778576426', 'language' => 'en', 'value' => 'synopsis-edited'],
+            ]]],
+            'metadata' => [
+                'uuid' => 'different-uuid'
+            ],
+            'relations' => [],
+        ]);
+
+        $jsonInstance = json_encode($instance->toArray(), JSON_THROW_ON_ERROR);
+        $this->assertStringContainsString('different-uuid', $jsonInstance);
         $this->assertStringContainsString('1989-03-08 09:00:00', $jsonInstance);
         $this->assertStringContainsString('sinopsis-editada', $jsonInstance);
         $this->assertStringContainsString('synopsis-edited', $jsonInstance);

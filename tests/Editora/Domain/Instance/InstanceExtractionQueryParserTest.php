@@ -11,7 +11,7 @@ class InstanceExtractionQueryParserTest extends TestCase
     public function givenExtractionExpressionWhenGetParsedThenGeneratedArrayIsOk(): void
     {
         $graphQuery = '{
-            Books(languages: [en]) {
+            Books(languages: [en], preview: true) {
                 title,
                 isbn,
                 synopsis,
@@ -55,9 +55,9 @@ class InstanceExtractionQueryParserTest extends TestCase
             ],
             'params' => [
                 'languages' => ['en'],
+                'preview' => true,
                 'class' => 'books',
                 'key' => null,
-                'preview' => false,
                 'limit' => 0,
                 'page' => 1,
             ],
@@ -71,7 +71,7 @@ class InstanceExtractionQueryParserTest extends TestCase
                         'type' => 'parent',
                         'key' => 'articles',
                         'class' => null,
-                        'preview' => false,
+                        'preview' => true,
                         'languages' => ['en'],
                     ],
                     'relations' => [],
@@ -84,7 +84,7 @@ class InstanceExtractionQueryParserTest extends TestCase
                         'type' => 'child',
                         'key' => 'photos',
                         'class' => null,
-                        'preview' => false,
+                        'preview' => true,
                         'page' => 1,
                         'languages' => ['en'],
                     ],
@@ -96,7 +96,7 @@ class InstanceExtractionQueryParserTest extends TestCase
                                 'limit' => 0,
                                 'key' => 'location',
                                 'class' => null,
-                                'preview' => false,
+                                'preview' => true,
                                 'page' => 1,
                                 'languages' => ['en'],
                                 'type' => 'child',
