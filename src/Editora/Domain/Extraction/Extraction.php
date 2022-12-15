@@ -19,6 +19,11 @@ final readonly class Extraction
         return $this->query;
     }
 
+    public function results(): array
+    {
+        return $this->results;
+    }
+
     public function toArray(): array
     {
         return reduce(static function (array $acc, Query $query): array {

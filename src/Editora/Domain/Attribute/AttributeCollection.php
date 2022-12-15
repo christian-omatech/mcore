@@ -23,7 +23,7 @@ final class AttributeCollection
         }, $attributes);
     }
 
-    public function find(string $key): ?Attribute
+    private function find(string $key): ?Attribute
     {
         return search(
             static fn (Attribute $attribute): bool => $attribute->key() === $key,

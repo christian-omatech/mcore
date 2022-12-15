@@ -8,18 +8,12 @@ use Omatech\MageCore\Editora\Domain\Extraction\ExtractionBuilder;
 use Omatech\MageCore\Editora\Domain\Extraction\Pagination;
 use Omatech\MageCore\Editora\Domain\Extraction\Parser;
 use Omatech\MageCore\Editora\Domain\Extraction\Results;
-use Omatech\MageCore\Editora\Domain\Instance\Instance;
-use Tests\Editora\Data\InstanceArrayBuilder;
-use Tests\Editora\Data\InstanceFactory;
 use Tests\Editora\Data\Objects\ArticleMother;
 use Tests\Editora\Data\Objects\BooksMother;
 use Tests\Editora\Data\Objects\LocationMother;
 use Tests\Editora\Data\Objects\NewsMother;
 use Tests\Editora\Data\Objects\PhotosMother;
 use Tests\TestCase;
-use function Lambdish\Phunctional\map;
-use function Lambdish\Phunctional\reduce;
-use function Lambdish\Phunctional\each;
 
 class InstanceExtractionTest extends TestCase
 {
@@ -29,7 +23,7 @@ class InstanceExtractionTest extends TestCase
         $news = NewsMother::get(2);
 
         $graphQuery = '{
-            News(preview: false, languages: [es], limit: 5, page: 1)
+            News(preview: false, languages: [es, en], limit: 5, page: 1)
         }';
 
         $mock = $this->mockExtraction($graphQuery, [
@@ -41,19 +35,73 @@ class InstanceExtractionTest extends TestCase
             ->build()
             ->toArray();
 
-        $expected = [];
-        for($i = 1, $iMax = count($news); $i <= $iMax; $i++) {
-            $expected['news'][] = (new InstanceArrayBuilder)
-                ->addMetadata('uuid', 'new-instance-'.$i)
-                ->addAttribute('title', 'string', [
-                    ['uuid' => 'uuid', 'language' => 'es', 'value' => 'title-es-'.$i]
-                ])
-                ->addAttribute('description', 'string', [
-                    ['uuid' => 'uuid', 'language' => 'es', 'value' => 'description-es-'.$i]
-                ])
-                ->results();
-        }
-        $this->assertEquals($expected, $extraction);
+        $this->assertEquals([
+            'news' => [
+                ['key' => 'new-instance-1', 'attributes' => [
+                    'es' => [
+                        ['uuid' => 'uuid', 'key' => 'title', 'value' => 'title-es-1', 'attributes' => []],
+                        ['uuid' => 'uuid', 'key' => 'description', 'value' => 'description-es-1', 'attributes' => []],
+                    ],
+                    'en' => [
+                        ['uuid' => 'uuid', 'key' => 'title', 'value' => 'title-en-1', 'attributes' => []],
+                        ['uuid' => 'uuid', 'key' => 'description', 'value' => 'description-en-1', 'attributes' => []],
+                    ]
+                ], 'relations' => []],
+                ['key' => 'new-instance-2', 'attributes' => [
+                    'es' => [
+                        ['uuid' => 'uuid', 'key' => 'title', 'value' => 'title-es-2', 'attributes' => []],
+                        ['uuid' => 'uuid', 'key' => 'description', 'value' => 'description-es-2', 'attributes' => []],
+                    ],
+                    'en' => [
+                        ['uuid' => 'uuid', 'key' => 'title', 'value' => 'title-en-2', 'attributes' => []],
+                        ['uuid' => 'uuid', 'key' => 'description', 'value' => 'description-en-2', 'attributes' => []],
+                    ]
+                ], 'relations' => []]
+            ]
+        ], $extraction);
+    }
+
+    /** @test */
+    public function givenExtraction2ExpressionWhenOk()
+    {
+        $photos = PhotosMother::get(1);
+        $news = NewsMother::get(11, [ 'news-photos' => $photos ]);
+
+        $graphQuery = '{
+            News(languages: es, limit: 5, page: 1, preview: true) {
+                NewsPhotos()
+            }
+        }';
+
+        $mock = $this->mockExtraction($graphQuery, [[
+            'instances' => $news,
+            'relations' => [
+                'instances' => [$photos]
+            ]
+        ]]);
+
+        $extraction = (new ExtractionBuilder($mock))
+            ->setQuery($graphQuery)
+            ->build();
+
+        $this->assertEquals([
+            'total' => 11,
+            'limit' => 5,
+            'current' => 1,
+            'pages' => 3
+        ], $extraction->results()[0]->pagination()->toArray());
+        $this->assertEquals(5, $extraction->results()[0]->pagination()->limit());
+        $this->assertEquals(0, $extraction->results()[0]->pagination()->offset());
+        $this->assertTrue($extraction->results()[0]->param('preview'));
+
+        $this->assertEquals([
+            'total' => 1,
+            'limit' => 0,
+            'current' => 1,
+            'pages' => 1
+        ], $extraction->results()[0]->relations()[0]->pagination()->toArray());
+        $this->assertEquals(1, $extraction->results()[0]->relations()[0]->pagination()->limit());
+        $this->assertEquals(0, $extraction->results()[0]->relations()[0]->pagination()->offset());
     }
 
     /** @test */
@@ -77,32 +125,31 @@ class InstanceExtractionTest extends TestCase
             ->build()
             ->toArray();
 
-        $expected = [];
-        for($i = 1, $iMax = count($news); $i <= $iMax; $i++) {
-            $expected['news'][] = (new InstanceArrayBuilder)
-                ->addMetadata('uuid', 'new-instance-'.$i)
-                ->addAttribute('title', 'string', [
-                    ['uuid' => 'uuid', 'language' => 'es', 'value' => 'title-es-'.$i]
-                ])
-                ->addAttribute('description', 'string', [
-                    ['uuid' => 'uuid', 'language' => 'es', 'value' => 'description-es-'.$i]
-                ])
-                ->results();
-        }
-        for($i = 1, $iMax = count($articles); $i <= $iMax; $i++) {
-            $expected['articles'][] = (new InstanceArrayBuilder)
-                ->addMetadata('uuid', 'article-instance-'.$i)
-                ->addAttribute('title', 'string', [
-                    ['uuid' => 'uuid', 'language' => 'es', 'value' => 'title-es-'.$i]
-                ])
-                ->addAttribute('author', 'string', [
-                    ['uuid' => 'uuid', 'language' => 'es', 'value' => 'author-es-'.$i]
-                ])
-                ->addAttribute('page', 'string', [
-                    ['uuid' => 'uuid', 'language' => 'es', 'value' => 'page-es-'.$i]
-                ])
-                ->results();
-        }
+        $expected = [
+            'news' => [
+                ['key' => 'new-instance-1', 'attributes' => [ 'es' => [
+                    ['uuid' => 'uuid', 'key' => 'title', 'value' => 'title-es-1', 'attributes' => []],
+                    ['uuid' => 'uuid', 'key' => 'description', 'value' => 'description-es-1', 'attributes' => []],
+                ]], 'relations' => []],
+                ['key' => 'new-instance-2', 'attributes' => [ 'es' => [
+                    ['uuid' => 'uuid', 'key' => 'title', 'value' => 'title-es-2', 'attributes' => []],
+                    ['uuid' => 'uuid', 'key' => 'description', 'value' => 'description-es-2', 'attributes' => []],
+                ]], 'relations' => []]
+            ],
+            'articles' => [
+                ['key' => 'article-instance-1', 'attributes' => [ 'es' => [
+                    ['uuid' => 'uuid', 'key' => 'title', 'value' => 'title-es-1', 'attributes' => []],
+                    ['uuid' => 'uuid', 'key' => 'author', 'value' => 'author-es-1', 'attributes' => []],
+                    ['uuid' => 'uuid', 'key' => 'page', 'value' => 'page-es-1', 'attributes' => []],
+                ]], 'relations' => []],
+                ['key' => 'article-instance-2', 'attributes' => [ 'es' => [
+                    ['uuid' => 'uuid', 'key' => 'title', 'value' => 'title-es-2', 'attributes' => []],
+                    ['uuid' => 'uuid', 'key' => 'author', 'value' => 'author-es-2', 'attributes' => []],
+                    ['uuid' => 'uuid', 'key' => 'page', 'value' => 'page-es-2', 'attributes' => []],
+                ]], 'relations' => []],
+            ]
+        ];
+
         $this->assertEquals($expected, $extraction);
     }
 
@@ -130,29 +177,20 @@ class InstanceExtractionTest extends TestCase
             ->build()
             ->toArray();
 
-        $expected = [];
-        for($i = 1, $iMax = count($news); $i <= $iMax; $i++) {
-            $expected['news'][] = (new InstanceArrayBuilder)
-                ->addMetadata('uuid', 'new-instance-'.$i)
-                ->addAttribute('title', 'string', [
-                    ['uuid' => 'uuid', 'language' => 'es', 'value' => 'title-es-'.$i]
-                ])
-                ->addAttribute('description', 'string', [
-                    ['uuid' => 'uuid', 'language' => 'es', 'value' => 'description-es-'.$i]
-                ])
-                ->results();
-        }
-        for($i = 1, $iMax = count($articles); $i <= $iMax; $i++) {
-            $expected['articles'][] = (new InstanceArrayBuilder)
-                ->addMetadata('uuid', 'article-instance-'.$i)
-                ->addAttribute('title', 'string', [
-                    ['uuid' => 'uuid', 'language' => 'es', 'value' => 'title-es-'.$i]
-                ])
-                ->addAttribute('author', 'string', [
-                    ['uuid' => 'uuid', 'language' => 'es', 'value' => 'author-es-'.$i]
-                ])
-                ->results();
-        }
+        $expected = [
+            'news' => [
+                ['key' => 'new-instance-1', 'attributes' => [ 'es' => [
+                    ['uuid' => 'uuid', 'key' => 'title', 'value' => 'title-es-1', 'attributes' => []],
+                    ['uuid' => 'uuid', 'key' => 'description', 'value' => 'description-es-1', 'attributes' => []],
+                ]], 'relations' => []],
+            ],
+            'articles' => [
+                ['key' => 'article-instance-1', 'attributes' => [ 'es' => [
+                    ['uuid' => 'uuid', 'key' => 'title', 'value' => 'title-es-1', 'attributes' => []],
+                    ['uuid' => 'uuid', 'key' => 'author', 'value' => 'author-es-1', 'attributes' => []],
+                ]], 'relations' => []],
+            ],
+        ];
         $this->assertEquals($expected, $extraction);
     }
 
@@ -174,18 +212,42 @@ class InstanceExtractionTest extends TestCase
             }
         }';
 
-        $mock = $this->mockExtraction($graphQuery, [$news, $photos, $locations]);
+        $mock = $this->mockExtraction($graphQuery, [[
+            'instances' => $news,
+            'relations' => [
+                'instances' => [$photos],
+                'relations' => [
+                    'instances' => [$locations]
+                ]
+            ]
+        ]]);
 
         $extraction = (new ExtractionBuilder($mock))
             ->setQuery($graphQuery)
-            ->build();
+            ->build()
+            ->toArray();
 
+        $expected = [
+            'news' => [
+                ['key' => 'new-instance-1', 'attributes' => [ 'es' => [
+                    ['uuid' => 'uuid', 'key' => 'title', 'value' => 'title-es-1', 'attributes' => []],
+                ]], 'relations' => [ 'news-photos' => [ 'child' => [
+                    ['key' => 'photo-instance-1', 'attributes' => [ 'es' => [
+                        ['uuid' => 'uuid', 'key' => 'url', 'value' => 'url-es-1', 'attributes' => []],
+                    ]], 'relations' => [ 'photos-locations' => [ 'child' => [
+                        ['key' => 'location-instance-1', 'attributes' => [ 'es' => [
+                            ['uuid' => 'uuid', 'key' => 'country', 'value' => 'country-es-1', 'attributes' => []]
+                        ]], 'relations' => []]
+                    ]]]]
+                ]]]]
+            ],
+        ];
+        $this->assertEquals($expected, $extraction);
     }
 
     /** @test */
     public function givenExtractionExpression5WhenOk()
     {
-
         $locations = LocationMother::get(1);
         $photos = PhotosMother::get(3, [ 'photos-locations' => $locations ]);
         $articles = ArticleMother::get(1);
@@ -207,12 +269,65 @@ class InstanceExtractionTest extends TestCase
             }
         }';
 
-        $mock = $this->mockExtraction($graphQuery, [$books, $articles, $photos, $locations]);
+        $mock = $this->mockExtraction($graphQuery, [[
+            'instances' => $books,
+            'relations' => [
+                'instances' => [$articles,  $photos],
+                'relations' => [
+                    'instances' => [$locations]
+                ]
+            ]
+        ]]);
 
         $extraction = (new ExtractionBuilder($mock))
             ->setQuery($graphQuery)
-            ->build();
+            ->build()
+            ->toArray();
 
+        $expected = [
+            'books' => [
+                ['key' => 'book-instance-1', 'attributes' => [ 'en' => [
+                    ['uuid' => 'uuid', 'key' => 'title', 'value' => 'title-en-1', 'attributes' => []],
+                    ['uuid' => 'uuid', 'key' => 'isbn', 'value' => 'isbn-en-1', 'attributes' => []],
+                    ['uuid' => 'uuid', 'key' => 'synopsis', 'value' => 'synopsis-en-1', 'attributes' => []],
+                    ['uuid' => 'uuid', 'key' => 'picture', 'value' => 'picture-en-1', 'attributes' => [
+                        ['uuid' => 'uuid', 'key' => 'alt', 'value' => 'alt-en-1', 'attributes' => []]
+                    ]],
+                    ['uuid' => null, 'key' => 'price', 'value' => 'price-1', 'attributes' => []],
+                ]], 'relations' => [
+                    'articles' => [ 'child' => [
+                        ['key' => 'article-instance-1', 'attributes' => [ 'en' => [
+                            ['uuid' => 'uuid', 'key' => 'title', 'value' => 'title-en-1', 'attributes' => []],
+                            ['uuid' => 'uuid', 'key' => 'author', 'value' => 'author-en-1', 'attributes' => []],
+                            ['uuid' => 'uuid', 'key' => 'page', 'value' => 'page-en-1', 'attributes' => []],
+                    ]], 'relations' => []]]],
+                    'photos' => [ 'child' => [
+                        ['key' => 'photo-instance-1', 'attributes' => [ 'en' => [
+                            ['uuid' => 'uuid', 'key' => 'url', 'value' => 'url-en-1', 'attributes' => []],
+                        ]], 'relations' => [ 'photos-locations' => [ 'child' => [
+                            ['key' => 'location-instance-1', 'attributes' => [ 'en' => [
+                                ['uuid' => 'uuid', 'key' => 'country', 'value' => 'country-en-1', 'attributes' => []]
+                            ]], 'relations' => []]
+                        ]]]],
+                        ['key' => 'photo-instance-2', 'attributes' => [ 'en' => [
+                            ['uuid' => 'uuid', 'key' => 'url', 'value' => 'url-en-2', 'attributes' => []],
+                        ]], 'relations' => [ 'photos-locations' => [ 'child' => [
+                            ['key' => 'location-instance-1', 'attributes' => [ 'en' => [
+                                ['uuid' => 'uuid', 'key' => 'country', 'value' => 'country-en-1', 'attributes' => []]
+                            ]], 'relations' => []]
+                        ]]]],
+                        ['key' => 'photo-instance-3', 'attributes' => [ 'en' => [
+                            ['uuid' => 'uuid', 'key' => 'url', 'value' => 'url-en-3', 'attributes' => []],
+                        ]], 'relations' => [ 'photos-locations' => [ 'child' => [
+                            ['key' => 'location-instance-1', 'attributes' => [ 'en' => [
+                                ['uuid' => 'uuid', 'key' => 'country', 'value' => 'country-en-1', 'attributes' => []]
+                            ]], 'relations' => []]
+                        ]]]],
+                    ]]
+                ]]
+            ],
+        ];
+        $this->assertEquals($expected, $extraction);
     }
 
     private function mockExtraction(string $graphQuery, array $instances): ExtractionInterface
@@ -235,7 +350,7 @@ class InstanceExtractionTest extends TestCase
     private function mockRelations(Mockery\MockInterface $mock, array $relations, $relatedInstances): void
     {
         foreach ($relations as $relation) {
-            $instance = array_shift($relatedInstances);
+            $instance = array_shift($relatedInstances['instances']);
             $mock->shouldReceive('findRelatedInstances')
                 ->with('uuid', $relation->params())
                 ->andReturn(new Results($instance, new Pagination([
@@ -244,7 +359,7 @@ class InstanceExtractionTest extends TestCase
                 ], count($instance))))
                 ->atLeast();
             if($relation->relations()) {
-                $this->mockRelations($mock, $relation->relations(), $relatedInstances);
+                $this->mockRelations($mock, $relation->relations(), $relatedInstances['relations']);
             }
         }
     }

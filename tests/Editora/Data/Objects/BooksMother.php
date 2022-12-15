@@ -19,9 +19,9 @@ class BooksMother
                         ['uuid' => 'uuid', 'language' => 'en', 'value' => 'title-en-'.$i],
                     ])
                     ->addAttribute('isbn', 'text', [
-                        ['uuid' => 'uuid', 'language' => 'es', 'value' => 'author-es-'.$i],
-                        ['uuid' => 'uuid', 'language' => 'en', 'value' => 'author-en-'.$i],
-                        ['uuid' => 'uuid', 'language' => '+', 'value' => 'author-en-'.$i],
+                        ['uuid' => 'uuid', 'language' => 'es', 'value' => 'isbn-es-'.$i],
+                        ['uuid' => 'uuid', 'language' => 'en', 'value' => 'isbn-en-'.$i],
+                        ['uuid' => 'uuid', 'language' => '+', 'value' => 'isbn-en-'.$i],
                     ])
                     ->addAttribute('synopsis', 'text', [
                         ['uuid' => 'uuid', 'language' => 'es', 'value' => 'synopsis-es-'.$i],

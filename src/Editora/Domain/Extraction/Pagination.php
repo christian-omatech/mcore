@@ -2,11 +2,11 @@
 
 namespace Omatech\MageCore\Editora\Domain\Extraction;
 
-final class Pagination
+final readonly class Pagination
 {
-    private readonly int $total;
-    private readonly int $limit;
-    private readonly int $page;
+    private int $total;
+    private int $limit;
+    private int $page;
 
     public function __construct(array $params, int $total)
     {
@@ -15,19 +15,19 @@ final class Pagination
         $this->page = $params['page'];
     }
 
-    public function realLimit(): int
+    public function limit(): int
     {
         return $this->limit ?: $this->total;
     }
 
     public function offset(): int
     {
-        return ($this->page - 1) * $this->realLimit();
+        return ($this->page - 1) * $this->limit();
     }
 
     private function pages(): int
     {
-        return $this->limit ? (int) ceil($this->total / $this->realLimit()) : 1;
+        return $this->limit ? (int) ceil($this->total / $this->limit()) : 1;
     }
 
     public function toArray(): array

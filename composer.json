@@ -6,6 +6,7 @@
     "webonyx/graphql-php": "^v14.11"
   },
   "require-dev": {
+    "brianium/paratest": "^6.7",
     "infection/infection": "^0.26",
     "mockery/mockery": "^1.5",
     "nunomaduro/phpinsights": "^v2.6",
@@ -24,10 +25,10 @@
     }
   },
   "scripts": {
-    "phpunit": "vendor/bin/phpunit",
+    "paratest": "vendor/bin/paratest -p8",
     "infection": "vendor/bin/infection -j8 --coverage=build --skip-initial-tests",
     "test": [
-      "@phpunit",
+      "@paratest",
       "@infection"
     ],
     "analyse": "vendor/bin/phpinsights analyse --verbose --config-path=rules.php --no-interaction --fix src"
