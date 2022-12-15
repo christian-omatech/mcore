@@ -16,7 +16,7 @@ use Tests\TestCase;
 class InstanceBuilderTest extends TestCase
 {
     /** @test */
-    public function expectInvalidLanguageExceptionGivenEmptyLanguages(): void
+    public function givenEmptyLanguagesWhenBuilderInstanceBuildThenThrowException(): void
     {
         $this->expectException(InvalidLanguagesException::class);
 
@@ -27,7 +27,7 @@ class InstanceBuilderTest extends TestCase
     }
 
     /** @test */
-    public function expectInvalidStructureExceptionGivenEmptyStructure(): void
+    public function givenEmptyStructureWhenBuilderInstanceBuildThenThrowException(): void
     {
         $this->expectException(InvalidStructureException::class);
 
@@ -38,7 +38,7 @@ class InstanceBuilderTest extends TestCase
     }
 
     /** @test */
-    public function expectInvalidClassNameExceptionGivenBlankClassName(): void
+    public function givenEmptyClassNameWhenbuilderInstanceBuildThenThrowException(): void
     {
         $this->expectException(InvalidClassNameException::class);
 
@@ -49,7 +49,7 @@ class InstanceBuilderTest extends TestCase
     }
 
     /** @test */
-    public function expectInvalidValueTypeExceptionGivenANonExistingValueType(): void
+    public function givenInvalidValueInStructureWhenBuilderInstanceBuildThenThrowException(): void
     {
         $this->expectException(InvalidValueTypeException::class);
 
@@ -68,7 +68,7 @@ class InstanceBuilderTest extends TestCase
     }
 
     /** @test */
-    public function expectInstanceBuiltCorrectly(): void
+    public function givenInstanceBuilderWhenBuildThenOk(): void
     {
         $instance = (new InstanceBuilder())
             ->setInstanceCache($this->mockInstanceCache())

@@ -36,11 +36,6 @@ final class Attribute
         return $this->valueCollection;
     }
 
-    public function value(string $language): ?BaseValue
-    {
-        return $this->valueCollection->language($language);
-    }
-
     public function key(): string
     {
         return $this->key;

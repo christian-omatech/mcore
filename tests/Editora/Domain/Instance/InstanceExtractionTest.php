@@ -3,6 +3,7 @@
 namespace Tests\Editora\Domain\Instance;
 
 use Mockery;
+use Mockery\MockInterface;
 use Omatech\MageCore\Editora\Domain\Extraction\Contracts\ExtractionInterface;
 use Omatech\MageCore\Editora\Domain\Extraction\ExtractionBuilder;
 use Omatech\MageCore\Editora\Domain\Extraction\Pagination;
@@ -18,7 +19,7 @@ use Tests\TestCase;
 class InstanceExtractionTest extends TestCase
 {
     /** @test */
-    public function givenExtractionExpressionWhenOk()
+    public function givenMultiLanguageQueryWhenExtractedThenOk(): void
     {
         $news = NewsMother::get(2);
 
@@ -62,7 +63,7 @@ class InstanceExtractionTest extends TestCase
     }
 
     /** @test */
-    public function givenExtraction2ExpressionWhenOk()
+    public function givenPaginateQueryWhenExtractedThenOk(): void
     {
         $photos = PhotosMother::get(1);
         $news = NewsMother::get(11, [ 'news-photos' => $photos ]);
@@ -91,6 +92,8 @@ class InstanceExtractionTest extends TestCase
             'pages' => 3
         ], $extraction->results()[0]->pagination()->toArray());
         $this->assertEquals(5, $extraction->results()[0]->pagination()->limit());
+        $this->assertEquals(0, $extraction->results()[0]->pagination()->offset());
+
         $this->assertFalse($extraction->results()[0]->params()['preview']);
         $this->assertEquals([
             'total' => 1,
@@ -98,10 +101,12 @@ class InstanceExtractionTest extends TestCase
             'current' => 1,
             'pages' => 1
         ], $extraction->results()[0]->relations()[0]->pagination()->toArray());
+        $this->assertEquals(0, $extraction->results()[0]->relations()[0]->pagination()->offset());
+        $this->assertEquals($graphQuery, $extraction->query());
     }
 
     /** @test */
-    public function givenExtractionExpression2WhenOk()
+    public function givenMultiClassQueryWhenExtractedThenOk(): void
     {
         $news = NewsMother::get(2);
         $articles = ArticleMother::get(2);
@@ -150,7 +155,7 @@ class InstanceExtractionTest extends TestCase
     }
 
     /** @test */
-    public function givenExtractionExpression3WhenOk()
+    public function givenInstanceQueryWhenExtractedThenOk(): void
     {
         $news = NewsMother::get(1);
         $articles = ArticleMother::get(1);
@@ -191,7 +196,7 @@ class InstanceExtractionTest extends TestCase
     }
 
     /** @test */
-    public function givenExtractionExpression4WhenOk()
+    public function givenMultiRelationQueryWhenExtractedThenOk(): void
     {
         $locations = LocationMother::get(1);
         $photos = PhotosMother::get(1, [ 'photos-locations' => $locations ]);
@@ -242,7 +247,7 @@ class InstanceExtractionTest extends TestCase
     }
 
     /** @test */
-    public function givenExtractionExpression5WhenOk()
+    public function givenComplexQueryWhenExtractedThenOk(): void
     {
         $locations = LocationMother::get(1);
         $photos = PhotosMother::get(3, [ 'photos-locations' => $locations ]);
@@ -343,7 +348,7 @@ class InstanceExtractionTest extends TestCase
         return $mock;
     }
 
-    private function mockRelations(Mockery\MockInterface $mock, array $relations, $relatedInstances): void
+    private function mockRelations(MockInterface $mock, array $relations, $relatedInstances): void
     {
         foreach ($relations as $relation) {
             $instance = array_shift($relatedInstances['instances']);

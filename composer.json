@@ -25,8 +25,8 @@
     }
   },
   "scripts": {
-    "paratest": "vendor/bin/paratest -p8",
-    "infection": "vendor/bin/infection -j8 --coverage=build --skip-initial-tests",
+    "paratest": "vendor/bin/paratest -p$(nproc)",
+    "infection": "vendor/bin/infection -j$(nproc) --coverage=build --skip-initial-tests",
     "test": [
       "@paratest",
       "@infection"

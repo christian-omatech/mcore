@@ -27,7 +27,7 @@ final class InstanceTest extends TestCase
     {
         $this->expectException(RequiredValueException::class);
 
-        InstanceFactory::fill('VideoGames', function (InstanceArrayBuilder $builder) {
+        InstanceFactory::fill('VideoGames', static function (InstanceArrayBuilder $builder) {
             return $builder->build();
         });
     }

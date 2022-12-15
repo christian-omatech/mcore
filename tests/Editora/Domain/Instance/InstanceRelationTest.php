@@ -8,7 +8,7 @@ use Tests\TestCase;
 final class InstanceRelationTest extends TestCase
 {
     /** @test */
-    public function instanceExistsInRelations(): void
+    public function givenInstanceRelationWhenInstanceExistsThenOk(): void
     {
         $relationInstance = new InstanceRelation('relation-key1', [
             '1' => 'class-one',

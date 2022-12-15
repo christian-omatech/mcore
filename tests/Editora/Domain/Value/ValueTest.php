@@ -7,9 +7,8 @@ use Tests\TestCase;
 
 class ValueTest extends TestCase
 {
-
     /** @test */
-    public function createAndFillValue(): void
+    public function givenValueWhenFilledThenOk(): void
     {
         $value = new Value('test', 'es', [
             'rules' => [],
@@ -27,5 +26,24 @@ class ValueTest extends TestCase
             'ext' => 'jpeg',
         ], $value->extraData());
         $this->assertEquals('hola', $value->value());
+    }
+
+    /** @test */
+    public function givenValueWhenUpdateThenOk(): void
+    {
+        $value = new Value('test', 'es', [
+            'rules' => [],
+            'configuration' => [],
+        ]);
+        $value->fill([
+            'value' => 'hola',
+            'extraData' => [
+                'ext' => 'jpeg',
+            ],
+            'uuid' => '1',
+        ]);
+        $this->assertEquals('1', $value->uuid());
+        $value->fill(['uuid' => '2']);
+        $this->assertEquals('2', $value->uuid());
     }
 }

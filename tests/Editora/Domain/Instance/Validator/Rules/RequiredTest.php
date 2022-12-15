@@ -11,7 +11,8 @@ use Tests\TestCase;
 
 class RequiredTest extends TestCase
 {
-    public function testRequired()
+    /** @test */
+    public function givenAttributeWithoutValueAndRequiredRuleWhenValidateThenThrowException(): void
     {
         $this->expectException(RequiredValueException::class);
 
@@ -31,7 +32,8 @@ class RequiredTest extends TestCase
         $rule->validate($value);
     }
 
-    public function testRequired2()
+    /** @test */
+    public function givenAttributeWithValueAndRequiredRuleWhenValidateThenOk(): void
     {
         $value = new Value('test', 'es', [
             'rules' => [ 'required' ],
@@ -51,7 +53,8 @@ class RequiredTest extends TestCase
         $this->assertTrue(true);
     }
 
-    public function testRequired3()
+    /** @test */
+    public function givenAttributeWithoutValueAndNonRequiredRuleWhenValidateThenOk(): void
     {
         $value = new Value('test', 'es', [
             'rules' => [ 'required' ],

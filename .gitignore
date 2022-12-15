@@ -1,9 +1,9 @@
 .idea
 .vscode
 .history
+.fleet
 /vendor
 /build
-/qodana
 .php-cs-fixer.cache
 .phpunit.result.cache
-infection.log
+infection.html

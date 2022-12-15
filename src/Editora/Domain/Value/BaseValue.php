@@ -28,7 +28,7 @@ abstract class BaseValue
 
     public function fill(array $value): void
     {
-        $this->value = $value['value'];
+        $this->value = $value['value'] ?? $this->value;
         $this->extraData = $value['extraData'] ?? $this->extraData;
         $this->uuid = $value['uuid'] ?? $this->uuid;
     }
