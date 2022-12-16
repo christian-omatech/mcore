@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Editora\Domain\Instance;
+namespace Tests\Editora\Domain\Extraction;
 
 use Mockery;
 use Mockery\MockInterface;
@@ -97,7 +97,7 @@ class InstanceExtractionTest extends TestCase
         $this->assertFalse($extraction->results()[0]->params()['preview']);
         $this->assertEquals([
             'total' => 1,
-            'limit' => 0,
+            'limit' => 1,
             'current' => 1,
             'pages' => 1
         ], $extraction->results()[0]->relations()[0]->pagination()->toArray());
@@ -357,7 +357,7 @@ class InstanceExtractionTest extends TestCase
                 ->andReturn(new Results($instance, new Pagination([
                     'page' => $relation->params()['page'],
                     'limit' => $relation->params()['limit'],
-                ], is_countable($instance) ? count($instance) : 0)))
+                ], \is_countable($instance) ? count($instance) : 0)))
                 ->atLeast();
             if($relation->relations()) {
                 $this->mockRelations($mock, $relation->relations(), $relatedInstances['relations']);

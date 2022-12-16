@@ -9,10 +9,6 @@
         "@default": true
     },
     "logs": {
-        "github": true,
-        "stryker": {
-            "report": "edge"
-        },
         "html": "infection.html",
     },
 }

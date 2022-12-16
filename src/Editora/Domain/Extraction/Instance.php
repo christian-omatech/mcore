@@ -7,10 +7,10 @@ use function Lambdish\Phunctional\reduce;
 
 final readonly class Instance
 {
-    private readonly string $class;
-    private readonly string $key;
-    private readonly array $attributes;
-    private readonly array $relations;
+    private string $class;
+    private string $key;
+    private array $attributes;
+    private array $relations;
 
     public function __construct(array $query)
     {

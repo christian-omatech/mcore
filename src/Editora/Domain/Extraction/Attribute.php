@@ -9,7 +9,8 @@ final class Attribute extends QueryAttribute
     private ?string $uuid = null;
     private mixed $value = null;
 
-    public function __construct(string $key, Value $value, array $attributes) {
+    public function __construct(string $key, Value $value, array $attributes)
+    {
         parent::__construct($key, $attributes);
         $this->uuid = $value->uuid();
         $this->value = $value->value();

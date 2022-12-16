@@ -5,9 +5,9 @@ namespace Omatech\MageCore\Editora\Domain\Clazz\Exceptions\Clazz;
 use function Lambdish\Phunctional\flat_map;
 use function Lambdish\Phunctional\map;
 
-final class RelationCollection
+final readonly class RelationCollection
 {
-    private readonly array $relations;
+    private array $relations;
 
     public function __construct(array $relations)
     {

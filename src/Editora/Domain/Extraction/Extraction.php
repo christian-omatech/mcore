@@ -7,10 +7,8 @@ use function Lambdish\Phunctional\reduce;
 
 final readonly class Extraction
 {
-    public function __construct(
-        private readonly string $query,
-        private readonly array $results
-    ) {
+    public function __construct(private string $query, private array $results)
+    {
     }
 
     public function query(): string

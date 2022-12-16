@@ -2,10 +2,10 @@
 
 namespace Omatech\MageCore\Editora\Domain\Clazz\Exceptions\Clazz;
 
-final class Clazz
+final readonly class Clazz
 {
-    private readonly string $key;
-    private readonly RelationCollection $relationCollection;
+    private string $key;
+    private RelationCollection $relationCollection;
 
     public function __construct(array $class)
     {

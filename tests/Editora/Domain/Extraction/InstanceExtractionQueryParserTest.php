@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Tests\Editora\Domain\Instance;
+namespace Tests\Editora\Domain\Extraction;
 
 use Omatech\MageCore\Editora\Domain\Extraction\Parser;
 use Tests\TestCase;
