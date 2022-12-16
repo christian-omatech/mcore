@@ -61,7 +61,9 @@ final class Query
     {
         return [
             'languages' => $this->languages(),
-            'attributes' => map(static fn (QueryAttribute $attribute): array => $attribute->toQuery(), $this->attributes),
+            'attributes' => map(static function (QueryAttribute $attribute): array {
+                return $attribute->toQuery();
+            }, $this->attributes),
             'params' => $this->params,
             'relations' => reduce(static function (array $acc, Query $query): array {
                 $acc[] = $query->toArray();

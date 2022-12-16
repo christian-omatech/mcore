@@ -28,18 +28,24 @@ final class ValueBuilder
             if (array_key_exists('+', $this->values['languages'])) {
                 $this->languages['+'] = [];
             }
-            $this->values['languages'] = map(fn ($values, $language): array => $this->values['languages'][$language] ?? $values, $this->languages);
+            $this->values['languages'] = map(function ($values, $language): array {
+                return $this->values['languages'][$language] ?? $values;
+            }, $this->languages);
         }
     }
 
     private function normalizeValues(): void
     {
-        $this->values = map(fn ($properties): array => $this->defaultsToValue($properties ?? []), $this->values['languages']);
+        $this->values = map(function ($properties): array {
+            return $this->defaultsToValue($properties ?? []);
+        }, $this->values['languages']);
     }
 
     private function defaultsToValue(array $properties): array
     {
-        return map(fn ($value, $key): string | array => $properties[$key] ?? $this->values[$key] ?? $value, [
+        return map(function ($value, $key) use ($properties): string | array {
+            return $properties[$key] ?? $this->values[$key] ?? $value;
+        }, [
             'configuration' => [],
             'rules' => [],
             'type' => 'Value',

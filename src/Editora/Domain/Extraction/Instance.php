@@ -48,7 +48,9 @@ final readonly class Instance
                 array $attributes,
                 string $language
             ): array {
-                $acc[$language] = map(static fn (QueryAttribute $attribute): array => $attribute->toArray(), $attributes);
+                $acc[$language] = map(static function (Attribute $attribute): array {
+                    return $attribute->toArray();
+                }, $attributes);
                 return $acc;
             }, $this->attributes, []),
             'relations' => $this->relatedInstancesToArray($this->relations),

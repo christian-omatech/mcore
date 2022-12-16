@@ -16,9 +16,9 @@ use function Lambdish\Phunctional\search;
 final readonly class Extractor
 {
     public function __construct(
-        private readonly Query $query,
-        private readonly Instance $instance,
-        private readonly array $relations = []
+        private Query $query,
+        private Instance $instance,
+        private array $relations = []
     ) {
     }
 
@@ -130,13 +130,13 @@ final readonly class Extractor
             array $acc,
             RelationsResults $relation
         ) use ($queryRelations): array {
-            $queryRelation = search(static function (
-                $query
-            ) use ($relation): bool {
-                return $query->param('key') === $relation->key() &&
-                    $query->param('type') === $relation->type();
+            $queryRelation = search(static function ($query) use ($relation): bool {
+                if ($query->param('key') !== $relation->key()) {
+                    return false;
+                }
+                return $query->param('type') === $relation->type();
             }, $queryRelations);
-            if ($queryRelation) {
+            if (isset($queryRelation)) {
                 $acc[] = (new Relation($relation->key(), $relation->type()))
                     ->setInstances($this->addInstancesRelation($queryRelation, $relation));
             }

@@ -4,7 +4,7 @@ namespace Omatech\MageCore\Editora\Domain\Instance\Validator;
 
 use Omatech\MageCore\Editora\Domain\Attribute\Attribute;
 use Omatech\MageCore\Editora\Domain\Attribute\AttributeCollection;
-use Omatech\MageCore\Editora\Domain\Clazz\Exceptions\Clazz\Relation;
+use Omatech\MageCore\Editora\Domain\Clazz\Relation;
 use Omatech\MageCore\Editora\Domain\Instance\InstanceRelation;
 use Omatech\MageCore\Editora\Domain\Instance\Validator\Exceptions\InvalidRelationException;
 use Omatech\MageCore\Editora\Domain\Instance\Validator\Exceptions\InvalidRuleException;
@@ -40,7 +40,9 @@ final class Validator
     public function validateRelations(array $classRelation, array $instanceRelations): void
     {
         each(static function (InstanceRelation $instanceRelation) use ($classRelation): void {
-            $relation = search(static fn (Relation $relation): bool => $relation->key() === $instanceRelation->key(), $classRelation);
+            $relation = search(static function (Relation $relation) use ($instanceRelation): bool {
+                return $relation->key() === $instanceRelation->key();
+            }, $classRelation);
             if (is_null($relation)) {
                 InvalidRelationException::withRelation($instanceRelation->key());
             }

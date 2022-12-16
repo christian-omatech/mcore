@@ -4,8 +4,11 @@ namespace Omatech\MageCore\Editora\Domain\Value;
 
 final readonly class Metadata
 {
-    public function __construct(private readonly string $attributeKey, private readonly string $language, private readonly array $rules)
-    {
+    public function __construct(
+        private string $attributeKey,
+        private string $language,
+        private array $rules
+    ) {
     }
 
     public function attributeKey(): string

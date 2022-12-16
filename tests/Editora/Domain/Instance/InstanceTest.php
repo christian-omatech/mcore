@@ -3,7 +3,7 @@
 namespace Tests\Editora\Domain\Instance;
 
 use DateTimeImmutable;
-use Omatech\MageCore\Editora\Domain\Clazz\Exceptions\Clazz\Exceptions\InvalidRelationClassException;
+use Omatech\MageCore\Editora\Domain\Clazz\Exceptions\InvalidRelationClassException;
 use Omatech\MageCore\Editora\Domain\Instance\Exceptions\InvalidEndDatePublishingException;
 use Omatech\MageCore\Editora\Domain\Instance\PublicationStatus;
 use Omatech\MageCore\Editora\Domain\Instance\Validator\Exceptions\InvalidRelationException;

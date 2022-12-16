@@ -18,7 +18,7 @@ final class Parser
         return reduce(function (array $acc, FieldNode $node): array {
             $acc[] = $this->parseRootNode($node);
             return $acc;
-        }, $graphQuery->definitions[0]->selectionSet->selections, []);
+        }, $graphQuery->definitions[0]->toArray()['selectionSet']->selections, []);
     }
 
     private function parseRootNode(FieldNode $node): Query
@@ -79,7 +79,7 @@ final class Parser
                 );
             }
             return $acc;
-        }, $node->selectionSet->selections ?? [], []);
+        }, $node->toArray()['selectionSet']->selections ?? [], []);
     }
 
     private function parseRelations(FieldNode $node, array $params = []): array
@@ -88,18 +88,23 @@ final class Parser
             if (count($node->arguments) > 0) {
                 $acc[] = new Query([
                     'attributes' => $this->parseAttributes($node),
-                    'params' => $this->defaultRelationParams([...$this->parseParams($node, 'key'), ...$params]),
+                    'params' => $this->defaultRelationParams([
+                        ...$this->parseParams($node, 'key'),
+                        ...$params,
+                    ]),
                     'relations' => $this->parseRelations($node, $params),
                 ]);
             }
             return $acc;
-        }, $node->selectionSet->selections ?? [], []);
+        }, $node->toArray()['selectionSet']->selections ?? [], []);
     }
 
     private function defaultRelationParams(array $params): array
     {
         $params['type'] ??= 'child';
-        $params['type'] = search(static fn (string $type): bool => $type === $params['type'], ['parent'], 'child');
+        $params['type'] = search(static function (string $type) use ($params): bool {
+            return $type === $params['type'];
+        }, ['parent'], 'child');
         return $params;
     }
 }

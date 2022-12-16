@@ -1,12 +1,12 @@
 <?php declare(strict_types=1);
 
-namespace Omatech\MageCore\Editora\Domain\Clazz\Exceptions\Clazz;
+namespace Omatech\MageCore\Editora\Domain\Clazz;
 
-use Omatech\MageCore\Editora\Domain\Clazz\Exceptions\Clazz\Exceptions\InvalidRelationClassException;
+use Omatech\MageCore\Editora\Domain\Clazz\Exceptions\InvalidRelationClassException;
 
 final readonly class Relation
 {
-    public function __construct(private readonly string $key, private readonly array $classes)
+    public function __construct(private string $key, private array $classes)
     {
     }
 

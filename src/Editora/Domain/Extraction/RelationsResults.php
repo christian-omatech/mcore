@@ -7,7 +7,6 @@ final class RelationsResults
     private readonly string $key;
     private readonly string $type;
     private Results $results;
-    /** @var array<Results> $relations */
     private array $relations;
 
     public function __construct(array $params)

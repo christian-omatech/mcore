@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Omatech\MageCore\Editora\Domain\Clazz\Exceptions\Clazz;
+namespace Omatech\MageCore\Editora\Domain\Clazz;
 
 final readonly class Clazz
 {

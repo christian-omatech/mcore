@@ -3,7 +3,7 @@
 namespace Omatech\MageCore\Editora\Domain\Instance;
 
 use Omatech\MageCore\Editora\Domain\Attribute\AttributeCollection;
-use Omatech\MageCore\Editora\Domain\Clazz\Exceptions\Clazz\Clazz;
+use Omatech\MageCore\Editora\Domain\Clazz\Clazz;
 use Omatech\MageCore\Editora\Domain\Instance\Validator\Validator;
 
 class Instance

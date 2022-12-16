@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Omatech\MageCore\Editora\Domain\Clazz\Exceptions\Clazz;
+namespace Omatech\MageCore\Editora\Domain\Clazz;
 
 use function Lambdish\Phunctional\flat_map;
 use function Lambdish\Phunctional\map;
