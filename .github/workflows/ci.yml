@@ -1,11 +1,11 @@
-name: MageCore
+name: Mage Core
 
 on: [push, pull_request]
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    name: MageCore Build
+    name: Mage Core Build
     strategy:
       matrix:
         php-versions:
@@ -25,8 +25,8 @@ jobs:
       - name: Install Dependencies
         run: task install
 
-      - name: Code Analysis
-        run: task analyse
+#      - name: Code Analysis
+#        run: task analyse
 
       - name: Testing
         run: task test
