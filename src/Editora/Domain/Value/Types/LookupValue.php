@@ -15,9 +15,12 @@ final class LookupValue extends StringValue
 
     private function ensureLookupIsValid(mixed $value): void
     {
-        if (! Utils::isEmpty($value) &&
-            ! $this->configuration->exists($value, ['options'])) {
-            LookupValueOptionException::withValue($this);
+        if (Utils::isEmpty($value)) {
+            return;
         }
+        if ($this->configuration->exists($value, ['options'])) {
+            return;
+        }
+        LookupValueOptionException::withValue($this);
     }
 }

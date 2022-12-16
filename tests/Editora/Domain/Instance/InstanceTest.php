@@ -3,7 +3,7 @@
 namespace Tests\Editora\Domain\Instance;
 
 use DateTimeImmutable;
-use Omatech\MageCore\Editora\Domain\Clazz\Exceptions\InvalidRelationClassException;
+use Omatech\MageCore\Editora\Domain\Clazz\Exceptions\Clazz\Exceptions\InvalidRelationClassException;
 use Omatech\MageCore\Editora\Domain\Instance\Exceptions\InvalidEndDatePublishingException;
 use Omatech\MageCore\Editora\Domain\Instance\PublicationStatus;
 use Omatech\MageCore\Editora\Domain\Instance\Validator\Exceptions\InvalidRelationException;
@@ -17,7 +17,6 @@ use Tests\Editora\Data\InstanceFactory;
 use Tests\Editora\Data\UniqueValueRepository;
 use Tests\Editora\Data\VideoGamesArrayBuilder;
 use Tests\TestCase;
-
 use function Lambdish\Phunctional\search;
 
 final class InstanceTest extends TestCase
@@ -27,9 +26,7 @@ final class InstanceTest extends TestCase
     {
         $this->expectException(RequiredValueException::class);
 
-        InstanceFactory::fill('VideoGames', static function (InstanceArrayBuilder $builder) {
-            return $builder->build();
-        });
+        InstanceFactory::fill('VideoGames', static fn(InstanceArrayBuilder $builder) => $builder->build());
     }
 
     /** @test */
@@ -37,11 +34,9 @@ final class InstanceTest extends TestCase
     {
         $this->expectException(LookupValueOptionException::class);
 
-        InstanceFactory::fill('VideoGames', static function (InstanceArrayBuilder $builder) {
-            return $builder->addAttribute('code', 'string', [
-                ['language' => '*', 'uuid' => '1', 'value' => 'hola'],
-            ])->build();
-        });
+        InstanceFactory::fill('VideoGames', static fn(InstanceArrayBuilder $builder) => $builder->addAttribute('code', 'string', [
+            ['language' => '*', 'uuid' => '1', 'value' => 'hola'],
+        ])->build());
     }
 
     /** @test */
@@ -49,9 +44,7 @@ final class InstanceTest extends TestCase
     {
         $this->expectException(InvalidRuleException::class);
 
-        InstanceFactory::fill('Movies', static function (InstanceArrayBuilder $builder) {
-            return $builder->build();
-        });
+        InstanceFactory::fill('Movies', static fn(InstanceArrayBuilder $builder) => $builder->build());
     }
 
     /** @test */
@@ -180,9 +173,7 @@ final class InstanceTest extends TestCase
             ->addAttribute('non-attribute', 'string', []);
         $instance = InstanceFactory::fill('VideoGames', static fn() => $instanceArrayBuilder->build());
 
-        $results = search(static function (array $attribute) {
-            return $attribute['key'] === 'non-attribute';
-        }, $instance->toArray()['attributes']);
+        $results = search(static fn(array $attribute) => $attribute['key'] === 'non-attribute', $instance->toArray()['attributes']);
 
         $this->assertNull($results);
     }
@@ -198,13 +189,9 @@ final class InstanceTest extends TestCase
             ]);
         $instance = InstanceFactory::fill('VideoGames', static fn() => $instanceArrayBuilder->build());
 
-        $results = search(static function (array $attribute) {
-            return $attribute['key'] === 'synopsis';
-        }, $instance->toArray()['attributes']);
+        $results = search(static fn(array $attribute) => $attribute['key'] === 'synopsis', $instance->toArray()['attributes']);
 
-        $results = search(static function (array $value) {
-            return $value['language'] === 'jp';
-        }, $results['values']);
+        $results = search(static fn(array $value) => $value['language'] === 'jp', $results['values']);
 
         $this->assertNull($results);
     }

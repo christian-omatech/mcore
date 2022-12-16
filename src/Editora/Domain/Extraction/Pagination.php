@@ -4,13 +4,11 @@ namespace Omatech\MageCore\Editora\Domain\Extraction;
 
 final readonly class Pagination
 {
-    private int $total;
-    private int $limit;
-    private int $page;
+    private readonly int $limit;
+    private readonly int $page;
 
-    public function __construct(array $params, int $total)
+    public function __construct(array $params, private readonly int $total)
     {
-        $this->total = $total;
         $this->limit = $params['limit'];
         $this->page = $params['page'];
     }
@@ -27,7 +25,7 @@ final readonly class Pagination
 
     private function pages(): int
     {
-        return $this->limit ? (int) ceil($this->total / $this->limit()) : 1;
+        return $this->limit > 0 ? (int) ceil($this->total / $this->limit()) : 1;
     }
 
     public function toArray(): array

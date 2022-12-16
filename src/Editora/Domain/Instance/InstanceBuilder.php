@@ -15,11 +15,9 @@ final class InstanceBuilder
     private array $languages = [];
     private array $structure = [];
     private string $className = '';
-    private readonly InstanceCacheInterface $instanceCache;
 
-    public function __construct(InstanceCacheInterface $instanceCache)
+    public function __construct(private readonly InstanceCacheInterface $instanceCache)
     {
-        $this->instanceCache = $instanceCache;
     }
 
     public function build(): Instance
@@ -30,13 +28,13 @@ final class InstanceBuilder
 
     private function ensureBuilderIsValid(): void
     {
-        if (! count($this->languages)) {
+        if ($this->languages === []) {
             throw new InvalidLanguagesException();
         }
         if ($this->className === '') {
             throw new InvalidClassNameException();
         }
-        if (! count($this->structure)) {
+        if ($this->structure === []) {
             throw new InvalidStructureException();
         }
     }

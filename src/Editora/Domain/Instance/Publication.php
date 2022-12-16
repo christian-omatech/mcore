@@ -2,23 +2,23 @@
 
 namespace Omatech\MageCore\Editora\Domain\Instance;
 
-use DateTime;
+use DateTimeImmutable;
 use Omatech\MageCore\Editora\Domain\Instance\Exceptions\InvalidEndDatePublishingException;
 
 final class Publication
 {
-    private const DATE_FORMAT = 'd/m/Y H:i:s';
+    private const DATE_FORMAT = 'Y-m-d H:i:s';
     private string $status = PublicationStatus::PENDING;
-    private ?DateTime $startPublishingDate = null;
-    private ?DateTime $endPublishingDate = null;
+    private ?DateTimeImmutable $startPublishingDate = null;
+    private ?DateTimeImmutable $endPublishingDate = null;
 
     public function fill(array $publication): void
     {
         assert(isset($publication['startPublishingDate']));
         $this->status = $publication['status'] ?? PublicationStatus::PENDING;
-        $this->startPublishingDate = new DateTime($publication['startPublishingDate']);
+        $this->startPublishingDate = new DateTimeImmutable($publication['startPublishingDate']);
         if (isset($publication['endPublishingDate'])) {
-            $this->endPublishingDate = new DateTime($publication['endPublishingDate']);
+            $this->endPublishingDate = new DateTimeImmutable($publication['endPublishingDate']);
         }
         $this->validateEndPublishingDate();
     }
@@ -27,8 +27,8 @@ final class Publication
     {
         if ($this->endPublishingDate?->diff($this->startPublishingDate)->invert === 0) {
             InvalidEndDatePublishingException::withDate(
-                $this->endPublishingDate->format($this::DATE_FORMAT),
-                $this->startPublishingDate->format($this::DATE_FORMAT)
+                $this->endPublishingDate->format(self::DATE_FORMAT),
+                $this->startPublishingDate->format(self::DATE_FORMAT)
             );
         }
     }
@@ -46,8 +46,8 @@ final class Publication
     {
         return [
             'status' => $this->status,
-            'startPublishingDate' => $this->startPublishingDate?->format('Y-m-d H:i:s'),
-            'endPublishingDate' => $this->endPublishingDate?->format('Y-m-d H:i:s'),
+            'startPublishingDate' => $this->startPublishingDate?->format(self::DATE_FORMAT),
+            'endPublishingDate' => $this->endPublishingDate?->format(self::DATE_FORMAT),
         ];
     }
 }

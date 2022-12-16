@@ -2,16 +2,13 @@
 
 namespace Omatech\MageCore\Editora\Domain\Extraction;
 
-final class Results
+final readonly class Results
 {
-    /** @var array<Instance> $instances */
-    private readonly array $instances;
-    private readonly ?Pagination $pagination;
-
-    public function __construct(array $instances, ?Pagination $pagination)
+    /**
+     * @param \Omatech\MageCore\Editora\Domain\Extraction\Instance[] $instances
+     */
+    public function __construct(private readonly array $instances, private readonly ?\Omatech\MageCore\Editora\Domain\Extraction\Pagination $pagination)
     {
-        $this->pagination = $pagination;
-        $this->instances = $instances;
     }
 
     public function instances(): array

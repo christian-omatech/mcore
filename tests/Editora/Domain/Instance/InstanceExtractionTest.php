@@ -341,7 +341,7 @@ class InstanceExtractionTest extends TestCase
                 ->andReturn(new Results($instances[$index]['instances'], new Pagination([
                     'page' => $query->params()['page'],
                     'limit' => $query->params()['limit'],
-                ], count($instances[$index]['instances']))))
+                ], is_countable($instances[$index]['instances']) ? count($instances[$index]['instances']) : 0)))
                 ->once();
             $this->mockRelations($mock, $query->relations(), $instances[$index]['relations'] ?? []);
         }
@@ -357,7 +357,7 @@ class InstanceExtractionTest extends TestCase
                 ->andReturn(new Results($instance, new Pagination([
                     'page' => $relation->params()['page'],
                     'limit' => $relation->params()['limit'],
-                ], count($instance))))
+                ], is_countable($instance) ? count($instance) : 0)))
                 ->atLeast();
             if($relation->relations()) {
                 $this->mockRelations($mock, $relation->relations(), $relatedInstances['relations']);

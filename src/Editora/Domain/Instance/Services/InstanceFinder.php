@@ -11,11 +11,8 @@ use function Lambdish\Phunctional\reduce;
 
 class InstanceFinder
 {
-    private readonly InstanceRepositoryInterface $repository;
-
-    public function __construct(InstanceRepositoryInterface $repository)
+    public function __construct(private readonly InstanceRepositoryInterface $repository)
     {
-        $this->repository = $repository;
     }
 
     public function findOrFail(string $uuid): Instance

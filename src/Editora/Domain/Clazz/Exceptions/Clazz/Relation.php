@@ -1,24 +1,19 @@
 <?php declare(strict_types=1);
 
-namespace Omatech\MageCore\Editora\Domain\Clazz;
+namespace Omatech\MageCore\Editora\Domain\Clazz\Exceptions\Clazz;
 
-use Omatech\MageCore\Editora\Domain\Clazz\Exceptions\InvalidRelationClassException;
+use Omatech\MageCore\Editora\Domain\Clazz\Exceptions\Clazz\Exceptions\InvalidRelationClassException;
 
-final class Relation
+final readonly class Relation
 {
-    private readonly string $key;
-    private readonly array $classes;
-
-    public function __construct(string $key, array $classes)
+    public function __construct(private readonly string $key, private readonly array $classes)
     {
-        $this->key = $key;
-        $this->classes = $classes;
     }
 
     public function validate(array $classes): void
     {
         $diff = array_diff($classes, $this->classes);
-        if (count($diff)) {
+        if ($diff !== []) {
             InvalidRelationClassException::withRelationClasses($this->key, $diff);
         }
     }

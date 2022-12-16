@@ -7,15 +7,8 @@ use Omatech\MageCore\Editora\Domain\Value\BaseValue;
 
 abstract class BaseRule
 {
-    protected AttributeCollection $attributeCollection;
-    protected mixed $conditions;
-
-    public function __construct(
-        AttributeCollection $attributeCollection,
-        mixed $conditions
-    ) {
-        $this->attributeCollection = $attributeCollection;
-        $this->conditions = $conditions;
+    public function __construct(protected AttributeCollection $attributeCollection, protected mixed $conditions)
+    {
     }
 
     abstract public function validate(BaseValue $value): void;

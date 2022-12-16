@@ -60,7 +60,7 @@ final class ExtractionBuilder
     private function fillRelations(Results $results, Query $query): array
     {
         return flat_map(function (Instance $instance) use ($query) {
-            if ($instance->relations()->count()) {
+            if ($instance->relations()->count() > 0) {
                 return $this->findRelatedInstances($query->relations(), $instance);
             }
             return [];

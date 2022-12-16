@@ -5,12 +5,14 @@ ARG GID
 
 RUN apk --update --no-cache add \
     curl \
-    git
+    git \
+    icu-dev
 
-RUN apk --update --no-cache add --virtual deps $PHPIZE_DEPS linux-headers
-RUN pecl install -f xdebug
-RUN docker-php-ext-enable xdebug
-RUN apk del --purge deps
+RUN apk --update --no-cache add --virtual deps $PHPIZE_DEPS linux-headers \
+&& pecl install -f xdebug \
+&& docker-php-ext-install intl \
+&& docker-php-ext-enable xdebug intl \
+&& apk del --purge deps
 
 RUN mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
 

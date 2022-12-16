@@ -2,17 +2,10 @@
 
 namespace Omatech\MageCore\Editora\Domain\Value;
 
-final class Metadata
+final readonly class Metadata
 {
-    private readonly string $attributeKey;
-    private readonly string $language;
-    private readonly array $rules;
-
-    public function __construct(string $attributeKey, string $language, array $rules)
+    public function __construct(private readonly string $attributeKey, private readonly string $language, private readonly array $rules)
     {
-        $this->attributeKey = $attributeKey;
-        $this->language = $language;
-        $this->rules = $rules;
     }
 
     public function attributeKey(): string

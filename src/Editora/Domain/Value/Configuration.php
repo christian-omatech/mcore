@@ -4,13 +4,10 @@ namespace Omatech\MageCore\Editora\Domain\Value;
 
 use function Lambdish\Phunctional\get_in;
 
-final class Configuration
+final readonly class Configuration
 {
-    private readonly array $configuration;
-
-    public function __construct(array $configuration)
+    public function __construct(private readonly array $configuration)
     {
-        $this->configuration = $configuration;
     }
 
     public function exists(mixed $value, array $path): bool

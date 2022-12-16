@@ -7,9 +7,9 @@ use function Lambdish\Phunctional\map;
 use function Lambdish\Phunctional\reduce;
 use function Lambdish\Phunctional\search;
 
-final class AttributeCollection
+final readonly class AttributeCollection
 {
-    private readonly array $attributes;
+    private array $attributes;
 
     public function __construct(array $attributes)
     {

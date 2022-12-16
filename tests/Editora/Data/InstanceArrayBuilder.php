@@ -79,16 +79,14 @@ class InstanceArrayBuilder
         return [
             'key' => $key,
             'type' => $type,
-            'values' => map(static function (array $value) {
-                return array_merge([
-                    'uuid' => null,
-                    'language' => '',
-                    'rules' => [],
-                    'configuration' => [],
-                    'value' => null,
-                    'extraData' => [],
-                ], $value);
-            }, ([] === $values) ? $this->languages : $values),
+            'values' => map(static fn(array $value) => array_merge([
+                'uuid' => null,
+                'language' => '',
+                'rules' => [],
+                'configuration' => [],
+                'value' => null,
+                'extraData' => [],
+            ], $value), ([] === $values) ? $this->languages : $values),
             'attributes' => array_reduce($fn, function (array $acc, callable $fn) {
                 if ($this->input) {
                     $attribute = $fn($this);

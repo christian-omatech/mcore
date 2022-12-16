@@ -7,10 +7,10 @@ use function Lambdish\Phunctional\reduce;
 
 final readonly class Instance
 {
-    private string $class;
-    private string $key;
-    private array $attributes;
-    private array $relations;
+    private readonly string $class;
+    private readonly string $key;
+    private readonly array $attributes;
+    private readonly array $relations;
 
     public function __construct(array $query)
     {
@@ -48,7 +48,7 @@ final readonly class Instance
                 array $attributes,
                 string $language
             ): array {
-                $acc[$language] = map(static fn (Attribute $attribute): array => $attribute->toArray(), $attributes);
+                $acc[$language] = map(static fn (QueryAttribute $attribute): array => $attribute->toArray(), $attributes);
                 return $acc;
             }, $this->attributes, []),
             'relations' => $this->relatedInstancesToArray($this->relations),

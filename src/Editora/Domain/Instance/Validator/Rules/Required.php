@@ -10,8 +10,12 @@ final class Required extends BaseRule
 {
     public function validate(BaseValue $value): void
     {
-        if ($this->conditions === true && Utils::isEmpty($value->value())) {
-            RequiredValueException::withValue($value);
+        if ($this->conditions !== true) {
+            return;
         }
+        if (!Utils::isEmpty($value->value())) {
+            return;
+        }
+        RequiredValueException::withValue($value);
     }
 }

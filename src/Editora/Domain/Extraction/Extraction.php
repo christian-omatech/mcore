@@ -2,15 +2,14 @@
 
 namespace Omatech\MageCore\Editora\Domain\Extraction;
 
-use function Lambdish\Phunctional\first;
 use function Lambdish\Phunctional\map;
 use function Lambdish\Phunctional\reduce;
 
 final readonly class Extraction
 {
     public function __construct(
-        private string $query,
-        private array  $results
+        private readonly string $query,
+        private readonly array $results
     ) {
     }
 

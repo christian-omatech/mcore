@@ -4,14 +4,10 @@ namespace Omatech\MageCore\Editora\Domain\Extraction;
 
 final class Relation
 {
-    private readonly string $key;
-    private readonly string $type;
     private array $instances = [];
 
-    public function __construct(string $key, string $type)
+    public function __construct(private readonly string $key, private readonly string $type)
     {
-        $this->key = $key;
-        $this->type = $type;
     }
 
     public function key(): string
