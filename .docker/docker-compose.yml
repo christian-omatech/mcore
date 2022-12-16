@@ -1,11 +1,11 @@
 version: '3.8'
 services:
   php:
-    container_name: mcore_php
+    container_name: ${PROJECT_NAME}-php
     environment:
       - XDEBUG_MODE=coverage
       - PHP_IDE_CONFIG=serverName=mcore
-    image: mcore_php
+    image: ${PROJECT_NAME}-php
     build:
       context: "."
       dockerfile: "php/Dockerfile"

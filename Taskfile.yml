@@ -1,25 +1,25 @@
 version: '3'
 
 env:
-  PROJECT_NAME: mcore
+  PROJECT_NAME: mage-core
   UID:
-    sh: echo "$(id -u)"
+    sh: 'if [ `echo $(id -u) -lt 1000` ]; then echo 1000; else echo $(id -u); fi'
   GID:
-    sh: echo "$(id -g)"
+    sh: 'if [ `echo $(id -g) -lt 1000` ]; then echo 1000; else echo $(id -g); fi'
 
 tasks:
   build:
     cmds:
-      - docker-compose -f .docker/docker-compose.yml -p $PROJECT_NAME build --compress --pull --no-cache --force-rm
+      - UID=$UID GID=$GID docker-compose -f .docker/docker-compose.yml -p $PROJECT_NAME build --compress --pull --no-cache --force-rm
   down:
     cmds:
-      - docker-compose -f .docker/docker-compose.yml -p $PROJECT_NAME down
+      - UID=$UID GID=$GID docker-compose -f .docker/docker-compose.yml -p $PROJECT_NAME down
   clear:
     cmds:
-      - docker-compose -f .docker/docker-compose.yml -p $PROJECT_NAME down --rmi all
+      - UID=$UID GID=$GID docker-compose -f .docker/docker-compose.yml -p $PROJECT_NAME down --rmi all
   composer:
     cmds:
-      - docker-compose -f .docker/docker-compose.yml -p $PROJECT_NAME run --rm php composer {{.CLI_ARGS}}
+      - UID=$UID GID=$GID docker-compose -f .docker/docker-compose.yml -p $PROJECT_NAME run --rm php composer {{.CLI_ARGS}}
   install:
     cmds:
       - task: composer
