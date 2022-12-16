@@ -13,7 +13,7 @@ final class Required extends BaseRule
         if ($this->conditions !== true) {
             return;
         }
-        if (!Utils::isEmpty($value->value())) {
+        if (! Utils::isEmpty($value->value())) {
             return;
         }
         RequiredValueException::withValue($value);

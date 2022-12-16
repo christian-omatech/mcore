@@ -5,9 +5,9 @@ namespace Omatech\MageCore\Editora\Domain\Extraction;
 final readonly class Results
 {
     /**
-     * @param \Omatech\MageCore\Editora\Domain\Extraction\Instance[] $instances
+     * @param array<\Omatech\MageCore\Editora\Domain\Extraction\Instance> $instances
      */
-    public function __construct(private readonly array $instances, private readonly ?\Omatech\MageCore\Editora\Domain\Extraction\Pagination $pagination)
+    public function __construct(private array $instances, private ?Pagination $pagination)
     {
     }
 

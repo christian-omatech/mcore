@@ -4,8 +4,8 @@ namespace Omatech\MageCore\Editora\Domain\Extraction;
 
 use Omatech\MageCore\Editora\Domain\Attribute\Attribute;
 use Omatech\MageCore\Editora\Domain\Attribute\AttributeCollection as InstanceAttributes;
-use Omatech\MageCore\Editora\Domain\Extraction\Instance as ExtractionInstance;
 use Omatech\MageCore\Editora\Domain\Extraction\Attribute as ExtractionAttribute;
+use Omatech\MageCore\Editora\Domain\Extraction\Instance as ExtractionInstance;
 use Omatech\MageCore\Editora\Domain\Extraction\Value as ExtractionValue;
 use Omatech\MageCore\Editora\Domain\Instance\Instance;
 use function Lambdish\Phunctional\filter;
@@ -85,10 +85,11 @@ final readonly class Extractor
         array $queryAttributes,
         Attribute $instanceAttribute
     ): ?QueryAttribute {
-        $queryAttribute = search(
-            static fn (QueryAttribute $queryAttribute): bool => $instanceAttribute->key() === $queryAttribute->key(),
-            $queryAttributes
-        );
+        $queryAttribute = search(static function (
+            QueryAttribute $queryAttribute
+        ) use ($instanceAttribute): bool {
+            return $instanceAttribute->key() === $queryAttribute->key();
+        }, $queryAttributes);
         if ($queryAttributes === []) {
             return new QueryAttribute($instanceAttribute->key(), []);
         }
@@ -129,8 +130,12 @@ final readonly class Extractor
             array $acc,
             RelationsResults $relation
         ) use ($queryRelations): array {
-            $queryRelation = search(static fn ($query): bool => $query->param('key') === $relation->key() &&
-                $query->param('type') === $relation->type(), $queryRelations);
+            $queryRelation = search(static function (
+                $query
+            ) use ($relation): bool {
+                return $query->param('key') === $relation->key() &&
+                    $query->param('type') === $relation->type();
+            }, $queryRelations);
             if ($queryRelation) {
                 $acc[] = (new Relation($relation->key(), $relation->type()))
                     ->setInstances($this->addInstancesRelation($queryRelation, $relation));

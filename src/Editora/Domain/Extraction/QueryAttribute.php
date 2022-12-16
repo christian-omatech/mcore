@@ -8,7 +8,7 @@ class QueryAttribute
 {
     public function __construct(
         protected readonly string $key,
-        protected readonly array  $attributes
+        protected readonly array $attributes
     ) {
     }
 
